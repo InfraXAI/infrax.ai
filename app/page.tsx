@@ -29,8 +29,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CONTENT — opaque background so it doesn't bleed into hero on scroll */}
-      <div className="bg-white relative">
+      {/* CONTENT */}
+      <div className="relative">
 
       {/* THREE VERTICALS */}
       <section id="platform" className="py-[100px] px-6 max-w-[1080px] mx-auto">
