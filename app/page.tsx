@@ -42,7 +42,7 @@ export default function Home() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[1px] mt-[56px] rounded-2xl overflow-hidden bg-[#e8e8ee]">
-          <div className="bg-white transition-all duration-300 overflow-hidden hover:bg-[#f8f9fb] hover:-translate-y-[2px] reveal">
+          <Link href="/solutions/government" className="bg-white transition-all duration-300 overflow-hidden hover:bg-[#f8f9fb] hover:-translate-y-[2px] reveal block">
             <img className="w-full h-[180px] object-cover block" src="/smart-highways-v3.png" alt="Smart Highway with IoT sensors" loading="lazy" />
             <div className="px-8 py-7 pb-9">
               <h3 className="text-[20px] font-bold mb-2.5">Smart Highways</h3>
@@ -52,9 +52,10 @@ export default function Home() {
                   <span key={tag} className="px-2.5 py-[3px] bg-[#f8f9fb] border border-[#e8e8ee] rounded-md text-[11px] text-[#5a5a7a]">{tag}</span>
                 ))}
               </div>
+              <div className="mt-4 text-[13px] text-[#2673B5] font-semibold">Learn more →</div>
             </div>
-          </div>
-          <div className="bg-white transition-all duration-300 overflow-hidden hover:bg-[#f8f9fb] hover:-translate-y-[2px] reveal">
+          </Link>
+          <Link href="/solutions/smart-cities" className="bg-white transition-all duration-300 overflow-hidden hover:bg-[#f8f9fb] hover:-translate-y-[2px] reveal block">
             <img className="w-full h-[180px] object-cover block" src="/smart-cities-v3.png" alt="Smart City intersection" loading="lazy" />
             <div className="px-8 py-7 pb-9">
               <h3 className="text-[20px] font-bold mb-2.5">Smart Cities</h3>
@@ -64,9 +65,10 @@ export default function Home() {
                   <span key={tag} className="px-2.5 py-[3px] bg-[#f8f9fb] border border-[#e8e8ee] rounded-md text-[11px] text-[#5a5a7a]">{tag}</span>
                 ))}
               </div>
+              <div className="mt-4 text-[13px] text-[#2673B5] font-semibold">Learn more →</div>
             </div>
-          </div>
-          <div className="bg-white transition-all duration-300 overflow-hidden hover:bg-[#f8f9fb] hover:-translate-y-[2px] reveal">
+          </Link>
+          <Link href="/solutions/smart-buildings" className="bg-white transition-all duration-300 overflow-hidden hover:bg-[#f8f9fb] hover:-translate-y-[2px] reveal block">
             <img className="w-full h-[180px] object-cover block" src="/smart-buildings-v3.png" alt="Smart Building at dusk" loading="lazy" />
             <div className="px-8 py-7 pb-9">
               <h3 className="text-[20px] font-bold mb-2.5">Smart Buildings</h3>
@@ -76,8 +78,9 @@ export default function Home() {
                   <span key={tag} className="px-2.5 py-[3px] bg-[#f8f9fb] border border-[#e8e8ee] rounded-md text-[11px] text-[#5a5a7a]">{tag}</span>
                 ))}
               </div>
+              <div className="mt-4 text-[13px] text-[#2673B5] font-semibold">Learn more →</div>
             </div>
-          </div>
+          </Link>
         </div>
       </section>
 
