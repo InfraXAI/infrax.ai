@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-brand-blue: #2673B5;
+  --color-brand-dark: #1a1a1a;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+@layer base {
+  :root {
+    --brand-blue: #2673B5;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-white text-[#1a1a2e];
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-[#1a1a2e];
+  }
+
+  p {
+    @apply text-[#5a5a7a];
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #2673B5, #3a8fd4, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e8e8ee, transparent);
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-label {
+    @apply text-[13px] font-semibold uppercase tracking-[0.1em] text-brand-blue mb-[14px] block;
+  }
+}
