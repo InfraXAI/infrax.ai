@@ -41,7 +41,7 @@ export default function LeadCaptureForm({ source = 'website', className = '' }: 
       setFormData({ name: '', organization: '', email: '', phone: '', audience: '', message: '' });
     } catch {
       setStatus('error');
-      setErrorMessage('Failed to submit. Please try again or email us directly at contact@infrax.ai');
+      setErrorMessage('Failed to submit. Please try again or email us directly at info@infrax.ai');
     }
   };
 
