@@ -26,7 +26,9 @@ export default function Navbar() {
         <Link href="/" className="nav-logo flex items-center gap-2">
           <img src="/logo-dark.svg" alt="InfraX AI" style={{ height: '36px', width: 'auto' }} />
         </Link>
-        <div className="nav-links hidden md:flex items-center gap-8">
+        <div className="nav-links hidden md:flex items-center gap-7">
+          <Link href="/#platform" className="text-[14px] text-[#5a5a7a] font-medium hover:text-[#1a1a2e] transition-colors">Platform</Link>
+          <Link href="/#how" className="text-[14px] text-[#5a5a7a] font-medium hover:text-[#1a1a2e] transition-colors">How It Works</Link>
           {/* Solutions dropdown */}
           <div className="relative" onMouseEnter={() => setSolOpen(true)} onMouseLeave={() => setSolOpen(false)}>
             <button className="text-[14px] text-[#5a5a7a] font-medium hover:text-[#1a1a2e] transition-colors flex items-center gap-1">
@@ -52,7 +54,6 @@ export default function Navbar() {
               </div>
             )}
           </div>
-          <Link href="/case-studies/transharyana-atms" className="text-[14px] text-[#5a5a7a] font-medium hover:text-[#1a1a2e] transition-colors">Case Study</Link>
           <Link href="/about" className="text-[14px] text-[#5a5a7a] font-medium hover:text-[#1a1a2e] transition-colors">About</Link>
           <Link href="/#contact" className="nav-cta px-5 py-2 bg-[#2673B5] text-white rounded-lg text-[14px] font-medium hover:opacity-85 transition-opacity">Get in Touch</Link>
         </div>
@@ -70,13 +71,15 @@ export default function Navbar() {
       <div 
         className={`nav-mobile fixed top-[55px] left-0 right-0 bg-white/97 backdrop-blur-xl border-b border-[#e8e8ee] p-4 flex flex-col gap-1 z-[99] ${isOpen ? 'flex' : 'hidden'}`}
       >
-        <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#9090a8] px-2 pt-2 pb-1">Solutions</div>
+        <Link href="/#platform" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>Platform</Link>
+        <Link href="/#how" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>How It Works</Link>
+        <div className="h-[1px] bg-[#e8e8ee] my-2"></div>
+        <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#9090a8] px-2 pt-1 pb-1">Solutions</div>
         <Link href="/solutions/government" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>Government & NHAI</Link>
         <Link href="/solutions/system-integrators" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>System Integrators</Link>
         <Link href="/solutions/smart-cities" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>Smart Cities</Link>
         <Link href="/solutions/smart-buildings" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>Smart Buildings</Link>
         <div className="h-[1px] bg-[#e8e8ee] my-2"></div>
-        <Link href="/case-studies/transharyana-atms" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>Case Study</Link>
         <Link href="/about" className="text-[15px] text-[#5a5a7a] font-medium py-2 px-2 hover:text-[#1a1a2e] rounded-lg hover:bg-[#f8f9fb]" onClick={() => setIsOpen(false)}>About</Link>
         <div className="h-[1px] bg-[#e8e8ee] my-2"></div>
         <Link href="/#contact" className="text-[15px] text-white font-medium py-2.5 px-4 bg-[#2673B5] rounded-lg text-center" onClick={() => setIsOpen(false)}>Get in Touch</Link>
