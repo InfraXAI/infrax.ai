@@ -7,17 +7,15 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ label, title, description, centered = false }: SectionHeaderProps) {
   return (
-    <div className={`mb-12 ${centered ? 'text-center max-w-3xl mx-auto' : ''}`}>
+    <div className={`mb-12 ${centered ? 'text-center max-w-[720px] mx-auto' : ''}`}>
       {label && (
-        <div className="inline-block px-4 py-1 bg-brand-blue/10 text-brand-blue rounded-full text-sm font-semibold mb-4">
-          {label}
-        </div>
+        <div className="section-label">{label}</div>
       )}
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+      <h2 className="text-[clamp(28px,4vw,44px)] font-bold leading-[1.15] tracking-[-0.02em] mb-[14px] text-[#1a1a2e]">
         {title}
       </h2>
       {description && (
-        <p className="text-lg text-gray-600 leading-relaxed">
+        <p className="text-[17px] text-[#5a5a7a] leading-[1.7]">
           {description}
         </p>
       )}
