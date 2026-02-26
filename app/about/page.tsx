@@ -69,7 +69,7 @@ export default function AboutPage() {
             {[
               { title: 'Smart Highways', desc: 'ATMS, incident detection, vehicle classification, speed monitoring, automated compliance — deployed on live expressways across Bharat.', stat: 'Live on TransHaryana' },
               { title: 'Smart Cities', desc: 'Unified city management — traffic, lighting, waste, energy, parking — all on one platform with autonomous AI agents.', stat: 'Coming Soon' },
-              { title: 'Smart Buildings', desc: 'Predictive HVAC, occupancy sensing, energy optimization, predictive maintenance — turning BMS data into autonomous operations.', stat: 'Coming Soon' },
+              { title: 'Smart Buildings', desc: 'Predictive HVAC, occupancy sensing, energy optimization, predictive maintenance — turning data into autonomous operations.', stat: 'Coming Soon' },
             ].map((item) => (
               <div key={item.title} className="bg-white py-10 px-8 text-center">
                 <h3 className="text-[20px] font-bold text-[#1a1a2e] mb-2.5">{item.title}</h3>

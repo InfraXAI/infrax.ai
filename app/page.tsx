@@ -72,9 +72,9 @@ export default function Home() {
             <img className="w-full h-[180px] object-cover block" src="/smart-buildings-v3.png" alt="Smart Building at dusk" loading="lazy" />
             <div className="px-8 py-7 pb-9">
               <h3 className="text-[20px] font-bold mb-2.5">Smart Buildings</h3>
-              <p className="text-[14px] text-[#5a5a7a] leading-[1.65]">Building-level intelligence. Parking, access, BMS, workspace management — one platform, AI-operated.</p>
+              <p className="text-[14px] text-[#5a5a7a] leading-[1.65]">Building-level intelligence. Parking, access, energy optimization — one platform, AI-operated.</p>
               <div className="mt-[18px] flex flex-wrap gap-[5px]">
-                {['BMS', 'Parking', 'Access Control', 'Workspace Mgmt', 'Energy', 'HVAC'].map(tag => (
+                {['Parking', 'Access Control', 'Energy', 'HVAC'].map(tag => (
                   <span key={tag} className="px-2.5 py-[3px] bg-[#f8f9fb] border border-[#e8e8ee] rounded-md text-[11px] text-[#5a5a7a]">{tag}</span>
                 ))}
               </div>
