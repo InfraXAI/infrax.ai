@@ -1,0 +1,503 @@
+/* canvas safety: animated radii can dip below zero for a frame; clamp instead of throwing */
+(function () {
+  var P = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype; if (!P || P.__arcSafe) return;
+  var arc = P.arc, ell = P.ellipse;
+  P.arc = function (x, y, r, a, b, c) { return arc.call(this, x, y, r > 0 ? r : 0, a, b, c); };
+  if (ell) P.ellipse = function (x, y, rx, ry, rot, a, b, c) { return ell.call(this, x, y, rx > 0 ? rx : 0, ry > 0 ? ry : 0, rot, a, b, c); };
+  P.__arcSafe = true;
+})();
+/* INFRAX.AI site — shared runtime.
+   Loads after GSAP, ScrollTrigger and Lenis (all optional). Provides:
+   - the original particle plexus background (ported 1:1 from components/CentralPlexus.tsx)
+   - nav behaviour, mobile sheet, current-page marking
+   - Lenis smooth scroll wired to ScrollTrigger
+   - wave page transitions between site pages
+   - INFRAX.split(el): masked line reveal helper, INFRAX.magnetic(el)
+*/
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var X = (window.INFRAX = window.INFRAX || {});
+  X.reduce = reduce;
+  X.isMobile = function () { return innerWidth < 768; };
+
+  /* ---------- original plexus background ---------- */
+  (function plexus() {
+    var canvas = document.createElement('canvas');
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.25';
+    document.body.prepend(canvas);
+    // opaque canvas (page is white): cheaper to composite; prefilled white so the trail fade looks identical
+    var ctx = canvas.getContext('2d', { alpha: false }); if (!ctx) return;
+    var particles = [], W = 0, H = 0;
+    // 1 canvas px per CSS px (as the original); the layer sits at 25% opacity so higher DPR buys nothing
+    function count() { var w = innerWidth; return w < 640 ? 40 : w < 1024 ? 60 : 100; }
+    // glow sprites: the per-particle radial gradient only depends on connection count (0..5), so draw each once
+    // into one atlas (6 glows + the drifting blob) and upload it as an ImageBitmap, so drawImage never re-uploads
+    var SPR = 32, atlas = document.createElement('canvas'); atlas.width = SPR * 6 + 100; atlas.height = 100;
+    (function () {
+      var ax = atlas.getContext('2d');
+      for (var b = 0; b <= 5; b++) {
+        var k = b / 5, cx = b * SPR + SPR / 2, g = ax.createRadialGradient(cx, SPR / 2, 0, cx, SPR / 2, SPR / 2);
+        g.addColorStop(0, 'rgba(38,115,181,' + (.6 + k * .3) + ')'); g.addColorStop(.5, 'rgba(58,143,212,' + (.3 + k * .2) + ')'); g.addColorStop(1, 'rgba(96,165,250,0)');
+        ax.fillStyle = g; ax.fillRect(b * SPR, 0, SPR, SPR);
+      }
+      var bx = SPR * 6 + 50, g2 = ax.createRadialGradient(bx, 50, 0, bx, 50, 50);
+      g2.addColorStop(0, 'rgba(38,115,181,0.35)'); g2.addColorStop(.5, 'rgba(58,143,212,0.2)'); g2.addColorStop(1, 'rgba(96,165,250,0)');
+      ax.fillStyle = g2; ax.fillRect(SPR * 6, 0, 100, 100);
+    })();
+    var src = atlas;
+    if (window.createImageBitmap) createImageBitmap(atlas).then(function (bm) { src = bm; }, function () {});
+    function init() {
+      var oldW = W, oldH = H;
+      W = canvas.width = innerWidth; H = canvas.height = innerHeight;
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+      var n = count();
+      if (particles.length !== n || oldW === 0) {
+        particles = [];
+        for (var i = 0; i < n; i++) particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .5, vy: (Math.random() - .5) * .5, radius: Math.random() * 2 + 1, connections: 0 });
+      } else if (oldW > 0 && oldH > 0) {
+        var sx = W / oldW, sy = H / oldH;
+        particles.forEach(function (p) { p.x *= sx; p.y *= sy; });
+      }
+    }
+    var NB = 8, buckets = []; for (var q = 0; q < NB; q++) buckets.push([]);
+    var grid = new Map();
+    function frame(dtk) {
+      ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fillRect(0, 0, W, H);
+      var maxD = W < 640 ? 100 : 150, maxD2 = maxD * maxD, mob = W < 640, n = particles.length, i, p;
+      grid.clear();
+      for (i = 0; i < n; i++) {
+        p = particles[i];
+        if (!reduce) { p.x += p.vx * dtk; p.y += p.vy * dtk; }
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        p.x = Math.max(0, Math.min(W, p.x)); p.y = Math.max(0, Math.min(H, p.y));
+        p.connections = 0;
+        var key = ((p.x / maxD) | 0) * 4096 + ((p.y / maxD) | 0), cell = grid.get(key);
+        if (cell) cell.push(i); else grid.set(key, [i]);
+      }
+      for (q = 0; q < NB; q++) buckets[q].length = 0;
+      // spatial grid: only neighbouring cells can hold a particle closer than maxD
+      for (i = 0; i < n; i++) {
+        p = particles[i];
+        var cx = (p.x / maxD) | 0, cy = (p.y / maxD) | 0;
+        for (var gx = cx - 1; gx <= cx + 1; gx++) for (var gy = cy - 1; gy <= cy + 1; gy++) {
+          var c = grid.get(gx * 4096 + gy); if (!c) continue;
+          for (var m = 0; m < c.length; m++) {
+            var j = c[m]; if (j <= i) continue;
+            var o = particles[j], dx = p.x - o.x, dy = p.y - o.y, d2 = dx * dx + dy * dy;
+            if (d2 < maxD2) {
+              p.connections++; o.connections++;
+              var a = (1 - Math.sqrt(d2) / maxD) * .25;
+              buckets[Math.min(NB - 1, (a / .25 * NB) | 0)].push(p.x, p.y, o.x, o.y);
+            }
+          }
+        }
+      }
+      // one stroke per alpha bucket instead of one per line
+      ctx.lineWidth = mob ? .8 : 1;
+      for (q = 0; q < NB; q++) {
+        var L = buckets[q]; if (!L.length) continue;
+        ctx.strokeStyle = 'rgba(38,115,181,' + ((q + .5) / NB * .25).toFixed(3) + ')';
+        // single-segment paths keep Skia on its fast line path (one big multi-contour path rasterises slower)
+        for (var e = 0; e < L.length; e += 4) { ctx.beginPath(); ctx.moveTo(L[e], L[e + 1]); ctx.lineTo(L[e + 2], L[e + 3]); ctx.stroke(); }
+      }
+      for (i = 0; i < n; i++) { p = particles[i]; var R = p.radius * 3; ctx.drawImage(src, Math.min(5, p.connections) * SPR, 0, SPR, SPR, p.x - R, p.y - R, R * 2, R * 2); }
+      ['#2673B5', '#5a9fd4'].forEach(function (col, ci) {
+        ctx.fillStyle = col;
+        for (i = 0; i < n; i++) { p = particles[i]; if ((p.connections > 3) !== (ci === 0)) continue; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill(); }
+      });
+      var cc = mob ? 2 : 3, cs = mob ? 35 : 50, t = reduce ? 0 : Date.now() * .001;
+      for (var kk = 0; kk < cc; kk++) {
+        var x = (Math.sin(t + kk * 2) * .5 + .5) * W, y = (Math.cos(t * .7 + kk * 2) * .5 + .5) * H;
+        ctx.drawImage(src, SPR * 6, 0, 100, 100, x - cs, y - cs, cs * 2, cs * 2);
+      }
+    }
+    // the background holds still while the page scrolls and otherwise draws at most 30 fps (motion is time-based); saves battery
+    var last = 0, scrollingUntil = 0;
+    addEventListener('scroll', function () { scrollingUntil = performance.now() + 180; }, { passive: true });
+    function loop(now) {
+      requestAnimationFrame(loop);
+      if (document.hidden) { last = 0; return; }
+      if (now < scrollingUntil || (last && now - last < 32)) return;
+      var dtk = last ? Math.min(3, (now - last) / 16.667) : 1; last = now;
+      frame(dtk);
+    }
+    var rsT = 0;
+    init(); requestAnimationFrame(loop);
+    addEventListener('resize', function () { clearTimeout(rsT); rsT = setTimeout(init, 120); });
+  })();
+
+  /* ---------- small particle network (the page background's style) for light side panels: start/stop while shown ---------- */
+  function makeNet(cv) {
+      var cx = cv && cv.getContext && cv.getContext('2d'), P = [], W = 0, H = 0, raf = 0, last = 0;
+      if (!cx) return { start: function () {}, stop: function () {} };
+      function size() {
+        var r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height;
+        cv.width = Math.round(W * d); cv.height = Math.round(H * d); cx.setTransform(d, 0, 0, d, 0, 0);
+        var n = Math.round(Math.min(70, W * H / 7000)); P = [];
+        for (var i = 0; i < n; i++) P.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1.2 + Math.random() * 2.2 });
+      }
+      function draw(dt) {
+        cx.clearRect(0, 0, W, H);
+        var i, j, a, b, dx, dy, d2, L = 120 * 120;
+        for (i = 0; i < P.length; i++) { a = P[i]; a.x += a.vx * dt; a.y += a.vy * dt; if (a.x < 0 || a.x > W) a.vx *= -1; if (a.y < 0 || a.y > H) a.vy *= -1; }
+        for (i = 0; i < P.length; i++) for (j = i + 1; j < P.length; j++) {
+          a = P[i]; b = P[j]; dx = a.x - b.x; dy = a.y - b.y; d2 = dx * dx + dy * dy;
+          if (d2 < L) { cx.strokeStyle = 'rgba(38,115,181,' + (.28 * (1 - d2 / L)).toFixed(3) + ')'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); }
+        }
+        for (i = 0; i < P.length; i++) { a = P[i]; cx.fillStyle = i % 5 ? 'rgba(38,115,181,.55)' : 'rgba(14,59,102,.7)'; cx.beginPath(); cx.arc(a.x, a.y, a.r, 0, Math.PI * 2); cx.fill(); }
+      }
+      function loop(now) { raf = requestAnimationFrame(loop); var dt = last ? Math.min(3, (now - last) / 16.7) : 1; last = now; draw(dt); }
+      return {
+        start: function () { requestAnimationFrame(function () { size(); if (reduce) draw(0); else if (!raf) { last = 0; raf = requestAnimationFrame(loop); } }); },
+        stop: function () { cancelAnimationFrame(raf); raf = 0; }
+      };
+    }
+  X.makeNet = makeNet;
+  // any canvas[data-net] runs while it is on screen
+  if ('IntersectionObserver' in window) document.querySelectorAll('canvas[data-net]').forEach(function (cv) {
+    var n = makeNet(cv); new IntersectionObserver(function (es) { if (es[0].isIntersecting) n.start(); else n.stop(); }).observe(cv);
+  });
+
+  /* ---------- sections off screen pause their CSS loops (icons, overlays, pulses) ---------- */
+  (function () {
+    if (!('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.toggleAttribute('data-off', !e.isIntersecting); }); }, { rootMargin: '200px 0px' });
+    function watch() { document.querySelectorAll('main > section, .site-foot').forEach(function (s) { io.observe(s); }); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+  })();
+
+  /* ---------- nav ---------- */
+  var nav = document.querySelector('.site-nav');
+  var page = document.body.getAttribute('data-page');
+  if (page) {
+    document.querySelectorAll('[data-nav="' + page + '"]').forEach(function (a) { a.setAttribute('aria-current', 'page'); });
+    var menuFor = ['how-it-works', 'analytics', 'deployment', 'integrations'].indexOf(page) > -1 ? 'platform' : page === 'products' ? 'products' : null;
+    if (menuFor) document.querySelectorAll('.has-menu > button[data-menu="' + menuFor + '"]').forEach(function (b) { b.classList.add('is-current'); });
+  }
+  var navScrolled = null;
+  addEventListener('scroll', function () { var s = scrollY > 8; if (nav && s !== navScrolled) { navScrolled = s; nav.classList.toggle('scrolled', s); } }, { passive: true });
+  document.querySelectorAll('.has-menu > button').forEach(function (b) {
+    var li = b.parentElement;
+    function closeOthers() { document.querySelectorAll('.has-menu').forEach(function (x) { if (x !== li) { x.classList.remove('open'); x.querySelector('button').setAttribute('aria-expanded', 'false'); if (x.contains(document.activeElement)) document.activeElement.blur(); } }); }
+    b.addEventListener('click', function () { var o = !li.classList.contains('open'); closeOthers(); li.classList.toggle('open', o); b.setAttribute('aria-expanded', o); });
+    li.addEventListener('mouseenter', closeOthers);
+    li.addEventListener('mouseleave', function () {
+      var a = document.activeElement, kb = a && a.matches && a.matches(':focus-visible');
+      li.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); if (li.contains(a) && !kb) a.blur();
+    });
+    // keyboard: ArrowDown opens and moves into the menu; tabbing out of the item closes it
+    b.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowDown') return; e.preventDefault(); closeOthers(); li.classList.add('open'); b.setAttribute('aria-expanded', 'true');
+      var first = li.querySelector('.menu a'); if (first) first.focus();
+    });
+    li.addEventListener('focusout', function (e) { if (!li.contains(e.relatedTarget)) { li.classList.remove('open'); b.setAttribute('aria-expanded', 'false'); } });
+  });
+  document.addEventListener('click', function (e) { document.querySelectorAll('.has-menu.open').forEach(function (li) { if (!li.contains(e.target)) { li.classList.remove('open'); li.querySelector('button').setAttribute('aria-expanded', 'false'); } }); });
+  var toggle = document.querySelector('.nav-toggle'), sheet = document.querySelector('.sheet');
+  if (toggle && sheet) toggle.addEventListener('click', function () {
+    var o = !sheet.classList.contains('open'); sheet.classList.toggle('open', o); toggle.setAttribute('aria-expanded', o); toggle.setAttribute('aria-label', o ? 'Close menu' : 'Open menu');
+    document.documentElement.style.overflow = o ? 'hidden' : '';
+    ['main', '.site-foot'].forEach(function (s) { var el = document.querySelector(s); if (el) el.inert = o; });
+    if (!o) toggle.focus();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (sheet && sheet.classList.contains('open')) toggle.click();
+    document.querySelectorAll('.has-menu.open').forEach(function (li) {
+      var mb = li.querySelector('button'); li.classList.remove('open'); mb.setAttribute('aria-expanded', 'false');
+      if (li.contains(document.activeElement)) mb.focus();
+    });
+  });
+
+  /* ---------- smooth scroll ---------- */
+  if (!reduce && window.Lenis) {
+    // lerp-based (frame-rate independent in Lenis 1.1), driven by GSAP's ticker below: one rAF loop for scroll + ScrollTrigger
+    var lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false });
+    X.lenis = lenis;
+    if (window.gsap && window.ScrollTrigger) {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(500, 33);
+    } else {
+      (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(0);
+    }
+  }
+  if (window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- every page opens at its top (or at its #anchor) ----------
+     The browser/viewer can restore the previous page's scroll offset, which dropped visitors at the bottom
+     of the next page. Force the start position until the visitor scrolls on their own. */
+  try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) {}
+  var userMoved = false;
+  // where an #anchor lands: its heading sits just under the nav (not the section's padded top edge)
+  function anchorY(el) { var h = el.querySelector('h1,h2') || el, n = document.querySelector('.site-nav'); return Math.max(0, h.getBoundingClientRect().top + scrollY - (n ? n.offsetHeight : 68) - 28); }
+  X.anchorY = anchorY;
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(function (ev) { addEventListener(ev, function () { userMoved = true; }, { passive: true, once: true }); });
+  function toStart() {
+    if (userMoved) return;
+    var id = location.hash.slice(1), el = id && document.getElementById(id);
+    var y = el ? anchorY(el) : 0;
+    if (id && !el) return; // page scripts handle their own deep links (e.g. solutions.html#toll)
+    if (X.lenis) X.lenis.scrollTo(y, { immediate: true, force: true });
+    window.scrollTo(0, y);
+  }
+  toStart();
+  document.addEventListener('DOMContentLoaded', toStart);
+  addEventListener('load', function () {
+    toStart();
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+    setTimeout(toStart, 80); setTimeout(toStart, 350);
+  });
+  addEventListener('pageshow', function (e) { if (e.persisted) { userMoved = false; toStart(); } });
+
+  /* INFRAX.wave was the decorative bottom signal track; it has been removed. Kept as a harmless no-op for any old caller. */
+  X.wave = function () { return { set: function () {}, destroy: function () {} }; };
+
+  /* ---------- masked line reveal ---------- */
+  X.split = function (el) {
+    if (!el || el.dataset.splitDone) return [];
+    el.dataset.splitDone = 1;
+    var words = el.innerHTML.split(/(<br\s*\/?>)/i);
+    var html = words.map(function (chunk) { return /^<br/i.test(chunk) ? chunk : chunk.trim() ? '<span class="split-line"><span>' + chunk + '</span></span>' : ''; }).join('');
+    el.innerHTML = html.replace(/<br\s*\/?>/gi, '');
+    return [].slice.call(el.querySelectorAll('.split-line>span'));
+  };
+  X.reveal = function (el, opts) {
+    if (reduce || !window.gsap) return;
+    var parts = X.split(el);
+    gsap.from(parts, Object.assign({ yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05 }, opts || {}));
+  };
+
+  /* ---------- magnetic buttons ---------- */
+  X.magnetic = function (el, k) {
+    if (reduce || !window.gsap || matchMedia('(pointer:coarse)').matches) return;
+    k = k || .3;
+    var qx = gsap.quickTo(el, 'x', { duration: .5, ease: 'power3' }), qy = gsap.quickTo(el, 'y', { duration: .5, ease: 'power3' });
+    el.addEventListener('pointermove', function (e) { var r = el.getBoundingClientRect(); qx((e.clientX - r.left - r.width / 2) * k); qy((e.clientY - r.top - r.height / 2) * k); });
+    el.addEventListener('pointerleave', function () { qx(0); qy(0); });
+  };
+  document.querySelectorAll('[data-magnetic]').forEach(function (el) { X.magnetic(el); });
+  document.querySelectorAll('[data-reveal]').forEach(function (el) {
+    if (reduce || !window.gsap) return;
+    var parts = X.split(el);
+    gsap.from(parts, { yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05, scrollTrigger: el.closest('[data-reveal-now]') ? null : { trigger: el, start: 'top 85%' } });
+  });
+
+  /* ---------- Book a demo: centred modal for every a[href$="#demo"] (markup from build.py) ---------- */
+  (function demoModal() {
+    var dm = document.getElementById('demoModal'); if (!dm) return;
+    // title words reveal one by one when the popup opens (styles in site.css)
+    (function () {
+      var t = document.getElementById('dmTitle'); if (!t) return;
+      var words = t.textContent.trim().split(/\s+/);
+      t.innerHTML = '<span class="sr-only">' + t.textContent.trim() + '</span>' + words.map(function (w, i) { return '<span class="dm-w" aria-hidden="true" style="--i:' + i + '">' + w + (i < words.length - 1 ? ' ' : '') + '</span>'; }).join('');
+      var d = .35 + words.length * .07 + .15;
+      var intro = dm.querySelector('.dm-intro'); if (intro) intro.style.setProperty('--d', d.toFixed(2) + 's');
+      [].forEach.call(dm.querySelectorAll('.dm-steps li'), function (li, i) { li.style.setProperty('--d', (d + .15 + i * .1).toFixed(2) + 's'); });
+    })();
+    var dlg = dm.querySelector('.dm-dialog'), form = document.getElementById('dmForm'), ok = document.getElementById('dmOk');
+    var net = makeNet(dm.querySelector('.dm-net'));
+    var trigger = null, closeT = 0, padR = document.body.style.paddingRight;
+    var FOC = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+    function focusables() { return [].filter.call(dlg.querySelectorAll(FOC), function (n) { return n.offsetParent !== null || n === document.activeElement; }); }
+    function open(from) {
+      if (!dm.hidden && dm.classList.contains('is-open')) return;
+      clearTimeout(closeT);
+      trigger = from || document.activeElement;
+      if (sheet && sheet.classList.contains('open')) toggle.click();
+      document.querySelectorAll('.has-menu.open').forEach(function (li) { li.classList.remove('open'); });
+      var sbw = innerWidth - document.documentElement.clientWidth;
+      if (sbw > 0) document.body.style.paddingRight = sbw + 'px';
+      document.documentElement.classList.add('dm-lock');
+      if (X.lenis) X.lenis.stop();
+      dm.hidden = false; dlg.scrollTop = 0;
+      void dm.offsetWidth; // commit the hidden state so the open transition runs
+      dm.classList.add('is-open'); net.start();
+      ['main', '.site-nav', '.site-foot'].forEach(function (s) { var el = document.querySelector(s); if (el) el.inert = true; });
+      var first = form.hidden ? ok : dlg;
+      setTimeout(function () { try { (first || dlg).focus({ preventScroll: true }); } catch (e) { (first || dlg).focus(); } }, 30);
+    }
+    function close() {
+      if (dm.hidden) return;
+      dm.classList.remove('is-open'); net.stop();
+      ['main', '.site-nav', '.site-foot'].forEach(function (s) { var el = document.querySelector(s); if (el) el.inert = false; });
+      closeT = setTimeout(function () {
+        dm.hidden = true;
+        document.documentElement.classList.remove('dm-lock');
+        document.body.style.paddingRight = padR;
+        if (X.lenis) X.lenis.start();
+      }, reduce ? 0 : 230);
+      if (trigger && sheet && sheet.contains(trigger) && toggle && toggle.offsetParent) trigger = toggle; // the sheet closed on open
+      if (trigger && trigger.focus && document.contains(trigger)) { try { trigger.focus({ preventScroll: true }); } catch (e) { trigger.focus(); } }
+      trigger = null;
+    }
+    X.demo = { open: open, close: close };
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href$="#demo"]');
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault(); open(a);
+    });
+    dm.addEventListener('click', function (e) { if (e.target.closest('[data-dm-close]')) close(); });
+    dm.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); return; }
+      if (e.key !== 'Tab') return;
+      var f = focusables(); if (!f.length) { e.preventDefault(); return; }
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey && (i <= 0)) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && (i === -1 || i === f.length - 1)) { e.preventDefault(); f[0].focus(); }
+    });
+    // focus must not escape the dialog (e.g. clicking the page behind is impossible, but programmatic focus can)
+    document.addEventListener('focusin', function (e) { if (!dm.hidden && dm.classList.contains('is-open') && !dm.contains(e.target)) { var f = focusables(); (f[0] || dlg).focus(); } });
+
+    function v(id) { return document.getElementById(id).value.trim(); }
+    function setErr(id, msg) { var el = document.getElementById(id), f = el.closest('.dm-f'); f.classList.toggle('bad', !!msg); f.querySelector('.err').textContent = msg || ''; el.setAttribute('aria-invalid', msg ? 'true' : 'false'); return !msg; }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var good = [
+        setErr('dmName', v('dmName') ? '' : 'Please add your name.'),
+        setErr('dmOrg', v('dmOrg') ? '' : 'Please add your organisation.'),
+        setErr('dmEmail', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('dmEmail')) ? '' : 'Please enter a work email, like name@company.com.'),
+        setErr('dmDomain', v('dmDomain') ? '' : 'Pick the closest domain.')
+      ].every(Boolean);
+      if (!good) { var bad = form.querySelector('[aria-invalid="true"]'); if (bad) bad.focus(); return; }
+      var picks = [].map.call(form.querySelectorAll('input[name="interest"]:checked'), function (i) { return i.value; });
+      var lead = { name: v('dmName'), org: v('dmOrg'), email: v('dmEmail'), phone: v('dmPhone'), domain: v('dmDomain'), products: picks, message: v('dmMsg') };
+      var body = 'Demo request\n\nName: ' + lead.name + '\nOrganisation: ' + lead.org + '\nWork email: ' + lead.email +
+        (lead.phone ? '\nPhone: ' + lead.phone : '') + '\nDomain: ' + lead.domain +
+        (picks.length ? '\nProducts of interest: ' + picks.join(', ') : '') + (lead.message ? '\nAbout our sites: ' + lead.message : '') +
+        '\n\nSent from: ' + (document.title || 'infrax.ai');
+      var subject = 'Demo request: ' + lead.org + ' (' + lead.domain + ')';
+      var mailto = 'mailto:sales@infrax.ai?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      document.getElementById('dmSum').value = body;
+      document.getElementById('dmMail').href = mailto;
+      // sent: a plain thank-you. Not sent (preview host, or the route failed): say so, and hand over the details to email.
+      // Never open the mail app by itself: sandboxed previews block it and blank the page.
+      function done(sent) {
+        document.getElementById('dmOkH').textContent = sent ? 'Thank you.' : 'One more step.';
+        document.getElementById('dmOkText').hidden = !sent;
+        ['dmAlt', 'dmSum'].forEach(function (id) { document.getElementById(id).hidden = sent; });
+        var lbl = ok.querySelector('.dm-sumlbl'); if (lbl) lbl.hidden = sent;
+        form.hidden = true; ok.hidden = false; dlg.scrollTop = 0; ok.focus();
+      }
+      // on the real site, save the lead through the Notion route; anywhere else (or if it fails) fall back to email
+      var onSite = /^https?:$/.test(location.protocol) && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+      if (!onSite || !window.fetch) { done(false); return; }
+      var btn = form.querySelector('[type="submit"]'); if (btn) btn.disabled = true;
+      fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+        name: lead.name, organization: lead.org, email: lead.email, phone: lead.phone, audience: lead.domain,
+        message: (picks.length ? 'Products: ' + picks.join(', ') + '. ' : '') + lead.message, source: 'website · ' + location.pathname
+      }) }).then(function (r) { if (!r.ok) throw new Error(r.status); return true; }).catch(function () { return false; }).then(function (sent) { if (btn) btn.disabled = false; done(sent); });
+    });
+    document.getElementById('dmAgain').addEventListener('click', function () { ok.hidden = true; form.hidden = false; document.getElementById('dmName').focus(); });
+    if (/#demo$/.test(location.hash)) addEventListener('load', function () { setTimeout(function () { open(null); }, 120); });
+  })();
+
+  /* ---------- wave page transitions ---------- */
+  var veil = document.createElement('div'); veil.className = 'wave-veil'; veil.setAttribute('aria-hidden', 'true');
+  var vc = document.createElement('canvas'); veil.appendChild(vc); document.body.appendChild(veil);
+  var vctx = vc.getContext('2d');
+  function sizeVeil() { var d = Math.min(devicePixelRatio || 1, 1.5); vc.width = innerWidth * d; vc.height = innerHeight * d; vctx.setTransform(d, 0, 0, d, 0, 0); }
+  sizeVeil(); addEventListener('resize', sizeVeil);
+  // p: 0..1 coverage; dir: 1 = wave rises from the bottom (leaving), -1 = wave clears upward (arriving)
+  function paintVeil(p, dir) {
+    var W = innerWidth, H = innerHeight, t = performance.now() * .002;
+    vctx.clearRect(0, 0, W, H);
+    if (p <= 0) return;
+    var layers = [['14,59,102', 0], ['38,115,181', .08], ['220,235,247', .16]];
+    layers.forEach(function (L, i) {
+      var q = Math.max(0, Math.min(1, (p - L[1]) / (1 - L[1] * 1.0)));
+      if (dir < 0) q = Math.max(0, Math.min(1, (p - (0.16 - L[1])) / (1 - 0.16)));
+      vctx.beginPath();
+      if (dir > 0) {
+        var top = H - q * (H + 140);
+        vctx.moveTo(0, H);
+        for (var x = 0; x <= W; x += 12) vctx.lineTo(x, top + Math.sin(x / W * 7 + t + i) * 46 * (1 - q * .6) + Math.sin(x / W * 17 - t) * 14);
+        vctx.lineTo(W, H);
+      } else {
+        var bot = q * (H + 140);
+        vctx.moveTo(0, 0);
+        for (var x2 = 0; x2 <= W; x2 += 12) vctx.lineTo(x2, bot + Math.sin(x2 / W * 7 + t + i) * 46 * (1 - q * .6) + Math.sin(x2 / W * 17 - t) * 14);
+        vctx.lineTo(W, 0);
+      }
+      vctx.closePath(); vctx.fillStyle = 'rgb(' + L[0] + ')'; vctx.fill();
+    });
+  }
+  function animateVeil(from, to, dir, ms, done) {
+    var s = performance.now();
+    (function step(n) {
+      var k = Math.min(1, (n - s) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      paintVeil(from + (to - from) * e, dir);
+      if (k < 1) requestAnimationFrame(step); else done && done();
+    })(s);
+  }
+  var arriving = false;
+  try { arriving = sessionStorage.getItem('infrax-wave') === '1'; sessionStorage.removeItem('infrax-wave'); } catch (e) {}
+  // the arrival reveal is pure CSS (html.wave-in, set in <head>) so the page shows from first paint; just tidy up after it
+  if (arriving) setTimeout(function () { document.documentElement.classList.remove('wave-in'); }, 380);
+  // fetch a page as soon as the pointer rests on its link, so the switch has nothing to wait for
+  var pre = {};
+  document.addEventListener('pointerover', function (e) {
+    var a = e.target.closest && e.target.closest('a[href$=".html"],a[href*=".html#"]'); if (!a) return;
+    var u = a.getAttribute('href').split('#')[0]; if (!u || pre[u] || /^https?:/.test(u)) return;
+    pre[u] = 1; var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l);
+  }, { passive: true });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a || e.defaultPrevented || reduce || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+    var href = a.getAttribute('href');
+    if (!/^[a-z0-9-]+\.html(#[a-z0-9-]+)?$/i.test(href)) return; // only our own pages
+    // same page, different #anchor: no reload happens, so no veil (the page handles the hashchange)
+    var here = (location.pathname.split('/').pop() || '').toLowerCase();
+    if (href.indexOf('#') > -1 && href.split('#')[0].toLowerCase() === here) {
+      if (sheet && sheet.classList.contains('open')) toggle.click();
+      document.querySelectorAll('.has-menu.open').forEach(function (li) { li.classList.remove('open'); });
+      // a section on this page (e.g. Company on Home): glide there and stop with its heading just under the nav
+      var id = href.split('#')[1], el = document.getElementById(id);
+      if (el && !/^(demo)$/.test(id)) {
+        e.preventDefault();
+        var y = (window.INFRAX && INFRAX.anchorY) ? INFRAX.anchorY(el) : el.getBoundingClientRect().top + scrollY - 96;
+        var jumpTo = function (v) { if (X.lenis) X.lenis.scrollTo(v, { immediate: true, force: true }); window.scrollTo(0, v); };
+        var glide = null;
+        if (window.gsap) { var pos = { v: scrollY }; glide = gsap.to(pos, { v: y, duration: 1.1, ease: 'power2.inOut', overwrite: true, onUpdate: function () { jumpTo(pos.v); } }); }
+        else jumpTo(y);
+        // always finish exactly on the heading (also if the glide could not run)
+        setTimeout(function () { if (glide) glide.kill(); jumpTo((window.INFRAX && INFRAX.anchorY) ? INFRAX.anchorY(el) : y); }, 1300);
+        try { history.replaceState(null, '', '#' + id); } catch (err) {}
+      }
+      return;
+    }
+    e.preventDefault();
+    if (sheet && sheet.classList.contains('open')) toggle.click();
+    try { sessionStorage.setItem('infrax-wave', '1'); } catch (err) {}
+    animateVeil(0, 1, 1, 180, function () { location.href = href; });
+  });
+  addEventListener('pageshow', function (e) { if (e.persisted) paintVeil(0, 1); });
+
+  /* ---------- footer year + copy email ---------- */
+  document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var txt = btn.getAttribute('data-copy');
+      var done = function () { var o = btn.textContent; btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = o; }, 1400); };
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(done, function () {});
+    });
+  });
+})();
+
+/* ---------- no-copy: block copy/cut, context menu, drag and common copy shortcuts (form fields excepted) ---------- */
+(function () {
+  function editable(t) { return t && (t.closest && t.closest('input,textarea,select,[contenteditable="true"]')); }
+  ['copy', 'cut'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { if (!editable(e.target)) e.preventDefault(); });
+  });
+  document.addEventListener('contextmenu', function (e) { if (!editable(e.target)) e.preventDefault(); });
+  document.addEventListener('dragstart', function (e) { if (!editable(e.target)) e.preventDefault(); });
+  document.addEventListener('selectstart', function (e) { if (!editable(e.target)) e.preventDefault(); });
+  document.addEventListener('keydown', function (e) {
+    var k = (e.key || '').toLowerCase();
+    if ((e.ctrlKey || e.metaKey) && (k === 'c' || k === 'x' || k === 'a' || k === 's' || k === 'u' || k === 'p') && !editable(e.target)) e.preventDefault();
+  });
+  document.querySelectorAll('img').forEach(function (i) { i.setAttribute('draggable', 'false'); });
+})();

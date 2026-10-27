@@ -1,0 +1,845 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>How InfraX AI Works: Camera to Action | InfraX AI</title>
+<meta name="description" content="From camera to action in real time: site devices capture events, AI at the site raises alerts even offline, and operators act from one control room.">
+<link rel="canonical" href="https://infrax.ai/how-it-works">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="InfraX AI">
+<meta property="og:locale" content="en_IN">
+<meta property="og:url" content="https://infrax.ai/how-it-works">
+<meta property="og:title" content="How InfraX AI Works: Camera to Action | InfraX AI">
+<meta property="og:description" content="From camera to action in real time: site devices capture events, AI at the site raises alerts even offline, and operators act from one control room.">
+<meta property="og:image" content="https://infrax.ai/img/real/wall-corridor.jpg">
+<meta property="og:image:alt" content="A control-room video wall of highway camera feeds">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How InfraX AI Works: Camera to Action | InfraX AI">
+<meta name="twitter:description" content="From camera to action in real time: site devices capture events, AI at the site raises alerts even offline, and operators act from one control room.">
+<meta name="twitter:image" content="https://infrax.ai/img/real/wall-corridor.jpg">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://infrax.ai/"},{"@type":"ListItem","position":2,"name":"How it works","item":"https://infrax.ai/how-it-works"}]}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<script>try{if(sessionStorage.getItem("infrax-wave")==="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("wave-in")}catch(e){}</script>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js">
+</head>
+<body data-page="how-it-works">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-nav"><div class="wrap">
+  <a class="brand" href="home.html" aria-label="INFRAX.AI home"><img src="assets/logo.svg" alt="INFRAX.AI" width="110" height="32"></a>
+  <ul class="nav-links">
+    <li class="has-menu"><button type="button" aria-expanded="false" aria-haspopup="true" data-menu="products">Products <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <div class="menu menu-products"><div class="pm-row"><a href="products.html#vides" data-nav="products"><i>01</i><b>InfraX VIDES</b><span>Plate, speed and class at the gantry</span></a><a href="products.html#astraalert" data-nav="products"><i>02</i><b>AstraAlert</b><span>Every emergency call answered and located</span></a><a href="products.html#tollcloud" data-nav="products"><i>03</i><b>TollCloud</b><span>Toll lanes that keep running offline</span></a><a href="products.html#cygnus" data-nav="products"><i>04</i><b>Cygnus</b><span>Video management with AI</span></a><a href="products.html#central-plexus" data-nav="products"><i>05</i><b>Central Plexus (ATMS)</b><span>One live map, incidents, e-challan and signs</span></a><a href="products.html#ops" data-nav="products"><i>06</i><b>InfraX Ops</b><span>Shifts, work orders, field teams</span></a><a href="products.html#access-parking" data-nav="products"><i>07</i><b>Access and parking</b><span>Entry and exit, plate reads</span></a></div><a class="pm-all" href="products.html">See every product in action &rarr;</a></div></li>
+    <li class="has-menu"><button type="button" aria-expanded="false" aria-haspopup="true" data-menu="platform">Platform <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <div class="menu"><a href="how-it-works.html" data-nav="how-it-works"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 18h4v-4H4zM10 12h4V8h-4zM16 6h4V2h-4M8 16l2-2M14 10l2-2"/></svg><b>How it works</b><span>From cameras to real-time actions</span></a><a href="analytics.html" data-nav="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 20h18M6 16V9M11 16V5M16 16v-6M21 16v-3"/></svg><b>AI analytics</b><span>What the cameras read and flag, live</span></a><a href="deployment.html" data-nav="deployment"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg><b>Deployment</b><span>Installs on your own servers, works with the cameras you own</span></a><a href="integrations.html" data-nav="integrations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 7H6a3 3 0 0 0 0 6h3M15 7h3a3 3 0 0 1 0 6h-3M8 10h8"/></svg><b>Integrations</b><span>Cameras, radar, call boxes, signs and e-challan</span></a></div></li>
+    <li><a href="services.html" data-nav="services">Services</a></li>
+    <li><a href="home.html#company" data-nav="company">Company</a></li>
+  </ul>
+  <div class="nav-cta"><a class="btn btn-primary" href="home.html#demo" data-magnetic>Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a></div>
+  <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navSheet"><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path class="nt-open" d="M3 6h14M3 10h14M3 14h14"/><path class="nt-close" d="M5 5l10 10M15 5L5 15"/></svg></button>
+</div></header>
+<nav class="sheet" id="navSheet" aria-label="Mobile">
+  <a href="home.html" data-nav="home">Home<small>INFRAX.AI</small></a>
+  <a href="products.html" data-nav="products">Products<small>Seven products</small></a>
+  <a href="how-it-works.html" data-nav="how-it-works">How it works<small>Platform</small></a><a href="analytics.html" data-nav="analytics">AI analytics<small>Platform</small></a><a href="deployment.html" data-nav="deployment">Deployment<small>Platform</small></a><a href="integrations.html" data-nav="integrations">Integrations<small>Platform</small></a>
+  <a href="services.html" data-nav="services">Services<small>Integration &amp; delivery</small></a>
+  <a href="home.html#company">Company<small>About</small></a>
+  <a class="btn btn-primary" href="home.html#demo">Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+</nav>
+<main id="main" tabindex="-1">
+<style>
+/* How it works — prefix hw-. Three scenes: hero, pinned layer stack, federation ring, alert rail. */
+.hw-hero{padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) 0;overflow-x:clip}
+.hw-hero .h-hero{max-width:13em}
+.hw-domains{display:flex;flex-wrap:wrap;gap:calc(6*var(--s)) calc(18*var(--s));margin:calc(28*var(--s)) 0 0;padding:0;list-style:none;font:500 max(12px,calc(12.5*var(--s)))/1.4 var(--f-mono);color:var(--muted);letter-spacing:.02em}
+.hw-domains li{display:flex;align-items:center;gap:calc(8*var(--s))}
+.hw-domains li::before{content:"";width:calc(14*var(--s));height:2px;border-radius:2px;background:var(--blue)}
+
+/* pinned stack */
+.hw-pin{position:relative;overflow-x:clip}
+/* the pin starts under the nav (see JS), so the stage is one screen minus the nav, content top-aligned: the subheading sits one
+   section gap below the hero line instead of floating in a centred 100vh band */
+.hw-pin .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),4vw,calc(64*var(--s)));align-items:start;min-height:calc(100svh - var(--nav-h));padding-block:clamp(48px,6vh,64px) 24px}
+.hw-steps{list-style:none;margin:calc(22*var(--s)) 0 0;padding:0;display:grid;gap:calc(10*var(--s))}
+.hw-step{position:relative;display:grid;grid-template-columns:calc(40*var(--s)) minmax(0,1fr);gap:calc(14*var(--s));padding:calc(13*var(--s)) calc(14*var(--s)) calc(13*var(--s)) calc(12*var(--s));border:1px solid var(--line);border-radius:calc(14*var(--s));background:rgba(255,255,255,.86);transition:border-color .4s,background .4s,box-shadow .4s}
+.hw-step .ix{width:calc(40*var(--s));height:calc(40*var(--s));border-radius:calc(10*var(--s));display:grid;place-items:center;background:var(--mist);color:var(--blue);transition:background .4s,color .4s}
+.hw-step .ix svg{width:calc(20*var(--s));height:calc(20*var(--s))}
+.hw-step h3{font:600 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+.hw-step p{margin:4px 0 0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+.hw-step .tags{display:flex;flex-wrap:wrap;gap:calc(6*var(--s));margin-top:calc(8*var(--s))}
+.hw-step .tags .lab{background:none;color:var(--muted);padding-left:0}
+.hw-step .tags span{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;color:var(--blue-mid);background:var(--mist);padding:calc(6*var(--s)) calc(8*var(--s));border-radius:calc(5*var(--s))}
+.hw-step .photo{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(12*var(--s));align-items:center;margin-top:calc(9*var(--s))}
+.hw-step .photo img{width:100%;max-width:320px;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:calc(8*var(--s))}
+.hw-step .photo small{font-size:max(12px,calc(12.5*var(--s)));line-height:1.45;color:var(--muted)}
+.hw-step.on{border-color:var(--blue);background:#fff;box-shadow:0 calc(18*var(--s)) calc(40*var(--s)) calc(-28*var(--s)) rgba(14,59,102,.5)}
+.hw-step.on .ix{background:var(--blue);color:#fff}
+.hw-stage{position:relative;height:min(72vh,calc(100svh - var(--nav-h) - 88px),calc(640*var(--s)));min-height:calc(420*var(--s));overflow:hidden;border-radius:calc(20*var(--s))}
+.hw-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hw-lbl{position:absolute;left:0;top:0;pointer-events:none;white-space:nowrap;font:500 max(12px,calc(12*var(--s)))/1.2 var(--f-mono);letter-spacing:.03em;color:var(--ink);background:rgba(255,255,255,.94);border:1px solid var(--line);padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(6*var(--s));opacity:0;transition:opacity .35s;will-change:transform}
+.hw-lbl b{color:var(--blue);font-weight:500;margin-right:calc(6*var(--s))}
+.hw-lbl.layer{font:600 max(12px,calc(13*var(--s)))/1.2 var(--f-body);letter-spacing:0;padding:calc(8*var(--s)) calc(11*var(--s));border-color:var(--blue)}
+.hw-lbl.layer small{display:block;font:500 max(12px,calc(12*var(--s)))/1.3 var(--f-mono);color:var(--muted);margin-top:calc(3*var(--s));letter-spacing:.02em}
+.hw-progress{position:absolute;left:calc(16*var(--s));bottom:calc(14*var(--s));display:flex;align-items:center;gap:calc(10*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.hw-progress i{display:block;width:calc(120*var(--s));height:2px;background:var(--line);position:relative;overflow:hidden}
+.hw-progress i::after{content:"";position:absolute;inset:0;background:var(--blue);transform:scaleX(var(--p,0));transform-origin:left}
+.hw-nogl{display:none;position:absolute;inset:0;place-items:center}
+.no-gl .hw-nogl{display:grid}
+.no-gl .hw-stage canvas{display:none}
+
+/* federation */
+.hw-fed{overflow-x:clip}
+.hw-fed-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:calc(24*var(--s));align-items:end}
+.hw-fed-grid{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:clamp(calc(20*var(--s)),3vw,calc(40*var(--s)));margin-top:var(--gap-c);align-items:stretch}
+.hw-fed-stage{height:min(64vh,calc(560*var(--s)));min-height:calc(380*var(--s))}
+.hw-fed-side{display:flex;flex-direction:column;gap:calc(14*var(--s));min-width:0}
+.hw-fed-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(8*var(--s));list-style:none;margin:0;padding:0}
+.hw-fed-list button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:calc(10*var(--s));width:100%;min-height:calc(46*var(--s));padding:calc(10*var(--s)) calc(12*var(--s));border:1px solid var(--line);border-radius:calc(10*var(--s));font:500 max(12px,calc(14*var(--s)))/1.2 var(--f-body);color:var(--ink-2);background:#fff;transition:border-color .25s,color .25s,background .25s}
+.hw-fed-list button i{width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;border:1.5px solid var(--blue);flex:none;transition:background .25s}
+.hw-fed-list button:hover{border-color:var(--blue-soft)}
+.hw-fed-list button[aria-pressed="true"]{border-color:var(--blue);color:var(--ink);background:var(--mist)}
+.hw-fed-list button[aria-pressed="true"] i{background:var(--blue)}
+.hw-fed-list button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hw-card{flex:1;border:1px solid var(--line);border-radius:14px;background:#fff;padding:var(--pad-card);min-height:240px}
+.hw-card h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em}
+.hw-card .sub{font:500 var(--fs-small)/1.45 var(--f-mono);color:var(--muted);margin-top:calc(6*var(--s));letter-spacing:.03em}
+.hw-card h4{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:calc(18*var(--s)) 0 calc(10*var(--s))}
+.hw-card ul{list-style:none;margin:0;padding:0;display:grid;gap:calc(8*var(--s))}
+.hw-card li{display:flex;justify-content:space-between;gap:calc(10*var(--s));align-items:flex-start;font-size:max(12px,calc(14*var(--s)));line-height:1.45;color:var(--ink-2);padding-top:calc(8*var(--s));border-top:1px solid var(--line)}
+.hw-card li .st{margin-top:1px}
+.hw-flbl{position:absolute;left:0;top:0;pointer-events:none;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);color:var(--ink);background:rgba(255,255,255,.92);padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line);white-space:nowrap;transition:border-color .25s,color .25s;will-change:transform}
+.hw-flbl.on{border-color:var(--blue);color:var(--blue)}
+.hw-flbl.hub{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* alert lifecycle rail */
+.hw-rail{position:relative;margin-top:calc(44*var(--s))}
+.hw-rail svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.hw-rail ol{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:calc(16*var(--s))}
+.hw-link{position:absolute;right:calc(14*var(--s));top:calc(14*var(--s));display:inline-flex;align-items:center;gap:calc(8*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;color:var(--blue-mid);background:#fff;border:1px solid var(--line);padding:calc(8*var(--s)) calc(10*var(--s));border-radius:calc(999*var(--s));opacity:0;transition:opacity .35s,border-color .3s,color .3s}
+.hw-link::before{content:"";width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;background:var(--blue)}
+.hw-link.down{color:var(--ink);border-color:var(--line-2)}
+.hw-link.down::before{background:#fff;border:1.5px dashed var(--muted)}
+.hw-link.sync::before{background:var(--blue);box-shadow:0 0 0 calc(5*var(--s)) rgba(38,115,181,.18)}
+.no-gl .hw-link{display:none}
+.hw-rail li{padding-top:calc(64*var(--s));min-width:0}
+.hw-rail .dot{position:absolute;top:calc(22*var(--s));width:calc(22*var(--s));height:calc(22*var(--s));margin-left:-2px;border-radius:50%;background:#fff;border:2px solid var(--line-2);transition:border-color .35s,background .35s,transform .45s var(--ease)}
+.hw-rail li.on .dot{border-color:var(--blue);background:var(--blue);transform:scale(1.08);box-shadow:0 0 0 calc(6*var(--s)) rgba(38,115,181,.12)}
+.hw-rail h3{font:600 var(--fs-h3)/var(--lh-h3) var(--f-display)}
+.hw-rail p{margin:6px 0 0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+.hw-rail .k{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);letter-spacing:.06em}
+
+@media (max-width:1100px) and (min-width:721px){ .hw-rail ol{gap:calc(10*var(--s))} }
+@media (max-width:980px){
+  .hw-pin .wrap{grid-template-columns:1fr;min-height:0;padding-block:calc(24*var(--s)) calc(48*var(--s))}
+  .hw-stage{height:calc(400*var(--s));min-height:0;order:-1}
+  .hw-fed-head,.hw-fed-grid{grid-template-columns:1fr}
+  .hw-fed-stage{height:calc(380*var(--s));min-height:0}
+  .hw-card{min-height:0}
+}
+@media (max-width:720px){
+  .hw-rail ol{grid-template-columns:1fr;gap:0}
+  .hw-rail li{padding:0 0 calc(26*var(--s)) calc(48*var(--s));position:relative}
+  .hw-rail .dot{top:2px;left:0;margin-left:0}
+  .hw-lbl{font-size:calc(12*var(--s));padding:calc(5*var(--s)) calc(7*var(--s))}
+  .hw-lbl.layer{font-size:calc(12*var(--s))}
+}
+.hw-card .mods{font:500 max(12px,calc(12*var(--s)))/1.45 var(--f-mono);color:var(--blue-mid);margin:calc(6*var(--s)) 0 calc(4*var(--s))}
+.hw-fed-tag{display:flex;flex-wrap:wrap;align-items:center;gap:calc(10*var(--s));margin-top:calc(14*var(--s))}
+.hw-fed-tag small{font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
+.hw-req{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);white-space:nowrap;margin-top:2px}
+
+
+
+/* five steps in one row: the operator comes in at step 4 */
+.fl{position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:calc(14*var(--s))}
+.fl-track{position:absolute;left:0;right:0;top:calc(27*var(--s));height:2px;background:var(--line);border-radius:2px;pointer-events:none}
+.fl-track i{position:absolute;left:0;top:50%;width:calc(12*var(--s));height:calc(12*var(--s));margin:calc(-6*var(--s)) 0 0 calc(-6*var(--s));border-radius:50%;background:var(--blue);box-shadow:0 0 0 calc(5*var(--s)) rgba(38,115,181,.16);opacity:0}
+.fl-step{position:relative;display:flex;flex-direction:column;gap:calc(8*var(--s));min-width:0;padding:0 2px}
+.fl-ico{position:relative;z-index:1;width:calc(56*var(--s));height:calc(56*var(--s));border-radius:calc(16*var(--s));display:grid;place-items:center;background:#fff;border:1px solid var(--line-2);transition:border-color .25s,background .25s,box-shadow .25s}
+.fl-step.on .fl-ico{border-color:var(--blue);box-shadow:0 calc(12*var(--s)) calc(26*var(--s)) calc(-18*var(--s)) rgba(14,59,102,.6)}
+.fl-step.op .fl-ico{background:var(--mist)}
+.fl-step.op.on .fl-ico{background:var(--blue)}
+.fl-step.op.on .fl-ico .ix{color:#fff}
+.fl-k{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.05em;color:var(--muted)}
+.fl-step h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+.fl-step p{margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
+.fl-tag{align-self:flex-start;justify-self:start;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(999*var(--s));white-space:nowrap}
+.fl-tag.auto{color:var(--blue);border:1px solid var(--blue);background:#fff}
+.fl-tag.op{color:#fff;background:var(--blue);border:1px solid var(--blue)}
+.fl-tag.hand{color:var(--muted);border:1px dashed var(--line-2)}
+.fl-who{align-self:flex-start;justify-self:start;display:inline-flex;align-items:center;gap:calc(6*var(--s));padding:calc(5*var(--s)) calc(10*var(--s)) calc(5*var(--s)) calc(7*var(--s));border-radius:calc(999*var(--s));background:var(--ink);color:#fff;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);white-space:nowrap;opacity:0;transform:translateY(calc(4*var(--s)));transition:opacity .3s,transform .35s var(--ease)}
+.fl-who .ix{color:#fff}
+.fl-step.join .fl-who{opacity:1;transform:none}
+@media (max-width:900px){
+  .fl{grid-template-columns:minmax(0,1fr);gap:0}
+  .fl-track{left:calc(27*var(--s));right:auto;top:0;bottom:0;width:2px;height:auto}
+  .fl-step{display:grid;grid-template-columns:calc(56*var(--s)) minmax(0,1fr);gap:calc(4*var(--s)) calc(14*var(--s));padding:0 0 calc(22*var(--s))}
+  .fl-step .fl-ico{grid-row:span 6}
+}
+
+
+
+/* distributed analytics */
+.hw-dist{overflow-x:clip}
+.hw-dist-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),4vw,calc(56*var(--s)));align-items:center}
+.hw-dist ul.pts{list-style:none;margin:calc(22*var(--s)) 0 0;padding:0;display:grid;gap:calc(12*var(--s))}
+.hw-dist ul.pts li{display:grid;grid-template-columns:calc(28*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
+.hw-dist ul.pts li i{width:calc(28*var(--s));height:calc(28*var(--s));border-radius:calc(8*var(--s));background:var(--mist);display:grid;place-items:center;color:var(--blue);font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);font-style:normal}
+.hw-dist ul.pts b{color:var(--ink);font-weight:600}
+.hw-dist-fig{max-width:780px;margin-inline:auto;position:relative;border:1px solid var(--line);border-radius:calc(20*var(--s));background:#fff;padding:calc(12*var(--s));min-width:0}
+.hw-dist-fig svg{display:block;width:100%;height:auto}
+.hw-dist-fig .ctl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(10*var(--s));padding:calc(8*var(--s)) calc(6*var(--s)) 2px}
+.hw-dist-fig .ctl small{font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
+.hw-dist-fig .ctl button{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:calc(8*var(--s));min-height:calc(40*var(--s));padding:0 calc(14*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line-2);font:600 max(12px,calc(13*var(--s)))/1 var(--f-body);color:var(--ink)}
+.hw-dist-fig .ctl button:hover{border-color:var(--blue);color:var(--blue)}
+.hw-dist-fig .ctl button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hw-dist-note{font:500 max(12px,calc(12*var(--s)))/1.5 var(--f-mono);color:var(--muted);margin-top:calc(16*var(--s))}
+@media (max-width:980px){ .hw-sca-head,.hw-dist-grid{grid-template-columns:1fr} .hw-sca ol{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:560px){ .hw-sca ol{grid-template-columns:1fr} }
+/* touch: 44px tap targets */
+@media (pointer:coarse),(max-width:1023.98px){.hw-dist-fig .ctl button,.hw-fed-list button{min-height:44px}}
+/* v17 calmer visuals */
+@media (min-width:641px){.hw-stage{height:min(58vh,calc(100svh - var(--nav-h) - 120px),540px);min-height:380px}.hw-fed-stage{height:min(52vh,460px);min-height:420px}}
+/* two columns: the federation diagram fills the full height of the site list and card beside it (no empty band under it) */
+@media (min-width:981px){.hw-fed-grid .hw-fed-stage{height:auto;min-height:520px;align-self:stretch}}
+</style>
+
+<section class="hw-hero" aria-labelledby="hw-title"><div class="wrap" data-reveal-now>
+  <h1 class="h-hero" id="hw-title" data-reveal>From camera to action, in real time.</h1>
+  <p class="lead">AI does the watching. Your operator makes the call.</p>
+</div></section>
+
+<section class="hw-pin" id="hwPin" aria-labelledby="hw-stack-title"><div class="wrap">
+  <div>
+    <h2 class="h-sub" id="hw-stack-title" data-reveal>Capture and detect on site. Act in one control room.</h2>
+    <ol class="hw-steps" id="hwSteps">
+      <li class="hw-step on" data-step="0">
+        <span class="ix" aria-hidden="true"><span class="ix" data-ix="camera" data-size="20"></span></span>
+        <div><h3>Capture</h3>
+          <p>Cameras, radar and call boxes send what they see to your own servers.</p>
+          <div class="tags"><span>IP cameras</span><span>Gantry radar</span><span>Call boxes</span></div></div>
+      </li>
+      <li class="hw-step" data-step="1">
+        <span class="ix" aria-hidden="true"><span class="ix" data-ix="edge" data-size="20"></span></span>
+        <div><h3>Detect</h3>
+          <p>AI on site reads plates, measures speed and flags incidents, even if the link drops.</p>
+          <div class="photo"><img decoding="async" src="img/edge-box-sm.webp" alt="The AI box in a roadside cabinet, beside the network switch" loading="lazy" width="92" height="62"><small id="hwLinkNote">Link up · reads sent to the control room as they happen.</small></div></div>
+      </li>
+      <li class="hw-step" data-step="2">
+        <span class="ix" aria-hidden="true"><span class="ix" data-ix="wall" data-size="20"></span></span>
+        <div><h3>Act</h3>
+          <p>The event reaches Central Plexus (ATMS) with its clip; your operator dispatches patrol, updates signs or sends it for e-challan.</p></div>
+      </li>
+    </ol>
+  </div>
+  <div class="hw-stage" id="hwStage" role="img" aria-label="A miniature road and sites with gantry cameras, radar, call boxes and an LED sign separates into three layers: capture in the field, detection by AI at the site, and one control room where an operator approves. Data flows up into one steady stream, and pauses and resumes when the link drops.">
+    <canvas id="hwStackGL"></canvas>
+    <div class="hw-nogl"><svg viewBox="0 0 320 260" width="320" height="260" aria-hidden="true"><g fill="none" stroke="#2673B5" stroke-width="1.5"><ellipse cx="160" cy="215" rx="140" ry="30" fill="#fff"/><ellipse cx="160" cy="135" rx="100" ry="22" fill="#F2F7FC"/><path d="M160 30l60 18v18l-60 18-60-18V48z" fill="#fff"/><path d="M160 190v-45M160 110V84"/></g><g font-family="Onest,sans-serif" font-size="12" fill="#0A1A2B"><text x="232" y="219">Capture</text><text x="230" y="139">Detect · AI on site</text><text x="200" y="60">Act · control room</text></g></svg></div>
+    <span class="hw-link" id="hwLink" aria-hidden="true">Link up</span>
+    <div class="hw-progress" aria-hidden="true"><span id="hwPhase">On the road</span><i id="hwBar"></i></div>
+  </div>
+</div></section>
+
+<section class="scene hw-dist" aria-labelledby="hw-dist-title"><div class="wrap hw-dist-grid">
+  <div>
+    <h2 class="h-1" id="hw-dist-title" data-reveal>AI runs next to the cameras. Video stays put.</h2>
+    <p class="lead">Edge boxes beside the cameras, or a server in the control room, run the detections and send results up, not video.</p>
+    <ul class="pts">
+      <li><i>01</i><span><b>Decode once per camera.</b> Every model shares the same frames.</span></li>
+      <li><i>02</i><span><b>Scale out, not up.</b> Add an edge box or server for each group of cameras.</span></li>
+    </ul>
+  </div>
+  <figure class="hw-dist-fig" style="margin:0">
+    <svg id="hwDist" viewBox="0 0 640 430" role="img" aria-label="Roadside cameras feed an edge box beside them; site cameras feed an analytics server in the control room. Each decodes once per camera, shares frames and runs scenario models for plates, vehicles and camera health. Results go up to the Cygnus core."></svg>
+    <div class="ctl"><small id="hwDistNote">2 analytics nodes · results up, video stays put</small><button type="button" id="hwDistAdd" aria-pressed="false">+ Add an edge box</button></div>
+  </figure>
+</div></section>
+
+<section class="scene hw-fed" aria-labelledby="hw-fed-title"><div class="wrap">
+  <div class="hw-fed-head">
+    <div>      <h2 class="h-1" id="hw-fed-title" data-reveal>Many sites, one control room.</h2>
+      </div>
+    <p class="body">Each site keeps working on its own; one control room sees every alert. Pick a site.</p>
+  </div>
+  <div class="hw-fed-grid">
+    <div class="hw-stage hw-fed-stage" id="hwFedStage" role="img" aria-label="Six site miniatures in a ring (two highway stretches, a call box network, city junctions, a campus and an industrial site) linked by flowing data to one control room in the centre.">
+      <canvas id="hwFedGL"></canvas>
+      <div class="hw-nogl"><img src="img/control-room-sm.webp" alt="Control room with a video wall and a map" style="width:100%;height:100%;object-fit:cover" width="768" height="432" decoding="async"></div>
+    </div>
+    <div class="hw-fed-side">
+      <ul class="hw-fed-list" id="hwFedList" aria-label="Choose a site"></ul>
+      <article class="hw-card" id="hwFedCard" aria-live="polite"></article>
+    </div>
+  </div>
+</div></section>
+
+<div class="wrap"><a class="next-band" href="analytics.html">
+  <div><p class="eyebrow">Next</p><p class="h-1">What your cameras read and flag.</p></div>
+  <span class="arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+</a></div>
+
+</main>
+<footer class="site-foot"><div class="wrap">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <img src="assets/logo.svg" alt="INFRAX.AI" width="104" height="30">
+      <p>InfraX AI builds control-room software for infrastructure: video, plates, call boxes and field work in one place. Built in India.</p>
+      <address><a class="foot-addr" href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City<br>Gurugram, Haryana 122002, India</a><br><span class="copy">sales@infrax.ai</span></address>
+    </div>
+    <div><p class="foot-h">Products</p><ul><li><a href="products.html#central-plexus">Central Plexus (ATMS)</a></li><li><a href="products.html#cygnus">Cygnus</a></li><li><a href="products.html#vides">InfraX VIDES</a></li><li><a href="products.html#astraalert">AstraAlert</a></li><li><a href="products.html#tollcloud">TollCloud</a></li><li><a href="products.html#access-parking">Access and parking</a></li><li><a href="products.html#ops">InfraX Ops</a></li></ul></div>
+    <div><p class="foot-h">Domains</p><ul><li><a href="products.html#d-highways">Highways</a></li><li><a href="products.html#d-cities">Cities</a></li><li><a href="products.html#d-campuses">Campuses</a></li><li><a href="products.html#d-ports">Ports</a></li><li><a href="products.html#d-warehouses">Warehouses</a></li><li><a href="products.html#d-construction">Construction</a></li></ul></div>
+    <div><p class="foot-h">Platform</p><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="analytics.html">AI analytics</a></li><li><a href="deployment.html">Deployment</a></li><li><a href="integrations.html">Integrations</a></li><li><a href="services.html">Services</a></li><li><a href="home.html#company">About</a></li><li><a href="home.html#demo">Book a demo</a></li></ul></div>
+  </div>
+  <div class="foot-base"><span>&copy; <span data-year>2026</span> NaturNest AI Private Limited</span><span>Made in Gurugram, India</span></div>
+</div></footer>
+<div class="dm" id="demoModal" hidden>
+  <div class="dm-backdrop" data-dm-close></div>
+  <div class="dm-dialog" role="dialog" aria-modal="true" aria-labelledby="dmTitle" tabindex="-1" data-lenis-prevent>
+    <button class="dm-x" type="button" aria-label="Close" data-dm-close><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg></button>
+    <div class="dm-side">
+      <canvas class="dm-net" aria-hidden="true"></canvas>
+      <div class="dm-brand" aria-hidden="true"><img src="assets/logo.svg" alt="" width="84" height="24"><span>infrax.ai</span></div>
+      <div class="dm-glass">
+        <h2 class="h-2" id="dmTitle">See it on a site like yours.</h2>
+        <p class="body dm-intro">Tell us what you run. We'll show the products that fit.</p>
+      </div>
+      <ol class="dm-steps">
+        <li><i>1</i><span>A 30-minute call about your sites and cameras.</span></li>
+        <li><i>2</i><span>A live walkthrough of the control room for your domain.</span></li>
+        <li><i>3</i><span>A rollout plan for your sites and servers.</span></li>
+      </ol>
+    </div>
+    <div class="dm-main">
+      <form class="dm-form" id="dmForm" novalidate>
+        <div class="dm-f"><label for="dmName">Name</label><input id="dmName" aria-describedby="dmNameErr" name="name" autocomplete="name" required><span class="err" id="dmNameErr" aria-live="polite"></span></div>
+        <div class="dm-f"><label for="dmOrg">Organisation</label><input id="dmOrg" aria-describedby="dmOrgErr" maxlength="200" name="org" autocomplete="organization" required><span class="err" id="dmOrgErr" aria-live="polite"></span></div>
+        <div class="dm-f"><label for="dmEmail">Work email</label><input id="dmEmail" aria-describedby="dmEmailErr" name="email" type="email" autocomplete="email" required><span class="err" id="dmEmailErr" aria-live="polite"></span></div>
+        <div class="dm-f"><label for="dmPhone">Phone <small>(optional)</small></label><input id="dmPhone" aria-describedby="dmPhoneErr" name="phone" type="tel" autocomplete="tel" inputmode="tel"><span class="err" id="dmPhoneErr" aria-live="polite"></span></div>
+        <div class="dm-f full"><label for="dmDomain">Domain</label>
+          <select id="dmDomain" aria-describedby="dmDomainErr" name="domain" required><option value="">Choose the closest match</option><option>Highways</option><option>Cities</option><option>Campuses</option><option>Ports</option><option>Warehouses</option><option>Construction</option><option>System integrator</option></select><span class="err" id="dmDomainErr" aria-live="polite"></span></div>
+        <fieldset class="dm-f full"><legend>Products of interest <small>(optional)</small></legend><div class="dm-opts"><label><input type="checkbox" name="interest" value="InfraX VIDES"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>VIDES</label><label><input type="checkbox" name="interest" value="AstraAlert"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>AstraAlert</label><label><input type="checkbox" name="interest" value="TollCloud"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>TollCloud</label><label><input type="checkbox" name="interest" value="Cygnus"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>Cygnus</label><label><input type="checkbox" name="interest" value="Central Plexus (ATMS)"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>Central Plexus (ATMS)</label><label><input type="checkbox" name="interest" value="InfraX Ops"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>InfraX Ops</label><label><input type="checkbox" name="interest" value="Access and parking"><i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>Access and parking</label></div></fieldset>
+        <div class="dm-f full"><label for="dmMsg">About your sites <small>(optional)</small></label><textarea id="dmMsg" maxlength="1500" name="message" placeholder="e.g. a warehouse with two gates and existing IP cameras"></textarea></div>
+        <div class="dm-submit"><button class="btn btn-primary" type="submit">Request a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button><p>We use your details only to arrange the demo.</p></div>
+      </form>
+      <div class="dm-ok" id="dmOk" hidden tabindex="-1">
+        <div class="tick"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+        <h3 class="h-2" id="dmOkH">Thank you.</h3>
+        <p class="body" id="dmOkText">Your request is in. We'll reply within one working day to set up the demo.</p>
+        <p class="body dm-alt" id="dmAlt">Email these details to <a id="dmMail" href="mailto:sales@infrax.ai" target="_blank" rel="noopener">sales@infrax.ai</a> and we'll set up the demo.</p>
+        <label class="dm-sumlbl" for="dmSum">Your request</label>
+        <textarea id="dmSum" readonly></textarea>
+        <div class="dm-okrow"><button class="btn btn-primary" type="button" data-dm-close>Done</button><button class="btn btn-ghost" type="button" id="dmAgain">Edit request</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"></script>
+<script src="assets/site.js"></script>
+<script src="assets/icons.js"></script>
+
+<script>
+(function(){
+'use strict';
+var X=window.INFRAX||{}, reduce=!!X.reduce, hasGsap=!!(window.gsap&&window.ScrollTrigger);
+function $(s,r){return (r||document).querySelector(s);} function $$(s,r){return [].slice.call((r||document).querySelectorAll(s));}
+function clamp(v,a,b){return Math.max(a===undefined?0:a,Math.min(b===undefined?1:b,v));}
+function ease(x){x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;}
+function easeBack(x){x=clamp(x);var c1=1.4,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2);}
+var mobile=innerWidth<980, low=innerWidth<720;
+
+/* ---------- WebGL helpers ---------- */
+var glOK=(function(){ if(!window.THREE) return false; try{ var c=document.createElement('canvas'); return !!(c.getContext('webgl')||c.getContext('experimental-webgl')); }catch(e){ return false; } })();
+if(!glOK){ document.documentElement.classList.add('no-gl'); }
+
+var T=window.THREE, UP=glOK? new T.Vector3(0,1,0):null, M=null, stages=[], clockT=0;
+function mats(){
+  if(M) return M;
+  M={ white:new T.MeshStandardMaterial({color:0xffffff,roughness:.9}), light:new T.MeshStandardMaterial({color:0xeaf1f8,roughness:.95}),
+      road:new T.MeshStandardMaterial({color:0xdbe4ee,roughness:1}), mark:new T.MeshBasicMaterial({color:0xffffff}),
+      blue:new T.MeshStandardMaterial({color:0x2673b5,roughness:.55}), navy:new T.MeshStandardMaterial({color:0x0e3b66,roughness:.5}),
+      tree:new T.MeshStandardMaterial({color:0xcfe0ef,roughness:1,flatShading:true}),
+      edge:new T.LineBasicMaterial({color:0x8fb3d6,transparent:true,opacity:.55}), edgeBlue:new T.LineBasicMaterial({color:0x2673b5,transparent:true,opacity:.85}) };
+  return M;
+}
+var GEO={};
+function boxGeo(w,h,d){ var k=w+'|'+h+'|'+d; return GEO[k]||(GEO[k]=new T.BoxGeometry(w,h,d)); }
+function box(p,w,h,d,x,y,z,mat,edges,ry){ var g=boxGeo(w,h,d), m=new T.Mesh(g,mat||mats().white); m.position.set(x,y,z); if(ry) m.rotation.y=ry; p.add(m);
+  if(edges!==false){ var e=new T.LineSegments(new T.EdgesGeometry(g,25),mats().edge); e.position.copy(m.position); e.rotation.copy(m.rotation); p.add(e); } return m; }
+function cyl(p,r,h,x,y,z,mat,seg){ var m=new T.Mesh(new T.CylinderGeometry(r,r,h,seg||72),mat||mats().white); m.position.set(x,y,z); p.add(m); return m; }
+function rim(r,y,color,op){ var pts=[]; for(var i=0;i<=128;i++){ var a=i/128*Math.PI*2; pts.push(new T.Vector3(Math.cos(a)*r,y,Math.sin(a)*r)); } return new T.Line(new T.BufferGeometry().setFromPoints(pts),new T.LineBasicMaterial({color:color,transparent:true,opacity:op})); }
+function shadowPlane(size,y){ var c=document.createElement('canvas'); c.width=c.height=256; var x=c.getContext('2d'); var g=x.createRadialGradient(128,128,30,128,128,128); g.addColorStop(0,'rgba(14,59,102,0.07)'); g.addColorStop(.45,'rgba(14,59,102,0.02)'); g.addColorStop(.7,'rgba(14,59,102,0)'); x.fillStyle=g; x.fillRect(0,0,256,256);
+  var m=new T.Mesh(new T.PlaneGeometry(size,size),new T.MeshBasicMaterial({map:new T.CanvasTexture(c),transparent:true,depthWrite:false})); m.rotation.x=-Math.PI/2; m.position.y=y; return m; }
+function lights(s){ s.add(new T.HemisphereLight(0xffffff,0xd9e6f3,1.0)); var d=new T.DirectionalLight(0xffffff,.55); d.position.set(8,14,6); s.add(d); }
+function cone(r,h){ var g=new T.ConeGeometry(r,h,24,1,true); g.translate(0,-h/2,0); return new T.Mesh(g,new T.MeshBasicMaterial({color:0x2673b5,transparent:true,opacity:.1,depthWrite:false,side:T.DoubleSide})); }
+function tree(p,x,z){ box(p,.05,.32,.05,x,.16,z,mats().white,false); var t=new T.Mesh(new T.IcosahedronGeometry(.22,0),mats().tree); t.position.set(x,.44,z); p.add(t); }
+/* wave particles: per-point alpha + size, soft round sprite */
+function waveMaterial(color,size){
+  return new T.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{uColor:{value:new T.Color(color)},uSize:{value:size*Math.min(devicePixelRatio||1,1.75)}},
+    vertexShader:'attribute float aA;varying float vA;uniform float uSize;void main(){vA=aA;vec4 mv=modelViewMatrix*vec4(position,1.0);gl_PointSize=uSize*(150.0/-mv.z);gl_Position=projectionMatrix*mv;}',
+    fragmentShader:'uniform vec3 uColor;varying float vA;void main(){float d=length(gl_PointCoord-.5);float a=smoothstep(.5,.15,d)*vA;if(a<.01)discard;gl_FragColor=vec4(uColor,a);}'});
+}
+function makePoints(n,color,size){ var g=new T.BufferGeometry(); g.setAttribute('position',new T.BufferAttribute(new Float32Array(n*3),3)); g.setAttribute('aA',new T.BufferAttribute(new Float32Array(n),1)); var p=new T.Points(g,waveMaterial(color,size)); p.frustumCulled=false; return p; }
+
+function makeStage(el,scene,fov){
+  var canvas=el.querySelector('canvas');
+  var r=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  r.setPixelRatio(Math.min(devicePixelRatio||1,1.5)); r.setClearColor(0,0);
+  var cam=new T.PerspectiveCamera(fov,1,.1,200);
+  var st={el:el,r:r,cam:cam,scene:scene,w:1,h:1,visible:true,rig:{az:.7,polar:1,dist:24,ty:1},pre:null,post:null};
+  function size(){ var b=el.getBoundingClientRect(); st.w=Math.max(1,b.width); st.h=Math.max(1,b.height); r.setSize(st.w,st.h,false); cam.aspect=st.w/st.h; cam.updateProjectionMatrix(); }
+  if(window.ResizeObserver) new ResizeObserver(size).observe(el); size();
+  new IntersectionObserver(function(es){ st.visible=es[0].isIntersecting; },{rootMargin:'120px'}).observe(el);
+  canvas.addEventListener('webglcontextlost',function(e){ e.preventDefault(); document.documentElement.classList.add('no-gl'); });
+  stages.push(st); return st;
+}
+function rig(st){ var g=st.rig,c=st.cam; c.position.set(Math.sin(g.polar)*Math.sin(g.az)*g.dist, g.ty+Math.cos(g.polar)*g.dist, Math.sin(g.polar)*Math.cos(g.az)*g.dist); c.lookAt(0,g.ty,0); }
+var PV=glOK? new T.Vector3():null;
+function place(st,v,el,dy){ PV.copy(v).project(st.cam); var x=(PV.x*.5+.5)*st.w, y=(-PV.y*.5+.5)*st.h+(dy||0);
+  var w=el.offsetWidth||80, h=el.offsetHeight||24; x=clamp(x-w/2,8,st.w-w-8); y=clamp(y-h/2,8,st.h-h-8);
+  el.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)'; return PV.z<1; }
+
+/* =====================================================================
+   SCENE 1 · the layer stack
+   p 0..0.15 mixed-site platter, data rising as loose waves
+   p 0.15..0.6 detect (AI at site) + control-room layers rise out of the platter
+   p 0.55..0.9 waves fuse into one steady stream; final stacked diagram
+   ===================================================================== */
+function buildStack(){
+  var Mt=mats(), scene=new T.Scene(); lights(scene);
+  var L0=new T.Group(), L1=new T.Group(), L2=new T.Group(); scene.add(L0,L1,L2);
+  // platter
+  cyl(L0,6.2,.36,0,-.18,0,Mt.white,96); cyl(L0,6.0,.42,0,-.55,0,Mt.light,96); L0.add(rim(6.2,.001,0x2673b5,.6)); L0.add(rim(6.05,-.76,0x8fb3d6,.45));
+  scene.add(shadowPlane(20,-1.05));
+  // highway band
+  box(L0,12.1,.03,1.7,0,.016,0,Mt.road,false);
+  for(var x=-5.6;x<5.8;x+=.9){ box(L0,.4,.012,.04,x,.036,-.42,Mt.mark,false); box(L0,.4,.012,.04,x,.036,.42,Mt.mark,false); }
+  // camera gantry (highway) x=-2.4: two IP cameras, a radar unit, and the AI box on the gantry leg
+  [-1.0,1.0].forEach(function(z){ box(L0,.12,1.55,.12,-2.4,.78,z); }); box(L0,.14,.14,2.2,-2.4,1.55,0);
+  [-.7,-.15].forEach(function(z){ box(L0,.24,.13,.16,-2.28,1.45,z); box(L0,.04,.07,.09,-2.15,1.45,z,Mt.blue,false); });
+  box(L0,.12,.18,.2,-2.26,1.42,.42,Mt.navy,false); box(L0,.02,.13,.15,-2.19,1.42,.42,Mt.blue,false); // radar
+  box(L0,.24,.36,.2,-2.4,.5,1.2,Mt.light); var aiLed=box(L0,.02,.04,.12,-2.27,.58,1.2,new T.MeshBasicMaterial({color:0x2673b5}),false); // AI box on the gantry
+  // LED message sign gantry x=3.0 (the road sign the control room writes to)
+  [-1.0,1.0].forEach(function(z){ box(L0,.1,1.5,.1,3.0,.75,z); }); box(L0,.12,.12,2.2,3.0,1.5,0);
+  box(L0,.1,.46,1.4,3.02,1.22,0,Mt.navy,false);
+  var signMat=new T.MeshBasicMaterial({color:0x1b5a94}); var signFace=box(L0,.02,.36,1.28,2.96,1.22,0,signMat,false);
+  // emergency call boxes on both shoulders
+  var callBoxes=[[.9,1.15],[-4.7,-1.15]].map(function(p){ box(L0,.11,.46,.11,p[0],.23,p[1],Mt.white); box(L0,.14,.08,.14,p[0],.5,p[1],Mt.blue,false);
+    var ring=new T.Mesh(new T.TorusGeometry(.2,.012,6,40),new T.MeshBasicMaterial({color:0x2673b5,transparent:true,opacity:0})); ring.rotation.x=Math.PI/2; ring.position.set(p[0],.56,p[1]); L0.add(ring); return ring; });
+  // city junction (-3.1,-3.2)
+  var cx=-3.0, cz=-3.25;
+  box(L0,3.6,.025,.55,cx,.02,cz,Mt.road,false); box(L0,.55,.025,3.4,cx,.02,cz,Mt.road,false);
+  [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(function(q,k){ var hs=[1.6,.9,1.2,2.1]; box(L0,.95,hs[k],.95,cx+q[0]*1.0,hs[k]/2,cz+q[1]*1.0); });
+  box(L0,.03,.9,.03,cx+.42,.45,cz+.42,Mt.white,false); box(L0,.18,.1,.1,cx+.42,.92,cz+.42);
+  // industrial site (warehouse) north-east, with a pole camera
+  box(L0,2.2,.7,1.1,2.6,.35,-3.45); for(var sx=1.65;sx<3.6;sx+=.42){ box(L0,.34,.12,1.1,sx,.76,-3.45,Mt.light); }
+  box(L0,.03,1.1,.03,3.9,.55,-3.1,Mt.white,false); box(L0,.18,.1,.1,3.9,1.16,-3.1);
+  // roadside cabinet with the AI box (south shoulder), beside a pole camera
+  box(L0,.42,.52,.32,2.45,.26,2.0,Mt.light); var cabLed=box(L0,.02,.05,.2,2.24,.4,2.0,new T.MeshBasicMaterial({color:0x2673b5}),false);
+  box(L0,.03,.8,.03,1.85,.4,2.0,Mt.white,false); box(L0,.18,.1,.1,1.85,.84,2.0);
+  [[3.4,3.4],[4.2,2.6],[2.9,4.3]].forEach(function(t){ tree(L0,t[0],t[1]); });
+  // campus (-3.1, 3.2)
+  box(L0,1.6,.9,.8,-3.6,.45,2.8); box(L0,.8,1.4,.9,-2.2,.7,3.5); box(L0,1.2,.6,.7,-3.2,.3,4.2); box(L0,1.25,.04,.72,-3.2,.62,4.2,Mt.blue,false);
+  [[-4.6,3.8],[-4.4,2.0],[-1.5,2.3],[-1.6,4.5]].forEach(function(t){ tree(L0,t[0],t[1]); });
+  box(L0,.03,.8,.03,-1.9,.4,2.25,Mt.white,false); box(L0,.18,.1,.1,-1.9,.84,2.25);
+  [[-5.3,-1.6],[5.3,-1.6],[5.2,1.7],[-.5,-2.2],[.4,2.6]].forEach(function(t){ tree(L0,t[0],t[1]); });
+
+  // capture sources: [x,y,z,isCamera]. Radar and call boxes send data too, but have no view cone.
+  var SRC=[[-2.28,1.45,-.7,1],[-2.28,1.45,-.15,1],[-2.26,1.42,.42,0],[.9,.5,1.15,0],[-4.7,.5,-1.15,0],[cx+.42,.92,cz+.42,1],[3.9,1.16,-3.1,1],[1.85,.84,2.0,1],[-1.9,.84,2.25,1]];
+  var cams=SRC.map(function(c){ return new T.Vector3(c[0],c[1],c[2]); });
+  var cones=[]; SRC.forEach(function(c,i){ if(!c[3]) return; var m=cone(.42,Math.max(.7,c[1]-.04)); m.position.copy(cams[i]); m.rotation.z=(i%2?.3:-.3); L0.add(m); cones.push(m); });
+  // vehicles
+  var NV=low?8:14, veh=new T.InstancedMesh(new T.BoxGeometry(1,1,1),new T.MeshStandardMaterial({color:0xffffff,roughness:.6}),NV); L0.add(veh);
+  var lanes=[-.62,-.22,.22,.62], V=[], col=new T.Color(), R=rnd(5);
+  // one speed per lane + even spacing per lane: vehicles keep their gap and never overlap
+  var LSP=[.85,1.15,1.1,.8], perLane=Math.ceil(NV/4);
+  for(var i=0;i<NV;i++){ var tr=R()<.25, ln=i%4, slot=Math.floor(i/4); V.push({z:lanes[ln],dir:ln<2?-1:1,x:-5.6+(slot+.15+R()*.35)*(11.2/perLane),sp:LSP[ln],sx:tr?.75:.42,sy:tr?.28:.18,sz:tr?.26:.22}); veh.setColorAt(i,col.set(tr?(R()<.5?0x2673b5:0x0e3b66):(R()<.3?0xcfdcea:0xffffff))); }
+  var dummy=new T.Object3D();
+  // L1 edge layer
+  cyl(L1,3.3,.18,0,0,0,Mt.light); L1.add(rim(3.3,.091,0x2673b5,.6));
+  var edges=[];
+  [0,1,2].forEach(function(k){ var a=k/3*Math.PI*2+.5, x=Math.cos(a)*1.85, z=Math.sin(a)*1.85; box(L1,.95,.3,.62,x,.25,z,Mt.white,true,-a); box(L1,.5,.04,.02,x+Math.cos(a)*.0,.27,z,Mt.blue,false,-a); edges.push(new T.Vector3(x,.3,z)); });
+  // L2 one control room: a video wall, a console desk and an operator who confirms each step
+  var hx=new T.Mesh(new T.CylinderGeometry(2.5,2.5,.16,6),Mt.white); L2.add(hx); L2.add(new T.LineSegments(new T.EdgesGeometry(hx.geometry),Mt.edgeBlue));
+  var wallMats=[];
+  [[0,-.9,0],[-.95,-.5,.55],[.95,-.5,-.55]].forEach(function(p){ var wm=new T.MeshStandardMaterial({color:0x0e3b66,roughness:.5}); wallMats.push(wm); box(L2,1.1,.62,.05,p[0],.45,p[1],wm,false,p[2]); });
+  box(L2,1.5,.28,.5,0,.22,.55,Mt.white); box(L2,.5,.22,.03,-.32,.47,.42,Mt.navy,false); box(L2,.5,.22,.03,.32,.47,.42,Mt.navy,false);
+  var op=new T.Group(); var body=new T.Mesh(new T.CylinderGeometry(.12,.16,.42,16),Mt.blue); body.position.y=.29; op.add(body);
+  var head=new T.Mesh(new T.SphereGeometry(.1,16,12),Mt.white); head.position.y=.6; op.add(head); op.position.set(0,.08,1.05); L2.add(op);
+  var ring=new T.Mesh(new T.TorusGeometry(2.95,.02,6,96),new T.MeshBasicMaterial({color:0x2673b5})); ring.rotation.x=Math.PI/2; L2.add(ring);
+  var ring2=new T.Mesh(new T.TorusGeometry(3.25,.01,6,96),new T.MeshBasicMaterial({color:0x5a9fd4,transparent:true,opacity:.6})); ring2.rotation.x=Math.PI/2; L2.add(ring2);
+  // trunk line (appears as the stream fuses)
+  var trunkMat=new T.LineBasicMaterial({color:0x2673b5,transparent:true,opacity:0});
+  var trunk=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(0,0,0),new T.Vector3(0,1,0)]),trunkMat); scene.add(trunk);
+  // particles
+  var NP=low?170:380, pts=makePoints(NP,0x2673b5,low?.9:1.05); scene.add(pts);
+  var PP=pts.geometry.attributes.position.array, PA=pts.geometry.attributes.aA.array, D=[];
+  for(var q=0;q<NP;q++) D.push({c:q%cams.length,e:q%3,o:R(),sp:.14+R()*.1,ph:R()*6.283});
+  var a=new T.Vector3(), b=new T.Vector3(), w=new T.Vector3(), base=new T.Vector3();
+  var state={p:0,y1:.2,y2:.2,link:'up',queued:0};
+  var signCol=new T.Color(), cA=new T.Color(0x1b5a94), cB=new T.Color(0x5a9fd4), wA=new T.Color(0x0e3b66), wB=new T.Color(0x2673b5);
+  function update(t,dt,p){
+    var sep=ease(clamp((p-.12)/.48)), fuse=ease(clamp((p-.52)/.36));
+    // link cycle (only once the layers stand): up 0-5s, down 5-7.6s (site keeps reading, reads queue), sync 7.6-8.8s
+    var cyc=t%10, link='up', queued=0;
+    if(sep>.6){ if(cyc>5&&cyc<7.6){ link='down'; queued=Math.floor((cyc-5)*9); } else if(cyc>=7.6&&cyc<8.8){ link='sync'; queued=23; } }
+    state.link=link; state.queued=queued;
+    var down=link==='down', burst=link==='sync';
+    // act: every 10s the operator confirms and the road sign + wall respond (after sync)
+    var act=sep>.6? Math.max(0,1-Math.abs(cyc-9.3)/.7):0;
+    signFace.material.color.copy(signCol.copy(cA).lerp(cB,act));
+    wallMats[0].color.copy(signCol.copy(wA).lerp(wB,Math.max(act,burst?.6:0)));
+    op.rotation.y=Math.sin(t*.4)*.25; op.position.y=.08+act*.04;
+    aiLed.material.color.setHex(down?0x8fb3d6:0x2673b5); cabLed.material.color.setHex(down&&Math.floor(t*4)%2?0x8fb3d6:0x2673b5);
+    callBoxes.forEach(function(r,i){ var ph=((t*.5+i*.5)%1); r.scale.setScalar(1+ph*2.2); r.material.opacity=(1-ph)*.7*(Math.sin(t*.3+i*2)>.2?1:0); });
+    var y1=.15+sep*3.6, y2=.15+sep*7.1; state.y1=y1; state.y2=y2;
+    L1.position.y=y1; L2.position.y=y2; L1.scale.setScalar(Math.max(.001,easeBack(sep))); L2.scale.setScalar(Math.max(.001,easeBack(clamp(sep*1.25-.15))));
+    L0.rotation.y=t*.03; L1.rotation.y=-t*.025; ring.rotation.z=t*.25; ring2.rotation.z=-t*.15;
+    for(var i=0;i<NV;i++){ var v=V[i]; v.x+=v.dir*v.sp*dt; if(v.x>5.7)v.x=-5.7; if(v.x<-5.7)v.x=5.7; dummy.position.set(v.x,.04+v.sy/2,v.z); dummy.scale.set(v.sx,v.sy,v.sz); dummy.updateMatrix(); veh.setMatrixAt(i,dummy.matrix); }
+    veh.instanceMatrix.needsUpdate=true;
+    cones.forEach(function(c,i){ c.material.opacity=.06+.07*(.5+.5*Math.sin(t*2+i)); });
+    trunk.geometry.attributes.position.setXYZ(0,0,y1+.2,0); trunk.geometry.attributes.position.setXYZ(1,0,y2-.1,0); trunk.geometry.attributes.position.needsUpdate=true;
+    trunkMat.opacity=down? .12*fuse*(Math.floor(t*3)%2) : .55*fuse*(burst?1.6:1);
+    var node=y2+.1, rot0=L0.rotation.y, rot1=L1.rotation.y;
+    for(var k=0;k<NP;k++){
+      var d=D[k], s=(t*d.sp+d.o)%1;
+      a.copy(cams[d.c]).applyAxisAngle(UP,rot0);
+      // loose wave wisps rising from each camera
+      w.set(a.x+Math.sin(s*7+t*1.6+d.ph)*.3*s, a.y+s*2.6, a.z+Math.cos(s*6+t*1.3+d.ph)*.3*s);
+      var wa=Math.sin(s*Math.PI)*.85;
+      // the routed stream: capture -> AI at the site -> control room
+      b.copy(edges[d.e]).multiplyScalar(Math.max(.001,sep)).applyAxisAngle(UP,rot1); b.y=y1+.3;
+      var A=.55*(1-fuse)+.03, kk, off;
+      if(s<.55){ kk=s/.55; base.copy(a).lerp(b,kk); base.y+=Math.sin(kk*Math.PI)*1.1*(1-fuse*.6); off=Math.sin(kk*Math.PI)*Math.sin(kk*10-t*3+d.ph)*A; }
+      else { kk=(s-.55)/.45; base.copy(b).lerp(w.set(0,node,0),kk); var pull=fuse*ease(clamp(kk*2.2)); base.x*=1-pull; base.z*=1-pull; if(kk<.5){ /* keep wisps local */ }
+        off=Math.sin(kk*Math.PI)*Math.sin(kk*9-t*3+d.ph)*A*.8; w.set(a.x+Math.sin(s*7+t*1.6+d.ph)*.3*s, a.y+s*2.6, a.z+Math.cos(s*6+t*1.3+d.ph)*.3*s); }
+      base.x+=Math.cos(d.ph)*off; base.z+=Math.sin(d.ph)*off;
+      var pa=Math.sin(clamp(s*6)*Math.PI*.5)*Math.sin(clamp((1-s)*6)*Math.PI*.5)*.9;
+      // link down: reads still flow camera -> AI at site, but nothing leaves the site (queued); on sync they rush up
+      if(s>=.55){ if(down) pa=0; else if(burst) pa=Math.min(1,pa*1.6); }
+      PP[k*3]=w.x+(base.x-w.x)*sep; PP[k*3+1]=w.y+(base.y-w.y)*sep; PP[k*3+2]=w.z+(base.z-w.z)*sep;
+      PA[k]=wa*(1-sep)+pa*sep;
+    }
+    pts.geometry.attributes.position.needsUpdate=true; pts.geometry.attributes.aA.needsUpdate=true;
+  }
+  var dom=[['Camera gantry + radar',-2.4,1.75,0],['LED message sign',3.0,1.75,0],['Call box',.9,.75,1.15],['City junction',cx,2.2,cz],['Warehouse',2.6,1.1,-3.45],['AI box on site',2.45,.75,2.0],['Campus',-2.2,1.6,3.5]].map(function(d){ return {name:d[0],v:new T.Vector3(d[1],d[2],d[3])}; });
+  return {scene:scene,update:update,state:state,dom:dom,L0:L0};
+}
+function rnd(seed){ return function(){ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; }; }
+
+/* =====================================================================
+   SCENE 2 · federation ring
+   ===================================================================== */
+var FED=[
+  {id:'highways',name:'Highway stretch · north',sub:'Gantries with cameras and radar',mods:'InfraX VIDES on the gantry · Central Plexus (ATMS)',
+    keep:['IP cameras on every gantry','Gantry radar','The AI box on the gantry, which keeps reading when the link drops'],
+    share:[['Plate read and vehicle class for every vehicle','live'],['Watchlist alerts with images','live'],['Radar speed and overspeed cases for e-challan review','live'],['Wrong-way and stopped-vehicle alerts','live']]},
+  {id:'signs',name:'Highway stretch · south',sub:'Cameras and LED message signs',mods:'Central Plexus (ATMS) · Cygnus',
+    keep:['IP cameras along the carriageway','LED message signs on gantries','Recording at the site'],
+    share:[['Incidents opened with video attached',''],['Messages sent to the road signs from the control room',''],['Camera tamper: blinded, moved or stream dropped','live']]},
+  {id:'callboxes',name:'Emergency call boxes',sub:'One button on the roadside',mods:'AstraAlert',
+    keep:['A call box every few kilometres','Power, battery, solar and door sensors'],
+    share:[['Each call, located on the map and recorded',''],['Box health before it fails someone',''],['Optional AI voice summary for the operator to confirm','']]},
+  {id:'cities',name:'City junctions',sub:'Police and city security teams',mods:'Cygnus',
+    keep:['Junction and street IP cameras','Recording on your servers'],
+    share:[['Watchlisted vehicle alerts','live'],['Plate search and vehicle journeys','live'],['A vehicle followed from camera to camera','live']]},
+  {id:'campuses',name:'Campus',sub:'One security team, many buildings',mods:'Cygnus · Access and parking',
+    keep:['Gate and building IP cameras','Live walls for the security desk'],
+    share:[['Vehicle plate reads at every gate','live'],['Camera tamper & health','live'],['People counting and zone intrusion','live']]},
+  {id:'industrial',name:'Warehouse',sub:'Gate, dock and yard security',mods:'Cygnus · Access and parking',
+    keep:['Gate and perimeter IP cameras','Recording with clip export'],
+    share:[['Gate plate reads and plate journeys','live'],['Camera tamper & health','live'],['Zone intrusion and line crossing','live']]}
+];
+function buildFed(){
+  var Mt=mats(), scene=new T.Scene(); lights(scene);
+  var root=new T.Group(); scene.add(root); scene.add(shadowPlane(16,-.5)); // small, faint contact shadow only: keeps the stage white
+  // hub
+  var hub=new T.Group(); var hx=new T.Mesh(new T.CylinderGeometry(1.5,1.5,.16,6),Mt.white); hub.add(hx); hub.add(new T.LineSegments(new T.EdgesGeometry(hx.geometry),Mt.edgeBlue));
+  box(hub,.9,.5,.05,0,.33,-.5,Mt.navy,false); box(hub,.6,.38,.05,.55,.27,.3,Mt.navy,false,-1.0);
+  var hr=new T.Mesh(new T.TorusGeometry(1.9,.02,6,96),new T.MeshBasicMaterial({color:0x2673b5})); hr.rotation.x=Math.PI/2; hub.add(hr);
+  hub.position.y=1.1; root.add(hub);
+  var RAD=low?5.2:6.2, P=[], discs=[];
+  FED.forEach(function(f,i){
+    var g=new T.Group(); var d=cyl(g,1.5,.2,0,-.1,0,Mt.white,64); d.userData.i=i; discs.push(d); var rl=rim(1.5,.001,0x5a9fd4,.7); g.add(rl);
+    mini(g,f.id); var a=i/6*Math.PI*2-Math.PI/2; var tgt=new T.Vector3(Math.cos(a)*RAD,0,Math.sin(a)*RAD);
+    root.add(g); P.push({g:g,tgt:tgt,rim:rl});
+  });
+  // wave links + particles flowing up to the hub
+  var curves=P.map(function(p){ var a=p.tgt.clone(); a.y=.35; var c=new T.Vector3(0,1.15,0); var m=a.clone().add(c).multiplyScalar(.5); m.y+=2.2; return new T.QuadraticBezierCurve3(a,m,c); });
+  var linkMats=[], links=curves.map(function(cv){ var mm=new T.LineDashedMaterial({color:0x2673b5,dashSize:.18,gapSize:.14,transparent:true,opacity:.35}); linkMats.push(mm); var l=new T.Line(new T.BufferGeometry().setFromPoints(cv.getPoints(48)),mm); l.computeLineDistances(); root.add(l); return l; });
+  var PER=low?16:26, NP=PER*6, pts=makePoints(NP,0x2673b5,low?1.0:1.15); root.add(pts);
+  var PP=pts.geometry.attributes.position.array, PA=pts.geometry.attributes.aA.array, R=rnd(9), D=[];
+  for(var q=0;q<NP;q++) D.push({l:Math.floor(q/PER),o:R(),sp:.16+R()*.1,ph:R()*6.283});
+  var tmp=new T.Vector3(), tan=new T.Vector3(), side=new T.Vector3();
+  var st={k:0,sel:-1,hover:-1};
+  function update(t,dt){
+    var k=st.k, cur=st.hover>-1?st.hover:st.sel;
+    root.rotation.y=t*.025; hub.rotation.y=-t*.1; hr.rotation.z=t*.3;
+    P.forEach(function(p,i){ var kk=easeBack(clamp(k*1.7-i*.12)); p.g.position.copy(p.tgt).multiplyScalar(Math.max(.001,clamp(kk,0,1.2))); p.g.scale.setScalar(Math.max(.001,kk));
+      var lift=(i===cur)?.35:0; p.g.position.y+=lift; p.rim.material.opacity=i===cur?1:.55; linkMats[i].opacity=(i===cur?.9:.3)*clamp(k*1.5-.3); });
+    for(var j=0;j<NP;j++){
+      var d=D[j], s=(t*d.sp*(d.l===cur?1.6:1)+d.o)%1, cv=curves[d.l];
+      cv.getPoint(s,tmp); cv.getTangent(s,tan); side.set(-tan.z,0,tan.x).normalize();
+      var A=(d.l===cur? .02 : .32)*Math.sin(s*Math.PI);
+      var off=Math.sin(s*12-t*4+d.ph)*A; tmp.addScaledVector(side,off); tmp.y+=Math.cos(s*10-t*3+d.ph)*A*.5;
+      PP[j*3]=tmp.x; PP[j*3+1]=tmp.y; PP[j*3+2]=tmp.z;
+      PA[j]=Math.sin(s*Math.PI)*(cur<0?.75:(d.l===cur?1:.35))*clamp(k*1.5-.4);
+    }
+    pts.geometry.attributes.position.needsUpdate=true; pts.geometry.attributes.aA.needsUpdate=true;
+  }
+  return {scene:scene,root:root,update:update,st:st,P:P,discs:discs,hub:hub};
+}
+/* domain miniatures on a 1.5-radius platter */
+function mini(g,id){
+  var Mt=mats();
+  if(id==='highways'){ box(g,2.7,.02,.8,0,.01,0,Mt.road,false); box(g,2.6,.01,.03,0,.026,0,Mt.mark,false);
+    [-.48,.48].forEach(function(z){ box(g,.08,1.0,.08,-.3,.5,z); }); box(g,.1,.1,1.1,-.3,1.0,0); box(g,.06,.22,.5,-.32,.84,.2,Mt.navy,false); box(g,.16,.09,.1,-.22,.92,-.25);
+    box(g,.4,.14,.2,.55,.08,-.2,Mt.white); box(g,.55,.2,.22,-.8,.11,.2,Mt.blue); }
+  else if(id==='cities'){ box(g,2.6,.02,.42,0,.01,0,Mt.road,false); box(g,.42,.02,2.6,0,.01,0,Mt.road,false);
+    [[-.75,-.75,.9],[.75,-.75,1.4],[-.75,.75,.6],[.75,.75,1.1]].forEach(function(b){ box(g,.7,b[2],.7,b[0],b[2]/2,b[1]); }); box(g,.03,.6,.03,.3,.3,.3,Mt.white,false); box(g,.14,.08,.08,.3,.62,.3); }
+  else if(id==='signs'){ box(g,2.7,.02,.8,0,.01,0,Mt.road,false); box(g,2.6,.01,.03,0,.026,0,Mt.mark,false);
+    [-.48,.48].forEach(function(z){ box(g,.07,.95,.07,.35,.47,z); }); box(g,.09,.09,1.1,.35,.95,0); box(g,.06,.3,.8,.33,.78,0,Mt.navy,false); box(g,.02,.24,.72,.3,.78,0,Mt.blue,false);
+    box(g,.45,.15,.2,-.6,.09,.2,Mt.white); box(g,.6,.22,.22,.9,.12,-.2,Mt.blue); }
+  else if(id==='callboxes'){ box(g,2.7,.02,.8,0,.01,0,Mt.road,false); box(g,2.6,.01,.03,0,.026,0,Mt.mark,false);
+    [[-.9,.58],[0,-.58],[.9,.58]].forEach(function(q){ box(g,.1,.42,.1,q[0],.21,q[1],Mt.white); box(g,.13,.07,.13,q[0],.45,q[1],Mt.blue,false); }); box(g,.4,.14,.2,.3,.08,.18,Mt.white); }
+  else if(id==='industrial'){ box(g,1.5,.6,.9,.25,.3,-.3); for(var x=-.4;x<.95;x+=.32) box(g,.26,.1,.9,x,.65,-.3,Mt.light); box(g,.3,.28,.28,-.85,.14,.55,Mt.light);
+    box(g,.03,.7,.03,-.55,.35,.6,Mt.white,false); box(g,.14,.08,.08,-.55,.72,.6); box(g,.3,.32,.7,.5,.18,.75,Mt.blue); box(g,.28,.24,.22,.5,.14,.32,Mt.white); }
+  else { box(g,.9,.8,.6,-.4,.4,-.3); box(g,.6,1.2,.6,.5,.6,-.2); box(g,.9,.45,.5,.1,.22,.6); box(g,.92,.03,.52,.1,.46,.6,Mt.blue,false); tree(g,-.95,.6); tree(g,.95,.65); tree(g,-1.0,-.8); }
+}
+
+/* ---------- wire everything up ---------- */
+var stack=null, fed=null, st1=null, st2=null;
+var stackP={v:reduce?1:0};
+if(glOK){
+  try{
+    stack=buildStack(); st1=makeStage($('#hwStage'),stack.scene,32);
+    fed=buildFed(); st2=makeStage($('#hwFedStage'),fed.scene,34);
+  }catch(err){ console.warn(err); document.documentElement.classList.add('no-gl'); glOK=false; }
+}
+
+/* labels for scene 1 */
+var stageEl=$('#hwStage'), domLbls=[], layerLbls=[], linkEl=$('#hwLink'), linkNote=$('#hwLinkNote');
+if(stack){
+  stack.dom.forEach(function(d){ var el=document.createElement('span'); el.className='hw-lbl'; el.innerHTML='<b>●</b>'+d.name; stageEl.appendChild(el); domLbls.push(el); });
+  [['Capture','IP cameras · gantry radar · call boxes'],['Detect · AI on site','plates · speed · alerts, even offline'],['Act · control room','your operator reviews and acts']].forEach(function(l){ var el=document.createElement('span'); el.className='hw-lbl layer'; el.innerHTML=l[0]+'<small>'+l[1]+'</small>'; stageEl.appendChild(el); layerLbls.push(el); });
+}
+var steps=$$('#hwSteps .hw-step'), phaseEl=$('#hwPhase'), barEl=$('#hwBar');
+function setStep(p){
+  var s=p<.3?0:p<.62?1:2; steps.forEach(function(el,i){ el.classList.toggle('on',i===s); });
+  if(phaseEl) phaseEl.textContent=p<.12?'In the field':p<.55?'Capture and detect':p<.88?'Alert in the control room':'Operator reviews and acts';
+  if(barEl) barEl.parentElement.style.setProperty('--p',p.toFixed(3));
+}
+setStep(stackP.v);
+var LV=glOK? new T.Vector3():null;
+if(st1){
+  st1.post=function(){
+    var p=stackP.v, sep=ease(clamp((p-.12)/.48));
+    stack.dom.forEach(function(d,i){ LV.copy(d.v).applyAxisAngle(UP,stack.L0.rotation.y); place(st1,LV,domLbls[i],-14); domLbls[i].style.opacity=String(clamp(1-sep*2.2)); });
+    var ys=[0,stack.state.y1,stack.state.y2], rr=[6.3,3.4,2.7];
+    layerLbls.forEach(function(el,i){ LV.set(rr[i],ys[i]+.1,0); place(st1,LV,el,0); el.style.opacity=String(i===0?clamp((sep-.3)*2.5):clamp((sep-.45-.1*i)*3)); });
+    // link status chip + note in the Detect step
+    var L=stack.state.link, txt=L==='down'?'Link down · still reading · '+stack.state.queued+' queued':L==='sync'?'Link back · '+stack.state.queued+' reads synced':'Link up · reads flowing';
+    if(linkEl.textContent!==txt){ linkEl.textContent=txt; linkEl.className='hw-link'+(L==='down'?' down':L==='sync'?' sync':''); if(linkNote) linkNote.textContent=L==='down'?'Link down. The box keeps reading plates and queues them on site.':L==='sync'?'Link back. Every queued read syncs to the control room.':'Link up · reads sent to the control room as they happen.'; }
+    linkEl.style.opacity=String(clamp((sep-.6)*4));
+  };
+}
+
+/* stack scroll control: pin on desktop, scrub on mobile */
+if(hasGsap&&!reduce){
+  var mm=gsap.matchMedia();
+  mm.add('(min-width:981px)',function(){
+    ScrollTrigger.create({trigger:'#hwPin',start:function(){ return 'top '+((document.querySelector('.site-nav')||{}).offsetHeight||0)+'px'; },end:'+=220%',pin:true,invalidateOnRefresh:true,scrub:.6,onUpdate:function(s){ stackP.v=s.progress; setStep(s.progress); }});
+  });
+  mm.add('(max-width:980px)',function(){
+    ScrollTrigger.create({trigger:'#hwStage',start:'top 75%',end:'bottom top',scrub:.6,onUpdate:function(s){ stackP.v=clamp(s.progress*1.35); setStep(stackP.v); }});
+  });
+}
+if(reduce) setStep(1);
+
+/* federation interaction */
+var list=$('#hwFedList'), card=$('#hwFedCard'), fedLbls=[], fedSel=0;
+FED.forEach(function(f,i){ var li=document.createElement('li'); li.innerHTML='<button type="button" aria-pressed="false"><i></i>'+f.name+'</button>'; list.appendChild(li);
+  li.firstChild.addEventListener('click',function(){ selectFed(i); }); });
+var STL={live:'<span class="st st-live">Live</span>',req:'<span class="st st-live">Live</span>'};
+function selectFed(i){
+  fedSel=i; if(fed) fed.st.sel=i;
+  $$('button',list).forEach(function(b,j){ b.setAttribute('aria-pressed',String(j===i)); });
+  fedLbls.forEach(function(el,j){ el.classList.toggle('on',j===i); });
+  var f=FED[i];
+  card.innerHTML='<h3>'+f.name+'</h3><p class="sub">'+f.sub+'</p><p class="mods">'+f.mods+'</p><h4 role="none">Captures on site</h4><ul>'+f.keep.map(function(k){return '<li><span>'+k+'</span></li>';}).join('')+
+    '</ul><h4 role="none">The control room sees</h4><ul>'+f.share.map(function(s){return '<li><span>'+s[0]+'</span>'+(STL[s[1]]||'')+'</li>';}).join('')+'</ul>';
+  if(window.gsap&&!reduce) gsap.from(card.children,{y:10,opacity:0,duration:.45,stagger:.035,ease:'power3.out'});
+}
+selectFed(0);
+if(fed){
+  var fedEl=$('#hwFedStage');
+  FED.forEach(function(f,i){ var el=document.createElement('span'); el.className='hw-flbl'+(i===0?' on':''); el.textContent=f.name; fedEl.appendChild(el); fedLbls.push(el); });
+  var hubL=document.createElement('span'); hubL.className='hw-flbl hub'; hubL.textContent='Control room'; fedEl.appendChild(hubL);
+  // labels: the hub's sits just under the hub; each site's sits under its node, and a label that would overlap one already
+  // placed moves up (or down) by its own height until it is clear
+  function fedPos(v,el,dy){ PV.copy(v).project(st2.cam); var w=el.offsetWidth||80, h=el.offsetHeight||24;
+    return { el:el, x:clamp((PV.x*.5+.5)*st2.w-w/2,8,st2.w-w-8), y:(-PV.y*.5+.5)*st2.h+dy, w:w, h:h }; }
+  function hits(a,b){ return a.x<b.x+b.w+4 && b.x<a.x+a.w+4 && a.y<b.y+b.h+4 && b.y<a.y+a.h+4; }
+  st2.post=function(){
+    LV.set(0,0,0); var hub=fedPos(LV,hubL,18), done=[hub];
+    fed.P.forEach(function(p,i){ LV.copy(p.g.position); LV.y=-.15; LV.applyAxisAngle(UP,fed.root.rotation.y);
+      var r=fedPos(LV,fedLbls[i],12), y0=r.y, dir=r.y<hub.y?-1:1, offs=[0,1,-1,2,-2,3];
+      for(var k=0;k<offs.length;k++){ r.y=y0+dir*offs[k]*(r.h+4); if(!done.some(function(b){ return hits(r,b); })) break; }
+      done.push(r); fedLbls[i].style.opacity=String(clamp(fed.st.k*2-.6)); });
+    done.forEach(function(r){ r.y=clamp(r.y,8,st2.h-r.h-8); r.el.style.transform='translate('+r.x.toFixed(1)+'px,'+r.y.toFixed(1)+'px)'; });
+    hubL.style.opacity=String(clamp(fed.st.k*2-.2));
+  };
+  var ray=new T.Raycaster(), mv=new T.Vector2();
+  fedEl.addEventListener('pointermove',function(e){ var b=fedEl.getBoundingClientRect(); mv.set((e.clientX-b.left)/b.width*2-1,-(e.clientY-b.top)/b.height*2+1); ray.setFromCamera(mv,st2.cam);
+    var hit=ray.intersectObjects(fed.discs,false); var i=hit.length?hit[0].object.userData.i:-1; fed.st.hover=i; fedEl.style.cursor=i>-1?'pointer':''; });
+  fedEl.addEventListener('pointerleave',function(){ fed.st.hover=-1; });
+  fedEl.addEventListener('click',function(){ if(fed.st.hover>-1) selectFed(fed.st.hover); });
+  if(hasGsap&&!reduce) ScrollTrigger.create({trigger:fedEl,start:'top 80%',once:true,onEnter:function(){ gsap.to(fed.st,{k:1,duration:.7,ease:'power2.out'}); }});
+  else fed.st.k=1;
+}
+
+
+/* ---------- distributed analytics diagram: video in, results up; scale out ---------- */
+var NS='http://www.w3.org/2000/svg', dist=$('#hwDist'), distNote=$('#hwDistNote'), addBtn=$('#hwDistAdd');
+function el(tag,attrs,parent,text){ var e=document.createElementNS(NS,tag); for(var k in attrs) e.setAttribute(k,attrs[k]); if(text!==undefined) e.textContent=text; (parent||dist).appendChild(e); return e; }
+var gBack=el('g',{}), gFlow=el('g',{}), gFront=el('g',{});
+var NODES=[], FLOWS=[], extra=false;
+function nodeBox(x,label,sub,source){
+  var g=el('g',{transform:'translate('+x+',0)'},gFront);
+  // cameras
+  for(var i=0;i<3;i++){ var cy=360+i*0; var cx=20+i*44; var c=el('g',{transform:'translate('+cx+',372)'},g);
+    el('rect',{x:-13,y:-8,width:26,height:15,rx:3,fill:'#fff',stroke:'#2673B5','stroke-width':1.4},c); el('circle',{cx:13,cy:0,r:4,fill:'#fff',stroke:'#2673B5','stroke-width':1.4},c); }
+  el('text',{x:64,y:408,'text-anchor':'middle',fill:'#5B6E82','font-family':'Geist Mono, monospace','font-size':12},g,source);
+  // node box
+  el('rect',{x:0,y:178,width:128,height:150,rx:12,fill:'#F2F7FC',stroke:'#2673B5','stroke-width':1.4},g);
+  el('text',{x:64,y:198,'text-anchor':'middle',fill:'#0A1A2B','font-family':'Onest, sans-serif','font-size':12.5,'font-weight':600},g,label);
+  el('text',{x:64,y:213,'text-anchor':'middle',fill:'#5B6E82','font-family':'Geist Mono, monospace','font-size':12},g,sub);
+  [['Decode once',224],['Shared frames',252],['Scenario models',280]].forEach(function(r,k){ el('rect',{x:6,y:r[1],width:116,height:22,rx:5,fill:'#fff',stroke:'#C5D4E2'},g); el('text',{x:64,y:r[1]+15,'text-anchor':'middle',fill:'#2B3E52','font-family':'Geist Mono, monospace','font-size':12},g,r[0]); });
+  el('text',{x:64,y:320,'text-anchor':'middle',fill:'#1B5A94','font-family':'Geist Mono, monospace','font-size':12},g,'plates · health');
+  return g;
+}
+function core(){
+  var g=el('g',{},gFront);
+  el('rect',{x:150,y:22,width:340,height:86,rx:14,fill:'#2673B5'},g);
+  el('text',{x:320,y:52,'text-anchor':'middle',fill:'#fff','font-family':'Onest, sans-serif','font-size':16,'font-weight':700},g,'Cygnus core');
+  el('text',{x:320,y:72,'text-anchor':'middle',fill:'#DCEBF7','font-family':'Geist Mono, monospace','font-size':12},g,'one record per camera · events & clips');
+  el('text',{x:320,y:90,'text-anchor':'middle',fill:'#DCEBF7','font-family':'Geist Mono, monospace','font-size':12},g,'plate journeys · incidents · reports');
+}
+function layout(){
+  gFront.innerHTML=''; gFlow.innerHTML=''; gBack.innerHTML=''; NODES=[]; FLOWS=[];
+  var xs=extra?[18,256,494]:[80,432], specs=[['Edge box','beside cameras','field cameras'],['Analytics server','control room','site cameras'],['Edge box','for new cameras','new cameras']];
+  core();
+  xs.forEach(function(x,i){ var s=specs[extra?i:i]; nodeBox(x,s[0],s[1],s[2]); NODES.push(x+64);
+    // video in (thick, lower) and results up (thin)
+    var vin=el('path',{d:'M'+(x+64)+' 362 L'+(x+64)+' 330',stroke:'#C5D4E2','stroke-width':6,'stroke-linecap':'round',fill:'none'},gBack);
+    var up=el('path',{fill:'none',stroke:'#2673B5','stroke-width':1.5,'stroke-dasharray':'4 5',opacity:.8},gBack);
+    FLOWS.push({x:x+64,up:up,dots:[0,1,2,3].map(function(q){ return {o:q/4,c:el('circle',{r:3.6,fill:'#2673B5'},gFlow)}; }),vdots:[0,1].map(function(q){ return {o:q/2,c:el('rect',{width:12,height:7,rx:1.5,fill:'#5A9FD4'},gFlow)}; })});
+  });
+  distNote.textContent=(extra?3:2)+' analytics nodes · results up, video stays put';
+  addBtn.textContent=extra?'− Remove the extra box':'+ Add an edge box'; addBtn.setAttribute('aria-pressed',String(extra));
+}
+layout();
+var DW={A:1}, distOn=false, distT=0;
+function upPath(f,A,t){ // wavy curve from node top to core bottom; settles straight-ish as A→0
+  var x0=f.x,y0=178,x1=320+(f.x-320)*.35,y1=108, d='';
+  for(var i=0;i<=24;i++){ var u=i/24, x=x0+(x1-x0)*u*u*(3-2*u), y=y0+(y1-y0)*u; d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1); }
+  return d;
+}
+function distFrame(now){
+  requestAnimationFrame(distFrame); if(!distOn||document.hidden) return;
+  distT=reduce?0:now/1000;
+  FLOWS.forEach(function(f){
+    // the curve never changes between layouts: build it and an arc-length table once, not every frame
+    if(!f.lut){ f.up.setAttribute('d',upPath(f,DW.A,distT)); var L=f.up.getTotalLength(); f.lut=[]; for(var q=0;q<=48;q++){ var pq=f.up.getPointAtLength(L*q/48); f.lut.push(pq.x,pq.y); } }
+    f.dots.forEach(function(d){ var s=reduce?d.o:(distT*.35+d.o)%1, u=s*48, q0=Math.min(47,u|0), fr=u-q0, pt={x:f.lut[q0*2]+(f.lut[q0*2+2]-f.lut[q0*2])*fr,y:f.lut[q0*2+1]+(f.lut[q0*2+3]-f.lut[q0*2+1])*fr}; d.c.setAttribute('cx',pt.x.toFixed(1)); d.c.setAttribute('cy',pt.y.toFixed(1)); d.c.setAttribute('opacity',Math.sin(s*Math.PI).toFixed(2)); });
+    f.vdots.forEach(function(d){ var s=reduce?d.o:(distT*.6+d.o)%1, y=362-32*s; d.c.setAttribute('x',f.x-6); d.c.setAttribute('y',y-3.5); d.c.setAttribute('opacity',(1-s).toFixed(2)); }); });
+}
+requestAnimationFrame(distFrame);
+new IntersectionObserver(function(es){ distOn=es[0].isIntersecting; }).observe(dist);
+if(hasGsap&&!reduce) ScrollTrigger.create({trigger:dist,start:'top 75%',once:true,onEnter:function(){ gsap.from('#hwDist g g',{y:18,opacity:0,duration:.45,stagger:.04,ease:'power3.out'}); }});
+else DW.A=.15;
+addBtn.addEventListener('click',function(){ extra=!extra; layout(); if(hasGsap&&!reduce){ gsap.from('#hwDist g g',{y:14,opacity:0,duration:.45,stagger:.04,ease:'power3.out'}); } });
+
+/* ---------- render loop ---------- */
+var last=performance.now();
+function loop(now){
+  requestAnimationFrame(loop);
+  var dt=Math.min(.05,(now-last)/1000); last=now; if(!reduce) clockT+=dt;
+  if(document.hidden) return;
+  if(st1&&st1.visible){ var p=stackP.v; var g=st1.rig, sep=ease(clamp((p-.12)/.48));
+    g.ty=.8+sep*3.1; g.dist=(mobile?30:23)+sep*(mobile?9:8); g.polar=.98+sep*.2; g.az=.75+p*.45;
+    stack.update(clockT,reduce?0:dt,p); rig(st1); st1.r.render(st1.scene,st1.cam); st1.post(); }
+  if(st2&&st2.visible){ var r2=st2.rig; r2.ty=.7; r2.polar=1.02; r2.az=.4;
+    // the camera distance is fitted to the box: the whole ring of sites (building tops included) stays inside with a margin
+    if(st2.fitKey!==st2.w+'x'+st2.h){ st2.fitKey=st2.w+'x'+st2.h; var R=(low?5.2:6.2)+1.8; /* the ring's final radius (sites animate outward, so their live positions start small) */
+      var lo=8, hi=80; for(var it=0;it<20;it++){ r2.dist=(lo+hi)/2; rig(st2); st2.cam.updateMatrixWorld(); var ok=true;
+        for(var k=0;k<24&&ok;k++){ var an=k/24*Math.PI*2; for(var yy=0;yy<=3.2&&ok;yy+=3.2){ PV.set(Math.cos(an)*R,yy,Math.sin(an)*R).project(st2.cam); if(PV.z>1||Math.abs(PV.x)>.86||Math.abs(PV.y)>.8) ok=false; } }
+        if(ok) hi=r2.dist; else lo=r2.dist; }
+      st2.fitDist=hi; }
+    r2.dist=st2.fitDist;
+    fed.update(clockT,dt); rig(st2); st2.r.render(st2.scene,st2.cam); st2.post(); }
+}
+if(glOK) requestAnimationFrame(loop);
+})();
+</script>
+<script>
+(function(){
+  var svg=document.getElementById('dmMap'); if(!svg) return;
+  var X=window.INFRAX||{}, reduce=!!X.reduce, NS='http://www.w3.org/2000/svg';
+  function el(t,a,p,txt){ var e=document.createElementNS(NS,t); for(var k in a) e.setAttribute(k,a[k]); if(txt!==undefined) e.textContent=txt; (p||svg).appendChild(e); return e; }
+  // land, river and roads (our own drawing)
+  el('rect',{x:0,y:0,width:640,height:420,rx:14,fill:'#F7FAFD'});
+  el('path',{d:'M-10 330 C 120 300, 210 360, 330 330 S 520 280, 660 310',fill:'none',stroke:'#DCEBF7','stroke-width':16,'stroke-linecap':'round'});
+  [[40,60,180,170],[380,40,560,120],[430,250,600,380],[60,250,200,370]].forEach(function(b){ el('rect',{x:b[0],y:b[1],width:b[2]-b[0],height:b[3]-b[1],rx:10,fill:'#EEF3F8'}); });
+  var road='M20 330 C 140 300, 220 210, 330 200 S 520 150, 625 70';
+  el('path',{d:road,fill:'none',stroke:'#C5D4E2','stroke-width':14,'stroke-linecap':'round'});
+  el('path',{d:road,fill:'none',stroke:'#fff','stroke-width':1.4,'stroke-dasharray':'8 9'});
+  el('path',{d:'M330 200 L 300 40 M330 200 L 420 400',fill:'none',stroke:'#DCE5EE','stroke-width':8,'stroke-linecap':'round'});
+  var path=el('path',{d:road,fill:'none',stroke:'none'}), L=path.getTotalLength();
+  var gLink=el('g',{}), gDev=el('g',{}), gTop=el('g',{});
+  // devices along the corridor: t = position along the road, side = offset
+  var KIND={cam:'Camera',gan:'Gantry',ecb:'Call box',vms:'Message sign'};
+  var DEV=[['cam',.05,-22],['ecb',.11,24],['gan',.18,0],['cam',.24,24],['vms',.3,-26],['cam',.37,-22],['ecb',.43,24],['cam',.5,22],['gan',.56,0],['cam',.62,-24],['vms',.68,26],['cam',.74,22],['ecb',.8,-24],['cam',.86,24],['gan',.91,0],['cam',.96,-22],['ecb',.99,22]];
+  var D=DEV.map(function(d,i){ var p=path.getPointAtLength(L*d[1]), q=path.getPointAtLength(Math.min(L,L*d[1]+2)), ang=Math.atan2(q.y-p.y,q.x-p.x);
+    var x=p.x-Math.sin(ang)*d[2], y=p.y+Math.cos(ang)*d[2];
+    var g=el('g',{transform:'translate('+x.toFixed(1)+','+y.toFixed(1)+')'},gDev);
+    var ring=el('circle',{r:10,fill:'none',stroke:'#D6453D','stroke-width':2,opacity:0},g);
+    var body;
+    if(d[0]==='cam'){ body=el('g',{},g); el('rect',{x:-7,y:-5,width:11,height:9,rx:2,fill:'#fff',stroke:'#2673B5','stroke-width':1.5},body); el('path',{d:'M4 -2 L 8 -4 V 4 L 4 2',fill:'#fff',stroke:'#2673B5','stroke-width':1.5,'stroke-linejoin':'round'},body); }
+    else if(d[0]==='gan'){ body=el('g',{},g); el('path',{d:'M-9 7 V -6 H 9 V 7 M-9 -3 H 9',fill:'none',stroke:'#2673B5','stroke-width':1.6,'stroke-linecap':'round'},body); }
+    else if(d[0]==='ecb'){ body=el('g',{},g); el('rect',{x:-4,y:-8,width:8,height:15,rx:1.6,fill:'#fff',stroke:'#2673B5','stroke-width':1.5},body); el('circle',{cx:0,cy:2,r:1.6,fill:'#2673B5'},body); }
+    else { body=el('g',{},g); el('rect',{x:-10,y:-6,width:20,height:9,rx:1.5,fill:'#0E3B66'},body); el('path',{d:'M-6 3 V 8 M6 3 V 8',stroke:'#2673B5','stroke-width':1.5},body); }
+    var dot=el('circle',{cx:9,cy:-8,r:3.6,fill:'#2673B5',stroke:'#fff','stroke-width':1.5},g);
+    return {kind:d[0],x:x,y:y,g:g,ring:ring,dot:dot,state:'on',id:(d[0]==='cam'?'CAM-':d[0]==='gan'?'GAN-':d[0]==='ecb'?'ECB-':'VMS-')+String(i+1).padStart(2,'0')};
+  });
+  // each camera is linked to the roadside asset it can see (the nearest non-camera device)
+  D.forEach(function(c){ if(c.kind!=='cam') return; var best=null,bd=1e9; D.forEach(function(o){ if(o.kind==='cam') return; var dd=Math.hypot(o.x-c.x,o.y-c.y); if(dd<bd){bd=dd;best=o;} });
+    if(best) el('line',{x1:c.x,y1:c.y,x2:best.x,y2:best.y,stroke:'#5A9FD4','stroke-width':1,'stroke-dasharray':'2 3',opacity:.6},gLink); });
+  // incident chip
+  var chip=el('g',{opacity:0},gTop), chipBg=el('rect',{x:0,y:0,width:206,height:40,rx:9,fill:'#0A1A2B'},chip);
+  var chipT1=el('text',{x:12,y:17,fill:'#fff','font-family':'Onest, sans-serif','font-size':12.5,'font-weight':600},chip,'');
+  var chipT2=el('text',{x:12,y:31,fill:'#BFD8F0','font-family':'Geist Mono, monospace','font-size':12},chip,'');
+  var onEl=document.getElementById('dmOn'), offEl=document.getElementById('dmOff'), alEl=document.getElementById('dmAl');
+  function paint(){ var n={on:0,off:0,al:0};
+    D.forEach(function(d){ n[d.state]++; d.dot.setAttribute('fill',d.state==='on'?'#2673B5':d.state==='al'?'#D6453D':'#fff'); d.dot.setAttribute('stroke',d.state==='off'?'#9AA9B9':'#fff'); d.g.style.opacity=d.state==='off'?'.55':'1'; });
+    onEl.textContent=n.on; offEl.textContent=n.off; alEl.textContent=n.al; }
+  function showChip(d,t1,t2){ chipT1.textContent=t1; chipT2.textContent=t2; var x=Math.min(640-216,Math.max(10,d.x-103)), y=d.y<120?d.y+22:d.y-62; chip.setAttribute('transform','translate('+x+','+y+')'); chip.setAttribute('opacity',1); }
+  // scripted faults: blinded camera, call box offline, moved camera, sign offline
+  var SEQ=[[5,'al','Camera blinded','Incident opened · '],[6,'off','Call box offline','Ticket raised · '],[11,'al','Camera moved','View changed · '],[10,'off','Sign not responding','Ticket raised · ']];
+  var k=0, ringT=0, cur=null;
+  function step(){ D.forEach(function(d){ d.state='on'; d.ring.setAttribute('opacity',0); }); var s=SEQ[k%SEQ.length], d=D[s[0]]; d.state=s[1]; cur=s[1]==='al'?d:null; paint(); showChip(d,s[2],s[3]+d.id); k++; }
+  paint();
+  if(reduce){ step(); return; }
+  var on=false; new IntersectionObserver(function(es){ on=es[0].isIntersecting; }).observe(svg);
+  var last=0; (function loop(t){ requestAnimationFrame(loop); if(!on||document.hidden) return; if(t-last>3600){ last=t; step(); }
+    if(cur){ ringT=(t/900)%1; cur.ring.setAttribute('r',(9+ringT*14).toFixed(1)); cur.ring.setAttribute('opacity',(1-ringT).toFixed(2)); } })(0);
+})();
+</script>
+<script>
+if(!window.INFRAX_ICONS){var s=document.createElement('script');s.src='assets/icons.js';document.body.appendChild(s);}
+else if(window.INFRAX&&INFRAX.icons){INFRAX.icons.render();}
+</script>
+</body></html>
