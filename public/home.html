@@ -409,13 +409,11 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   .tw-g .gcard{width:190px;padding:11px}
   .tw-g .gcard .tt{font-size:15px}
 }
-/* badge on the map, one-time hint after the first dive */
+/* badge on the map */
 .tw-g .tw-badge{position:absolute;top:16px;left:var(--twx);z-index:4;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.92);box-shadow:0 0 0 1px #DCE5EF;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#0A1A2B}
 .tw-g .tw-badge i{width:7px;height:7px;border-radius:50%;background:#2FB47C}
-.tw-g .tw-hint{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:6;padding:8px 14px;border-radius:10px;background:#0A1A2B;color:#fff;font:500 max(13px,calc(13*var(--s)))/1.3 var(--f-body);white-space:nowrap;opacity:0;transition:opacity .3s}
-.tw-g .tw-hint.on{opacity:1}
-@media (max-width:768px){.tw-g .tw-badge{left:16px;top:12px}.tw-g .tw-hint{white-space:normal;width:calc(100% - 32px);text-align:center;bottom:auto;top:52px}}
-@media (prefers-reduced-motion:reduce){.tw-g .gcard,.tw-g .live,.tw-g .live .bx,.tw-g .lyr button,.tw-g .pcard,.tw-g .tw-rp,.tw-g .tw-hint{transition:none}}
+@media (max-width:768px){.tw-g .tw-badge{left:16px;top:12px}}
+@media (prefers-reduced-motion:reduce){.tw-g .gcard,.tw-g .live,.tw-g .live .bx,.tw-g .lyr button,.tw-g .pcard,.tw-g .tw-rp{transition:none}}
 @media (max-width:768px){.hm-ops{flex-wrap:wrap}.hm-ops .link-arrow{margin-left:0}}
 @media (prefers-reduced-motion:reduce){.ov-box,.ov-scan,.ov-pin::after,.ov-ring,.ov-cyc{animation:none!important}.ov-box{opacity:1}}
 /* lite (phones, touch): decorative overlay loops and the agent pulse hold still */
@@ -576,7 +574,6 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       <div class="pcard" id="hmTwPcard" role="dialog" aria-label="Device"><div class="r1"><i></i><span></span></div><div class="tt"></div><button type="button" class="go">Open street twin <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       <div class="chrome" aria-hidden="true"><span>+</span><span>&minus;</span></div>
       <div class="tw-badge" aria-hidden="true"><i></i>Digital Twin &middot; Live</div>
-      <div class="tw-hint" id="hmTwHint" role="status" hidden>You're now inside the digital twin.</div>
       <div class="scl" aria-hidden="true"><i></i>100 m</div>
       <div class="gcard"><div class="r1"><i></i>Online &middot; PTZ</div><div class="tt">CAM-07 &middot; km 42.6</div><button type="button" class="go">Open street twin <svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       <div class="live" id="hmTwLive" aria-hidden="true"><div class="hd"><b>LIVE</b>CAM-07 &middot; km 42.6<em id="hmTwClk">10:42:18</em></div><div class="fr"><img src="img/real/tiles/w02.webp" alt="" width="320" height="200" loading="lazy" decoding="async"><div class="bx" style="left:68.4%;top:12.6%;width:7.6%;height:16.4%"><span>truck .91</span></div></div></div>
@@ -1949,16 +1946,8 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       try { var c = document.createElement('canvas'), g = c.getContext('webgl') || c.getContext('experimental-webgl'); if (!g) return false;
         var x = g.getExtension('WEBGL_lose_context'); if (x) x.loseContext(); return true; } catch (e) { return false; }
     }
-    var hint = document.getElementById('hmTwHint'), hinted = false;
-    // the first dive into the street twin shows a one-time hint (once per session)
-    function firstDive() {
-      if (hinted || !hint) return; hinted = true;
-      try { if (sessionStorage.twHint) return; sessionStorage.twHint = 1; } catch (e) {}
-      hint.hidden = false; requestAnimationFrame(function () { hint.classList.add('on'); });
-      setTimeout(function () { hint.classList.remove('on'); }, 3500);
-    }
     function setStep(s, pr) {
-      if (s !== step) { step = s; S.liveOv = null; if (s === 1) firstDive();
+      if (s !== step) { step = s; S.liveOv = null;
         lyr.forEach(function (b, i) { var o = i === s; b.classList.toggle('on', o); if (o) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); }); }
       lyrB[s].style.transform = 'scaleX(' + clamp(pr, 0, 1).toFixed(3) + ')';
     }
