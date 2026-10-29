@@ -16,7 +16,7 @@
       body: 'Every entry and exit updates the count for each level of the parking deck. Cameras at the basement ramp watch the cars going down to P2.',
       rows: [['Level 1', '12 free'], ['Level 2', '27 free'], ['Level 3', '41 free'], ['Ramp', 'P2 · 2 cameras']],
       live: ['Parking occupancy', 'ANPR', 'Live video'],
-      photo: 'img/campus-sm.jpg', photoCaption: 'Illustrative' },
+      photo: 'img/campus-parking-sm.jpg', photoCaption: 'Illustrative' },
     { id: 'console', product: 'Cygnus', productSlug: 'cygnus', short: 'One console',
       title: 'One console for every building',
       body: 'Gates, blocks, parking and walkways on one 3×3 video wall and one campus map. Recording runs 24×7 with timeline playback, and PTZ cameras move from the tile.',
@@ -28,13 +28,13 @@
       body: 'Cygnus flags a camera the moment it is blinded, moved or drops its stream, and opens a maintenance ticket, so the gap is fixed before anyone needs that footage.',
       rows: [['Camera', 'Basement ramp · cam 04'], ['Status', 'Stream lost'], ['Next step', 'Maintenance ticket']],
       live: ['Camera tamper & health'],
-      photo: 'img/campus-sm.jpg', photoCaption: 'Illustrative' },
+      photo: 'img/campus-ramp-sm.jpg', photoCaption: 'Illustrative' },
     { id: 'people', product: 'Cygnus', productSlug: 'cygnus', short: 'People count',
       title: 'People in and out at every entrance',
       body: 'A camera over the Block A entrance counts people crossing the line in each direction, so facilities see footfall by entrance and by hour.',
       rows: [['Entrance', 'Block A · main doors'], ['In today', '1,284'], ['Out today', '1,102'], ['Busiest', '09:00–10:00']],
       live: ['People counting', 'Live video'],
-      photo: 'img/campus-sm.jpg', photoCaption: 'Illustrative' }
+      photo: 'img/campus-entrance-sm.jpg', photoCaption: 'Illustrative' }
   ];
 
   function create(host, ctx) {

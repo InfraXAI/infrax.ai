@@ -25,7 +25,7 @@
       { id: 'journey', product: 'Cygnus', productSlug: 'cygnus', short: 'Gate to dock', title: 'Gate to dock to exit, on one timeline',
         body: 'Search a plate and Cygnus lines up every camera that saw it: the gate, the dock bay it reversed into and the exit, each with its clip.',
         rows: [['Search', 'XX 00 AB 1234'], ['Gate 1', '08:42'], ['Dock 4', '08:51'], ['Exit', '10:07']],
-        live: ['Plate search & journeys'], photo: 'img/factory-gate-sm.jpg', photoCaption: 'Illustrative' },
+        live: ['Plate search & journeys'], photo: 'img/warehouse-dock-sm.jpg', photoCaption: 'Illustrative' },
       { id: 'wall', product: 'Cygnus', productSlug: 'cygnus', short: 'Video wall', title: 'Docks and aisles on one wall',
         body: 'Every dock, yard and aisle camera on one 3×3 wall, recorded around the clock. Scrub the timeline to any moment and export the clip.',
         rows: [['Cameras', 'Gate · docks · aisles'], ['Recording', '24×7'], ['Playback', 'Timeline · clip export']],
@@ -33,11 +33,11 @@
       { id: 'health', product: 'Cygnus', productSlug: 'cygnus', short: 'Camera health', title: 'A blinded camera is flagged at once',
         body: 'When an aisle camera is covered, knocked off its view or drops its stream, Cygnus raises a tamper alert so it is fixed before anyone needs the footage.',
         rows: [['Camera', 'Aisle 3 · CAM 12'], ['Status', 'View blocked'], ['Raised', '14:06 IST']],
-        live: ['Camera tamper & health'], photo: 'img/real/tiles/t9-warehouse.jpg', photoCaption: 'Illustrative' },
+        live: ['Camera tamper & health'], photo: 'img/warehouse-aisle-sm.jpg', photoCaption: 'Illustrative' },
       { id: 'docks', product: 'Cygnus', productSlug: 'cygnus', short: 'Dock dwell', title: 'Every dock, busy or free, with its dwell time',
         body: 'Cygnus counts the trucks at each bay and times how long each one stays, so the yard team sees which docks are free and which truck has waited too long.',
         rows: [['Docks busy', '4 of 8'], ['Longest dwell', 'Dock 6 · 1 h 18 m'], ['Average dwell', '39 min']],
-        live: ['Dock occupancy & dwell', 'Vehicle detection & classification'], photo: 'img/factory-gate-sm.jpg', photoCaption: 'Illustrative' }
+        live: ['Dock occupancy & dwell', 'Vehicle detection & classification'], photo: 'img/warehouse-bays-sm.jpg', photoCaption: 'Illustrative' }
     ],
     create: function (host, ctx) { return build(host, ctx); }
   };
@@ -844,7 +844,7 @@
     // 3×3 wall: two tiles use masked feed images, the rest are drawn (illustrative) views
     var TILE_DEF = [['img/real/tiles/t9-warehouse.jpg', 'GATE 1 · LIVE', 'gate'], ['dock', 'DOCK 4 · LIVE'], ['dock', 'DOCK 7 · LIVE'],
       ['aisle', 'AISLE 3 · CAM 12'], ['aisle', 'AISLE 5 · LIVE'], ['yard', 'YARD · LIVE'],
-      ['dock', 'DOCK 2 · LIVE'], ['img/real/tiles/t8-port.jpg', 'YARD GATE B · LIVE', 'yard'], ['aisle', 'AISLE 8 · LIVE']];
+      ['dock', 'DOCK 2 · LIVE'], ['img/warehouse-bays-sm.jpg', 'YARD GATE B · LIVE', 'yard'], ['aisle', 'AISLE 8 · LIVE']];
     var TILES = TILE_DEF.map(function (d, i) {
       var tex = d.length === 3 ? imgTile(d[0], d[1], d[2]) : tileTex(d[0], d[1]), m = new T.Mesh(new T.PlaneGeometry(3.9, 2.3), B(0xffffff, { map: tex }));
       m.geometry.dispose(); m.geometry = new T.PlaneGeometry(SW, SH2);

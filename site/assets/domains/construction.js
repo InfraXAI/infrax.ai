@@ -34,11 +34,11 @@
       { id: 'health', product: 'Cygnus', productSlug: 'cygnus', short: 'Camera health', title: 'Dust on the crane camera, flagged',
         body: 'Dust from the site settles on the lens of the camera on the crane jib. As the picture fades, Cygnus raises a tamper alert so someone cleans it before the next lift needs watching.',
         rows: [['Camera', 'Crane T1 · CAM 04'], ['Status', 'Lens blocked · dust'], ['Raised', '13:20 IST']],
-        live: ['Camera tamper & health'], photo: 'img/construction-site-sm.jpg', photoCaption: 'Illustrative' },
+        live: ['Camera tamper & health'], photo: 'img/construction-crane-cam-sm.jpg', photoCaption: 'Illustrative' },
       { id: 'safety', product: 'Cygnus', productSlug: 'cygnus', short: 'Swing radius', title: 'Someone inside the swing radius',
         body: 'A zone is drawn around the excavator’s swing radius. When a person walks into it while the machine works, Cygnus raises a zone-intrusion alert with the clip.',
         rows: [['Zone', 'Excavator EX-2 · swing radius'], ['Event', 'Person in zone'], ['Raised', '15:06 IST']],
-        live: ['Zone intrusion'], photo: 'img/construction-aerial-sm.jpg', photoCaption: 'Illustrative' }
+        live: ['Zone intrusion'], photo: 'img/construction-lift-sm.jpg', photoCaption: 'Illustrative' }
     ],
     create: function (host, ctx) { return build(host, ctx); }
   };

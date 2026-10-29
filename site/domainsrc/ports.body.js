@@ -17,7 +17,7 @@
       body: 'Search a plate and Cygnus shows every camera that read it, in order: the gate lane, the yard block, the berth.',
       rows: [['Plate', 'XX 00 AB 1234'], ['Seen at', 'Gate 3 → Block C → Berth 2'], ['Time in port', '31 min']],
       live: ['Plate search & journeys'],
-      photo: 'img/port-sm.jpg', photoCaption: 'Illustrative' },
+      photo: 'img/port-road-sm.jpg', photoCaption: 'Illustrative' },
     { id: 'wall', product: 'Cygnus', productSlug: 'cygnus', short: 'Yard wall',
       title: 'Yard and quay on one 3×3 wall',
       body: 'Gates, yard blocks, the quay and the berths on one wall in the gate operations room. Every camera records 24×7, and any moment plays back from the timeline.',
@@ -29,13 +29,13 @@
       body: 'Remote berth cameras sit on the same wall. When one is blinded, moved or goes offline, Cygnus flags it at once and raises a maintenance ticket.',
       rows: [['Camera', 'Berth 2 · quay cam'], ['Status', 'Stream lost'], ['Next step', 'Maintenance ticket']],
       live: ['Camera tamper & health'],
-      photo: 'img/port-sm.jpg', photoCaption: 'Illustrative' },
+      photo: 'img/port-berth-sm.jpg', photoCaption: 'Illustrative' },
     { id: 'queue', product: 'Access and parking', productSlug: 'access-parking', short: 'Gate queue',
       title: 'How long trucks wait, lane by lane',
       body: 'Trucks queued outside each gate lane are counted with their waiting time, so the gate team opens another lane before the line reaches the road.',
       rows: [['Lane 1', '3 trucks · 6 min'], ['Lane 2', '2 trucks · 4 min'], ['Lane 3', '1 truck · 1 min'], ['Lane 4', '2 trucks · 3 min']],
       live: ['Queue length', 'Dwell time', 'ANPR'],
-      photo: 'img/port-sm.jpg', photoCaption: 'Illustrative' }
+      photo: 'img/port-queue-sm.jpg', photoCaption: 'Illustrative' }
   ];
 
   function create(host, ctx) {

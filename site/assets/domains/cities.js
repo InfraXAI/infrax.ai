@@ -17,7 +17,7 @@
     { id: 'journey', short: 'Journeys',  product: 'Cygnus', productSlug: 'cygnus', title: 'Where has this vehicle been?',
       body: 'Search a plate and Cygnus lists every camera that read it, with the time of each read, in order.',
       rows: [['Search', 'XX 00 CD 5678'], ['Reads', 'J-02 09:12 · J-04 09:18 · J-07 09:31']],
-      live: ['Plate search & journeys'], photo: 'img/city-junction-sm.jpg', photoCaption: 'Illustrative' },
+      live: ['Plate search & journeys'], photo: 'img/city-arterial-sm.jpg', photoCaption: 'Illustrative' },
     { id: 'health', short: 'Camera health',  product: 'Cygnus', productSlug: 'cygnus', title: 'A blinded camera, caught at once.',
       body: 'Cygnus warns the moment a camera is blinded, moved or drops its stream, so a blank feed never sits unnoticed on the wall.',
       rows: [['Camera', 'J-05 · south-west corner'], ['State', 'Blinded · 09:44', 'bad'], ['Next', 'Field team informed']],
@@ -25,7 +25,7 @@
     { id: 'approve', short: 'Central Plexus',  product: 'Central Plexus (ATMS)', productSlug: 'central-plexus', title: 'Central Plexus acts on it.',
       body: 'The alert arrives with its clip and frames; the incident is opened and the patrol informed, all on record.',
       rows: [['Incident', '#2219 · watchlist', 'ok'], ['Evidence', 'Clip + frames · on record'], ['Patrol', 'Informed · 09:47', 'ok']], live: ['Watchlist alerts', 'Plate search & journeys'],
-      photo: 'img/control-room-sm.jpg', photoCaption: 'Illustrative' }
+      photo: 'img/city-ops-sm.jpg', photoCaption: 'Illustrative' }
   ];
 
   function create(host, ctx) {
