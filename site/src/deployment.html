@@ -1,0 +1,819 @@
+<!--META title="On-Premise Deployment | InfraX AI" desc="Every InfraX AI product installs on servers you own: central, edge or hybrid, on the IP cameras you already have." page="deployment" libs="gsap"-->
+<style>
+/* Deployment page. Layout: hero copy row, then one full-width topology stage with a deployment-size switcher
+   and a three-column panel; then camera registry, the gantry box offline story and a short security row. Prefix: .dp- */
+.dp-roadmap{display:inline-flex;align-items:center;gap:calc(8*var(--s));margin:calc(14*var(--s)) 0 0;font:500 var(--fs-small)/1.45 var(--f-mono);color:var(--muted);letter-spacing:.02em}
+.dp-roadmap::before{content:"";flex:none;width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;border:1.5px dashed var(--muted)}
+.dp-hero{padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) 0;overflow-x:clip}
+.dp-head{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(calc(24*var(--s)),5vw,calc(72*var(--s)));align-items:end}
+.dp-head .lead{margin:0}
+.dp-hero .h-1{font-size:var(--fs-hero);line-height:var(--lh-hero);letter-spacing:var(--ls-hero)}
+.dp-tabs{display:flex;width:fit-content;max-width:100%;margin-inline:auto;gap:calc(4*var(--s));padding:calc(5*var(--s));margin-top:var(--gap-c);border:1px solid var(--line);border-radius:calc(999*var(--s));background:rgba(255,255,255,.9);position:relative}
+.dp-tab{position:relative;z-index:1;height:max(44px,calc(44*var(--s)));padding:0 calc(22*var(--s));border:0;background:none;border-radius:calc(999*var(--s));font:600 calc(15*var(--s))/1 var(--f-body);color:var(--ink-2);cursor:pointer;display:inline-flex;align-items:center;gap:calc(8*var(--s));transition:color .3s}
+.dp-tab svg{width:calc(18*var(--s));height:calc(18*var(--s))}
+.dp-tab[aria-selected="true"]{color:#fff}
+.dp-pill{position:absolute;z-index:0;top:calc(5*var(--s));bottom:calc(5*var(--s));left:0;border-radius:calc(999*var(--s));background:var(--blue);transition:transform .55s var(--ease)}
+.dp-auto{display:block;text-align:center;white-space:nowrap;margin-block:10px;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);letter-spacing:.04em;vertical-align:middle}
+.dp-stage{position:relative;margin-top:calc(18*var(--s));border:1px solid var(--line);border-radius:calc(22*var(--s));background:rgba(255,255,255,.78);overflow:hidden}
+.dp-svg{position:relative;display:block;width:100%;height:auto;max-height:min(66vh,620px);max-height:min(66svh,620px)}
+.dp-zone rect{fill:rgba(220,235,247,.38);stroke:var(--line-2);stroke-width:1.2}
+.dp-zone.dash rect{fill:none;stroke:var(--blue-soft);stroke-dasharray:6 6}
+.dp-zone text{font:500 13px var(--f-mono);fill:var(--blue-mid);letter-spacing:.04em;text-transform:uppercase}
+.dp-link{fill:none;stroke:var(--line-2);stroke-width:1.6}
+.dp-link.ev{stroke:rgba(38,115,181,.55)}
+.dp-node text{text-anchor:middle}
+.dp-l1{font:600 15px var(--f-body);fill:var(--ink)}
+.dp-l2{font:400 14px var(--f-mono);fill:var(--muted)}
+.dp-vert .dp-l1{font-size:23px}
+.dp-vert .dp-l2{display:none}
+.dp-vert .dp-zone text{font-size:19px}
+.led{animation:dpled 1.6s infinite}
+.led.l2{animation-delay:.4s}.led.l3{animation-delay:.8s}
+@keyframes dpled{0%,100%{opacity:1}50%{opacity:.25}}
+.dp-legend{position:relative;display:flex;justify-content:flex-end;padding:0 calc(20*var(--s)) calc(14*var(--s));gap:calc(16*var(--s));font:500 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--muted)}
+.dp-legend i{display:inline-block;width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;margin-right:calc(6*var(--s));vertical-align:middle}
+.dp-panel{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.3fr) minmax(0,1fr);gap:clamp(calc(20*var(--s)),3vw,calc(44*var(--s)));padding:calc(30*var(--s)) calc(4*var(--s)) 0}
+.dp-panel h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+.dp-panel h4{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 calc(12*var(--s))}
+.dp-chips{display:flex;flex-wrap:wrap;gap:calc(8*var(--s));margin-top:calc(18*var(--s))}
+.dp-chip{display:inline-flex;align-items:center;gap:calc(8*var(--s));min-height:calc(36*var(--s));padding:0 calc(14*var(--s));border:1px solid var(--line-2);border-radius:calc(999*var(--s));font:500 max(12px,calc(13.5*var(--s))) var(--f-body);text-decoration:none;color:var(--ink-2);background:#fff;transition:border-color .2s,color .2s}
+.dp-chip:hover{border-color:var(--blue);color:var(--blue)}
+.dp-chip::before{content:"";width:calc(6*var(--s));height:calc(6*var(--s));border-radius:50%;background:var(--blue)}
+.dp-where{margin:0;display:grid;gap:0}
+.dp-where div{display:grid;grid-template-columns:calc(120*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));padding:calc(11*var(--s)) 0;border-top:1px solid var(--line)}
+.dp-where div:last-child{border-bottom:1px solid var(--line)}
+.dp-where dt{font:500 max(12px,calc(12*var(--s)))/1.5 var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.dp-where dd{margin:0;font-size:calc(15*var(--s));color:var(--ink)}
+.dp-needs{list-style:none;margin:0;padding:0;display:grid;gap:calc(10*var(--s))}
+.dp-needs li{display:grid;grid-template-columns:calc(22*var(--s)) minmax(0,1fr);gap:calc(10*var(--s));font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+.dp-needs svg{width:calc(18*var(--s));height:calc(18*var(--s));color:var(--blue);margin-top:calc(3*var(--s))}
+
+/* cameras */
+.dp-cams{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:clamp(calc(28*var(--s)),5vw,calc(72*var(--s)));align-items:start;position:relative}
+.dp-tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(16*var(--s));margin-top:calc(40*var(--s))}
+.dp-tray li{list-style:none;border:1px solid var(--line);border-radius:calc(14*var(--s));background:#fff;padding:calc(12*var(--s)) calc(8*var(--s)) calc(10*var(--s));text-align:center;font:500 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--muted);position:relative;transition:opacity .4s}
+.dp-tray svg{width:calc(64*var(--s));height:calc(48*var(--s));display:block;margin:0 auto calc(6*var(--s))}
+.dp-tray li.done{opacity:.5}
+.dp-tray li.done::after{content:"✓";position:absolute;top:calc(6*var(--s));right:calc(9*var(--s));color:var(--blue);font-weight:700}
+.dp-tray ul{margin:0;padding:0;display:contents}
+.dp-proto{display:flex;flex-wrap:wrap;gap:calc(8*var(--s));margin-top:calc(22*var(--s))}
+.dp-proto span{font:500 max(12px,calc(12*var(--s))) var(--f-mono);padding:calc(6*var(--s)) calc(10*var(--s));border-radius:calc(6*var(--s));background:var(--mist);color:var(--blue-deep)}
+.dp-reg{border:1px solid var(--line);border-radius:calc(18*var(--s));background:#fff;overflow:hidden;box-shadow:0 calc(30*var(--s)) calc(60*var(--s)) calc(-48*var(--s)) rgba(10,26,43,.5)}
+.dp-reg-top{display:flex;justify-content:space-between;align-items:center;padding:calc(14*var(--s)) calc(18*var(--s));border-bottom:1px solid var(--line);font:500 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--muted)}
+.dp-reg-top b{font:600 max(12px,calc(14*var(--s))) var(--f-body);color:var(--ink)}
+.dp-reg-row{display:grid;grid-template-columns:calc(52*var(--s)) minmax(0,1.3fr) minmax(0,1fr) auto;gap:calc(12*var(--s));align-items:center;padding:calc(10*var(--s)) calc(18*var(--s));border-bottom:1px solid var(--line)}
+.dp-reg-row:last-child{border-bottom:0}
+.dp-reg-ic{width:calc(48*var(--s));height:calc(36*var(--s))}
+.dp-reg-id{font:500 max(12px,calc(13*var(--s))) var(--f-mono);color:var(--ink)}
+.dp-reg-id small{display:block;font:400 max(12px,calc(12.5*var(--s))) var(--f-body);color:var(--muted)}
+.dp-reg-pr{font:400 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--ink-2)}
+.dp-on{position:relative;display:inline-flex;align-items:center;gap:calc(6*var(--s));font:500 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--blue-mid);white-space:nowrap}
+.dp-on::before{content:"";width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;background:var(--blue)}
+/* ping ring: scale + opacity only (no box-shadow repaint) */
+.dp-on::after{content:"";position:absolute;left:0;top:50%;width:calc(8*var(--s));height:calc(8*var(--s));margin-top:calc(-4*var(--s));border-radius:50%;background:rgba(38,115,181,.45);pointer-events:none;animation:dpping 2s infinite}
+.dp-on.off{color:var(--alert)}
+.dp-on.off::before{background:var(--alert)}
+.dp-on.off::after{display:none}
+@keyframes dpping{0%{transform:scale(1);opacity:1}80%,100%{transform:scale(2.75);opacity:0}}
+@media (max-width:768px),(pointer:coarse){.dp-on::after{display:none}.led{animation:none}}
+
+/* edge */
+.dp-edge{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:clamp(calc(28*var(--s)),5vw,calc(72*var(--s)));align-items:center}
+.dp-photo{position:relative;border-radius:calc(20*var(--s));overflow:hidden;margin:0}
+.dp-photo img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.dp-hot{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:5px solid transparent;background:linear-gradient(var(--blue),var(--blue)) padding-box,rgba(255,255,255,.85) border-box;color:#fff;font:600 max(12px,calc(13*var(--s))) var(--f-mono);cursor:pointer;display:grid;place-items:center}
+.dp-hot::before,.dp-hot::after{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid #fff;animation:dpripple 2.4s infinite;pointer-events:none}
+.dp-hot::after{animation-delay:1.2s}
+.dp-hot.on{background:linear-gradient(var(--blue-deep),var(--blue-deep)) padding-box,rgba(255,255,255,.85) border-box}
+@keyframes dpripple{0%{transform:scale(1);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+.dp-notes{list-style:none;margin:calc(32*var(--s)) 0 0;padding:0;display:grid;gap:calc(10*var(--s))}
+.dp-notes li{display:grid;grid-template-columns:calc(30*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));padding:calc(12*var(--s));border-radius:calc(12*var(--s));cursor:default;transition:background .25s}
+.dp-notes li.on{background:var(--mist)}
+.dp-notes b{display:grid;place-items:center;width:calc(26*var(--s));height:calc(26*var(--s));border-radius:50%;background:var(--wash);color:var(--blue-deep);font:600 max(12px,calc(12*var(--s))) var(--f-mono)}
+.dp-notes li.on b{background:var(--blue);color:#fff}
+.dp-notes p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+.dp-notes strong{color:var(--ink);font-weight:600}
+.dp-up{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:calc(14*var(--s));margin-top:calc(24*var(--s))}
+.dp-up figure{margin:0;border:1px solid var(--line);border-radius:calc(14*var(--s));padding:calc(12*var(--s)) calc(14*var(--s)) calc(10*var(--s));background:#fff}
+.dp-up figcaption{font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted);margin-top:calc(6*var(--s))}
+.dp-up figcaption b{color:var(--ink);font-weight:500}
+
+/* security row */
+.dp-sec{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px var(--gap-g);margin-top:var(--gap-c)}
+/* all five in one row on desktop; three per row on small laptops (phones/tablets below keep their own rules) */
+@media (max-width:1024px){.dp-sec{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.dp-sec div{border-top:2px solid var(--ink);padding-top:16px}
+.dp-sec svg{width:28px;height:28px;color:var(--blue)}
+.dp-sec h3{font:600 var(--fs-h3)/var(--lh-h3) var(--f-display);margin:10px 0 6px}
+.dp-sec p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+
+.dp-tab-st{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(4*var(--s));border:1px solid currentColor;opacity:.85}
+.dp-legend i.ai{background:none;border-radius:calc(4*var(--s));width:calc(14*var(--s));height:calc(10*var(--s));border:1.5px solid #2673B5;box-shadow:inset 0 0 0 2px #fff,inset 0 0 0 calc(6*var(--s)) #2673B5}
+.dp-ai rect{fill:#2673B5}
+.dp-ai text{font:600 12.5px var(--f-mono);fill:#fff;letter-spacing:.06em;text-anchor:middle}
+.dp-ai .ring{fill:none;stroke:#2673B5;stroke-width:1.5}
+.dp-vert .dp-ai text{font-size:18px}
+.dp-found{display:flex;flex-wrap:wrap;align-items:center;gap:calc(10*var(--s)) calc(24*var(--s));margin-top:calc(14*var(--s));padding:calc(14*var(--s)) calc(18*var(--s));border:1px solid var(--line);border-radius:calc(14*var(--s));background:rgba(255,255,255,.9)}
+.dp-found .lbl{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+.dp-found .it{display:inline-flex;align-items:center;gap:calc(8*var(--s));font:500 max(12px,calc(14*var(--s)))/1.3 var(--f-body);color:var(--ink)}
+.dp-found svg{width:calc(20*var(--s));height:calc(20*var(--s));color:var(--blue)}
+.dp-panel h3 .dp-req{vertical-align:middle;margin-left:calc(10*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);white-space:nowrap}
+/* registry actions: ONVIF discovery + CSV import */
+.dp-reg-act{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--line)}
+.dp-act{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:calc(34*var(--s)) minmax(0,1fr);gap:calc(10*var(--s));align-items:center;padding:calc(12*var(--s)) calc(18*var(--s));min-height:calc(58*var(--s))}
+.dp-act+.dp-act{border-left:1px solid var(--line)}
+.dp-act:hover{background:var(--mist)}
+.dp-act:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.dp-act svg{width:calc(34*var(--s));height:calc(34*var(--s))}
+.dp-act b{display:block;font:600 max(12px,calc(13.5*var(--s)))/1.2 var(--f-body);color:var(--ink)}
+.dp-act small{display:block;font:500 max(12px,calc(12*var(--s)))/1.35 var(--f-mono);color:var(--muted);margin-top:calc(3*var(--s))}
+.dp-act .pb{display:block;height:calc(3*var(--s));background:var(--line);border-radius:2px;margin-top:calc(6*var(--s));overflow:hidden}
+.dp-act .pb i{display:block;height:100%;width:100%;background:var(--blue);transform:scaleX(0);transform-origin:0 50%}
+.dp-act .sweep{transform-origin:calc(17*var(--s)) calc(17*var(--s))}
+.dp-reg-row.new{background:linear-gradient(90deg,rgba(38,115,181,.08),transparent 70%)}
+@media (max-width:1024px){
+  .dp-head,.dp-panel,.dp-cams,.dp-edge{grid-template-columns:minmax(0,1fr)}
+  .dp-reg-act{grid-template-columns:minmax(0,1fr)}
+  .dp-act+.dp-act{border-left:0;border-top:1px solid var(--line)}
+  .dp-legend{justify-content:flex-start;padding:0 calc(16*var(--s)) calc(14*var(--s));flex-wrap:wrap}
+}
+@media (max-width:768px){
+  .dp-sec{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dp-tabs{display:flex;width:100%;flex-wrap:wrap;border-radius:calc(18*var(--s))}
+  .dp-tab{flex:1 1 45%;justify-content:center;padding:0 calc(8*var(--s));font-size:calc(14*var(--s))}
+  .dp-tab svg{display:none}
+  .dp-pill{display:none}
+  .dp-tab[aria-selected="true"]{background:var(--blue)}
+  .dp-auto{display:block;white-space:normal;margin:calc(10*var(--s)) 0 0}
+}
+@media (max-width:480px){
+  .dp-where div{grid-template-columns:calc(96*var(--s)) minmax(0,1fr)}
+  .dp-reg-row{grid-template-columns:calc(44*var(--s)) minmax(0,1fr) auto;padding:calc(10*var(--s)) calc(12*var(--s))}
+  .dp-reg-pr{display:none}
+  .dp-sec{grid-template-columns:minmax(0,1fr)}
+  .dp-hot{font-size:12px}
+  .dp-up{grid-template-columns:minmax(0,1fr)}
+}
+
+/* camera brand marquee: two rows in opposite directions, pause on hover/focus, static list for reduced motion */
+.dp-mq{margin-top:clamp(calc(36*var(--s)),5vw,calc(56*var(--s)))}
+.dp-mq-h{font:500 max(12px,calc(12.5*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 calc(14*var(--s))}
+.dp-mq-row{display:flex;overflow:hidden;gap:calc(10*var(--s));padding-block:calc(5*var(--s));-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.dp-mq-track{list-style:none;margin:0;padding:0;display:flex;gap:calc(10*var(--s));flex:none;animation:dp-mq 38s linear infinite}
+.dp-mq-row.r2 .dp-mq-track{animation-direction:reverse;animation-duration:32s}
+.dp-mq-row:hover .dp-mq-track,.dp-mq:focus-within .dp-mq-track{animation-play-state:paused}
+.dp-mq-track li{flex:none;display:inline-flex;align-items:center;min-height:max(44px,calc(44*var(--s)));padding:0 calc(18*var(--s));border:1px solid var(--line);border-radius:calc(10*var(--s));background:#fff;font:650 calc(15.5*var(--s))/1 var(--f-display);letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
+/* brand logos sit in the same white tiles, at one height; white artwork is shown dark */
+.dp-mq-track li.lg{justify-content:center;width:calc(168*var(--s));padding:0 calc(16*var(--s));height:calc(60*var(--s))}
+.dp-mq-track li.lg img{display:block;width:100%;height:calc(34*var(--s));object-fit:contain}
+/* stacked logos (mark over a small wordmark) get a little more height so they read at the same weight */
+.dp-mq-track li.lg img[src*="hanwha"],.dp-mq-track li.lg img[src*="uniview"],.dp-mq-track li.lg img[src*="godrej"]{height:calc(44*var(--s))}
+.dp-mq-track li.lg img.dk{filter:brightness(0) opacity(.85)}
+.dp-mq-track li.grp{border:0;background:none;padding:0 calc(6*var(--s)) 0 calc(14*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+@keyframes dp-mq{from{transform:translateX(0)}to{transform:translateX(calc(-100% - calc(10*var(--s))))}}
+.dp-mq-static{display:none;list-style:none;margin:0;padding:0}
+.dp-mq-static li{padding:calc(8*var(--s)) 0;border-bottom:1px solid var(--line);font-size:calc(15*var(--s));color:var(--ink-2)}
+.dp-mq-static b{display:block;font:500 max(12px,calc(12*var(--s)))/1.6 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+.dp-mq-note{margin:calc(14*var(--s)) 0 0;max-width:62em;font-size:var(--fs-small);line-height:1.5;color:var(--muted)}
+@media (max-width:768px),(pointer:coarse){.dp-mq-row.r2{display:none}.dp-mq-track{animation-duration:46s}}
+@media (prefers-reduced-motion:reduce){.dp-mq-row{display:none}.dp-mq-static{display:block}}
+/* touch: 44px tap targets */
+@media (pointer:coarse),(max-width:1024px){.dp-chip{min-height:44px}}
+/* v17 calmer visuals */
+@media (min-width:480.02px){.dp-stage{max-width:1040px;margin-inline:auto}.dp-stage svg,.dp-stage canvas{max-height:min(55vh,520px);max-height:min(55svh,520px)}}
+</style>
+
+<!-- icon sprite: equipment drawn as hardware, centred in a 96×72 box -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ic-bullet" viewBox="-48 -36 96 72">
+      <path d="M-30 -18H26l8-5" fill="none" stroke="#0E3B66" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="-30" y="-14" width="56" height="22" rx="5" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="24" y="-12" width="9" height="18" rx="2.5" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.6"/>
+      <circle cx="29" cy="-3" r="5" fill="#0E3B66"/><circle cx="30.6" cy="-4.6" r="1.4" fill="#5A9FD4"/>
+      <path d="M-22 -8h20M-22 -3h14" stroke="#C5D4E2" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M-8 8v9h-14v8" fill="none" stroke="#0E3B66" stroke-width="2.2" stroke-linejoin="round"/>
+      <rect x="-30" y="24" width="16" height="7" rx="2" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.6"/>
+      <circle cx="16" cy="3" r="1.8" fill="#2673B5" class="led"/>
+    </symbol>
+    <symbol id="ic-dome" viewBox="-48 -36 96 72">
+      <rect x="-30" y="-26" width="60" height="11" rx="4" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <path d="M-24 -15a24 24 0 0 0 48 0z" fill="#DCEBF7" stroke="#0E3B66" stroke-width="2"/>
+      <path d="M-15 -12a15 15 0 0 0 30 0" fill="none" stroke="#5A9FD4" stroke-width="1.4"/>
+      <circle cx="0" cy="-2" r="7" fill="#0E3B66"/><circle cx="2" cy="-4" r="2" fill="#5A9FD4"/>
+      <circle cx="-20" cy="-20.5" r="1.6" fill="#0E3B66"/><circle cx="20" cy="-20.5" r="1.6" fill="#0E3B66"/>
+      <circle cx="0" cy="-20.5" r="1.8" fill="#2673B5" class="led"/>
+    </symbol>
+    <symbol id="ic-anpr" viewBox="-48 -36 96 72">
+      <path d="M-36 -20H26l8-5" fill="none" stroke="#0E3B66" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="-36" y="-16" width="58" height="28" rx="5" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="20" y="-17" width="18" height="30" rx="4" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.6"/>
+      <circle cx="29" cy="-2" r="5.5" fill="#0E3B66"/>
+      <g fill="#2673B5"><circle cx="29" cy="-12" r="1.5"/><circle cx="36" cy="-8.5" r="1.5"/><circle cx="36" cy="4.5" r="1.5"/><circle cx="29" cy="8" r="1.5"/><circle cx="22" cy="4.5" r="1.5"/><circle cx="22" cy="-8.5" r="1.5"/></g>
+      <rect x="-28" y="-8" width="26" height="10" rx="2" fill="#F2F7FC" stroke="#5A9FD4" stroke-width="1.2"/>
+      <path d="M-25 -3h20" stroke="#5A9FD4" stroke-width="1.6" stroke-dasharray="3 2"/>
+      <path d="M-10 12v10h-16v8" fill="none" stroke="#0E3B66" stroke-width="2.2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ic-ptz" viewBox="-48 -36 96 72">
+      <rect x="-12" y="-34" width="24" height="7" rx="2" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.6"/>
+      <path d="M0 -27v9" stroke="#0E3B66" stroke-width="3"/>
+      <rect x="-18" y="-19" width="36" height="12" rx="4" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <circle cx="0" cy="8" r="17" fill="#DCEBF7" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="-10" y="2" width="20" height="12" rx="5" fill="#0E3B66"/><circle cx="3" cy="8" r="3" fill="#5A9FD4"/>
+    </symbol>
+    <symbol id="ic-fisheye" viewBox="-48 -36 96 72">
+      <ellipse cx="0" cy="-4" rx="30" ry="9" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <path d="M-18 -2a18 13 0 0 0 36 0z" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.8"/>
+      <circle cx="0" cy="3" r="5" fill="#0E3B66"/><circle cx="1.5" cy="1.5" r="1.4" fill="#5A9FD4"/>
+      <path d="M-26 -6h6M20 -6h6" stroke="#C5D4E2" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="ic-box" viewBox="-48 -36 96 72">
+      <rect x="-30" y="-14" width="40" height="26" rx="3" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="10" y="-10" width="16" height="18" rx="2" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.6"/>
+      <rect x="26" y="-8" width="6" height="14" rx="1.5" fill="#0E3B66"/>
+      <path d="M-24 -6h20M-24 -1h12M-24 4h16" stroke="#C5D4E2" stroke-width="1.6"/>
+      <path d="M-10 12v12" stroke="#0E3B66" stroke-width="2.2"/><rect x="-20" y="24" width="20" height="5" rx="2" fill="#0E3B66"/>
+    </symbol>
+    <symbol id="ic-edge" viewBox="-48 -36 96 72">
+      <rect x="-42" y="-24" width="84" height="48" rx="5" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <g stroke="#0E3B66" stroke-width="2.4"><path d="M-34 -18v14M-27 -18v14M-20 -18v14M-13 -18v14M-6 -18v14M1 -18v14M8 -18v14M15 -18v14M22 -18v14M29 -18v14M36 -18v14"/></g>
+      <path d="M-42 2H42" stroke="#C5D4E2" stroke-width="1.4"/>
+      <circle cx="-33" cy="12" r="2.3" fill="#2673B5" class="led"/><circle cx="-26" cy="12" r="2.3" fill="#2673B5" class="led l2"/><circle cx="-19" cy="12" r="2.3" fill="#5A9FD4" class="led l3"/>
+      <g fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.4"><rect x="2" y="7" width="9" height="8" rx="1"/><rect x="14" y="7" width="9" height="8" rx="1"/><rect x="26" y="7" width="9" height="8" rx="1"/></g>
+      <rect x="-10" y="8" width="7" height="5" rx="1" fill="#0E3B66"/>
+    </symbol>
+    <symbol id="ic-rack" viewBox="-48 -36 96 72">
+      <rect x="-30" y="-34" width="60" height="68" rx="4" fill="#F2F7FC" stroke="#0E3B66" stroke-width="2"/>
+      <g fill="#fff" stroke="#0E3B66" stroke-width="1.6">
+        <rect x="-25" y="-29" width="50" height="13" rx="2"/><rect x="-25" y="-13" width="50" height="13" rx="2"/><rect x="-25" y="3" width="50" height="13" rx="2"/><rect x="-25" y="19" width="50" height="10" rx="2"/>
+      </g>
+      <g fill="#C5D4E2"><rect x="-21" y="-26" width="5" height="7"/><rect x="-14" y="-26" width="5" height="7"/><rect x="-7" y="-26" width="5" height="7"/><rect x="0" y="-26" width="5" height="7"/>
+        <rect x="-21" y="-10" width="5" height="7"/><rect x="-14" y="-10" width="5" height="7"/><rect x="-7" y="-10" width="5" height="7"/><rect x="0" y="-10" width="5" height="7"/>
+        <rect x="-21" y="6" width="5" height="7"/><rect x="-14" y="6" width="5" height="7"/><rect x="-7" y="6" width="5" height="7"/><rect x="0" y="6" width="5" height="7"/></g>
+      <circle cx="18" cy="-22.5" r="2" fill="#2673B5" class="led"/><circle cx="18" cy="-6.5" r="2" fill="#2673B5" class="led l2"/><circle cx="18" cy="9.5" r="2" fill="#2673B5" class="led l3"/>
+      <path d="M-20 24h28" stroke="#5A9FD4" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="ic-console" viewBox="-48 -36 96 72">
+      <rect x="-44" y="-30" width="42" height="30" rx="3" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="2" y="-30" width="42" height="30" rx="3" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <g fill="#DCEBF7"><rect x="-40" y="-26" width="10" height="7"/><rect x="-28" y="-26" width="10" height="7"/><rect x="-16" y="-26" width="10" height="7"/><rect x="-40" y="-17" width="10" height="7"/><rect x="-28" y="-17" width="10" height="7"/><rect x="-16" y="-17" width="10" height="7"/></g>
+      <path d="M7 -10l8-8 7 5 9-11 9 6" fill="none" stroke="#2673B5" stroke-width="1.8"/>
+      <circle cx="31" cy="-24" r="2.4" fill="#D6453D" class="led"/>
+      <path d="M-23 0v8M23 0v8" stroke="#0E3B66" stroke-width="2.4"/>
+      <rect x="-46" y="8" width="92" height="7" rx="2" fill="#0E3B66"/>
+      <rect x="-14" y="17" width="28" height="5" rx="2" fill="#C5D4E2"/>
+    </symbol>
+    <symbol id="ic-dc" viewBox="-48 -36 96 72">
+      <path d="M-38 -16L0 -32 38 -16" fill="none" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="-38" y="-16" width="76" height="46" rx="3" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <g fill="#F2F7FC" stroke="#0E3B66" stroke-width="1.4"><rect x="-31" y="-10" width="16" height="34" rx="1.5"/><rect x="-8" y="-10" width="16" height="34" rx="1.5"/><rect x="15" y="-10" width="16" height="34" rx="1.5"/></g>
+      <g stroke="#5A9FD4" stroke-width="1.6"><path d="M-28 -4h10M-28 2h10M-28 8h10M-5 -4h10M-5 2h10M-5 8h10M18 -4h10M18 2h10M18 8h10"/></g>
+      <g fill="#2673B5"><circle cx="-23" cy="17" r="1.8" class="led"/><circle cx="0" cy="17" r="1.8" class="led l2"/><circle cx="23" cy="17" r="1.8" class="led l3"/></g>
+      <rect x="22" y="-36" width="24" height="15" rx="3" fill="#2673B5"/><text x="34" y="-25" text-anchor="middle" font-family="Geist Mono,monospace" font-size="12" font-weight="600" fill="#fff">IN</text>
+    </symbol>
+    <symbol id="ic-fw" viewBox="-48 -36 96 72">
+      <path d="M0 -32l26 9v16c0 18-11 30-26 37C-15 23-26 11-26-7v-16z" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <g stroke="#5A9FD4" stroke-width="1.6"><path d="M-20 -12h40M-20 0h40M-17 12h34M-8 -24v12M8 -24v12M0 -12v12M-12 0v12M12 0v12M0 12v10"/></g>
+    </symbol>
+    <symbol id="ic-radar" viewBox="-48 -36 96 72">
+      <path d="M-30 -24H18l8-5" fill="none" stroke="#0E3B66" stroke-width="2.2" stroke-linecap="round"/>
+      <rect x="-30" y="-20" width="44" height="36" rx="6" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="12" y="-18" width="8" height="32" rx="3" fill="#0E3B66"/>
+      <g fill="#5A9FD4"><circle cx="-21" cy="-11" r="2"/><circle cx="-13" cy="-11" r="2"/><circle cx="-5" cy="-11" r="2"/><circle cx="3" cy="-11" r="2"/><circle cx="-21" cy="-2" r="2"/><circle cx="-13" cy="-2" r="2"/><circle cx="-5" cy="-2" r="2"/><circle cx="3" cy="-2" r="2"/><circle cx="-21" cy="7" r="2"/><circle cx="-13" cy="7" r="2"/><circle cx="-5" cy="7" r="2"/><circle cx="3" cy="7" r="2"/></g>
+      <path d="M26 -12a16 16 0 0 1 0 22M32 -18a24 24 0 0 1 0 34" fill="none" stroke="#2673B5" stroke-width="2" stroke-linecap="round" class="led"/>
+      <path d="M-8 16v8h-14v6" fill="none" stroke="#0E3B66" stroke-width="2.2" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="ic-callbox" viewBox="-48 -36 96 72">
+      <rect x="-14" y="-34" width="28" height="6" rx="1.5" fill="#DCEBF7" stroke="#0E3B66" stroke-width="1.6"/>
+      <path d="M-16 -27h32v6h-32z" fill="#2673B5"/>
+      <rect x="-15" y="-21" width="30" height="46" rx="3" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <g fill="#C5D4E2"><circle cx="-6" cy="-13" r="1.5"/><circle cx="0" cy="-13" r="1.5"/><circle cx="6" cy="-13" r="1.5"/><circle cx="-6" cy="-8" r="1.5"/><circle cx="0" cy="-8" r="1.5"/><circle cx="6" cy="-8" r="1.5"/></g>
+      <circle cx="0" cy="4" r="6" fill="#2673B5"/><path d="M-3 4h6" stroke="#fff" stroke-width="1.6"/>
+      <circle cx="9" cy="16" r="1.8" fill="#2673B5" class="led"/>
+      <rect x="-10" y="25" width="20" height="8" rx="1.5" fill="#0E3B66"/>
+    </symbol>
+    <symbol id="ic-vms" viewBox="-48 -36 96 72">
+      <path d="M-40 -30H40" stroke="#0E3B66" stroke-width="2.6"/>
+      <rect x="-42" y="-24" width="84" height="30" rx="3" fill="#0E3B66"/>
+      <rect x="-38" y="-20" width="76" height="22" rx="1.5" fill="#1B5A94"/>
+      <g fill="#DCEBF7"><rect x="-32" y="-15" width="44" height="3" rx="1"/><rect x="-32" y="-8" width="30" height="3" rx="1"/></g>
+      <circle cx="28" cy="-9" r="5" fill="none" stroke="#DCEBF7" stroke-width="1.6"/><path d="M28 -12v4" stroke="#DCEBF7" stroke-width="1.6"/>
+      <path d="M-30 6v26M30 6v26" stroke="#0E3B66" stroke-width="2.6"/>
+    </symbol>
+    <symbol id="ic-laptop" viewBox="-48 -36 96 72">
+      <rect x="-32" y="-28" width="64" height="40" rx="3" fill="#fff" stroke="#0E3B66" stroke-width="2"/>
+      <rect x="-27" y="-23" width="54" height="30" fill="#F2F7FC"/>
+      <path d="M-22 0l9-8 8 5 9-10 9 4 9-6" fill="none" stroke="#2673B5" stroke-width="1.8"/>
+      <circle cx="17" cy="-17" r="2.2" fill="#2673B5"/>
+      <path d="M-42 14h84l-6 9h-72z" fill="#0E3B66"/>
+    </symbol>
+  </defs>
+</svg>
+
+<section class="dp-hero" aria-labelledby="dp-h">
+  <div class="wrap">
+    <div class="dp-head">
+      <div>
+        <h1 class="h-hero" id="dp-h" data-reveal>Runs on your<br>own servers.</h1>
+      </div>
+      <div><p class="lead">Standard CPU servers are enough. Add a GPU for more cameras and faster analytics.</p>
+        <p class="dp-roadmap">Four ways to deploy, mixed per site. InfraX Ops is already hosted at ops.infrax.ai; hosted Cygnus is on our roadmap.</p></div>
+    </div>
+
+    <div role="tablist" aria-label="Deployment model" class="dp-tabs" id="dpTabs">
+      <span class="dp-pill" id="dpPill" aria-hidden="true"></span>
+      <button class="dp-tab" role="tab" id="tab-centralised" aria-controls="dpPanel" aria-selected="true" data-mode="centralised"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="4" width="10" height="16" rx="1.5"/><path d="M10 8h4M10 12h4M10 16h4"/></svg>Centralised</button>
+      <button class="dp-tab" role="tab" id="tab-edge" aria-controls="dpPanel" aria-selected="false" tabindex="-1" data-mode="edge"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="8" width="18" height="9" rx="1.5"/><path d="M6 8V5M9 8V5M12 8V5M15 8V5M18 8V5"/></svg>Edge</button>
+      <button class="dp-tab" role="tab" id="tab-hybrid" aria-controls="dpPanel" aria-selected="false" tabindex="-1" data-mode="hybrid"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="7" height="6" rx="1"/><rect x="3" y="14" width="7" height="6" rx="1"/><rect x="15" y="7" width="6" height="10" rx="1"/><path d="M10 7c3 0 3 5 5 5M10 17c3 0 3-5 5-5"/></svg>Hybrid</button>
+      <button class="dp-tab" role="tab" id="tab-federated" aria-controls="dpPanel" aria-selected="false" tabindex="-1" data-mode="federated"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5L6.5 16M12 11.5l5.5 4.5"/></svg>Federated</button>
+    </div>
+    <span class="dp-auto" id="dpAuto">Cycling through the four models · pick one to stop</span>
+
+    <div class="dp-stage" id="dpStage">
+      <svg class="dp-svg" id="dpSvg" viewBox="0 0 1200 560" role="img" aria-labelledby="dpSvgTitle">
+        <title id="dpSvgTitle">Deployment topology for the selected size</title>
+        <g id="dpZones"></g><g id="dpLinks"></g><g id="dpPackets"></g><g id="dpNodes"></g>
+      </svg>
+      <div class="dp-legend" aria-hidden="true"><span><i style="background:#5A9FD4"></i>Video</span><span><i style="background:#2673B5"></i>Results: plates, events, clips, alerts</span><span><i class="ai"></i>Where the AI runs</span></div>
+    </div>
+
+    <div class="dp-found" aria-label="Common foundation in every model">
+      <span class="lbl">In every model</span>
+      <span class="it"><span class="ix" data-ix="camera" data-size="20" aria-hidden="true"></span>Central CCTV registry</span>
+      <span class="it"><span class="ix" data-ix="map" data-size="20" aria-hidden="true"></span>GIS map of every camera</span>
+      <span class="it"><span class="ix" data-ix="lock" data-size="20" aria-hidden="true"></span>Role-based access and audit</span>
+      <span class="it"><span class="ix" data-ix="wall" data-size="20" aria-hidden="true"></span>One console in the browser</span>
+    </div>
+
+    <div class="dp-panel" id="dpPanel" role="tabpanel" aria-labelledby="tab-centralised" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="scene" aria-labelledby="dp-cam-h" style="overflow-x:clip">
+  <div class="wrap dp-cams" id="dpCams">
+    <div>
+      <h2 class="h-2" id="dp-cam-h" data-reveal>Works with the cameras<br>you already own.</h2>
+      <p class="lead">If it speaks ONVIF or RTSP, Cygnus finds it, records it, maps it and warns you when it is blinded or moved.</p>
+      <ul class="dp-tray" id="dpTray">
+        <li><svg viewBox="-48 -36 96 72"><use href="#ic-bullet" x="-48" y="-36" width="96" height="72"/></svg>Bullet</li>
+        <li><svg viewBox="-48 -36 96 72"><use href="#ic-ptz" x="-48" y="-36" width="96" height="72"/></svg>PTZ</li>
+        <li><svg viewBox="-48 -36 96 72"><use href="#ic-anpr" x="-48" y="-36" width="96" height="72"/></svg>ANPR</li>
+        <li><svg viewBox="-48 -36 96 72"><use href="#ic-box" x="-48" y="-36" width="96" height="72"/></svg>Box</li>
+        <li><svg viewBox="-48 -36 96 72"><use href="#ic-dome" x="-48" y="-36" width="96" height="72"/></svg>Dome</li>
+        <li><svg viewBox="-48 -36 96 72"><use href="#ic-fisheye" x="-48" y="-36" width="96" height="72"/></svg>Fisheye</li>
+      </ul>
+      <div class="dp-proto"><span>ONVIF Profile S</span><span>ONVIF Profile T</span><span>RTSP</span><span>H.264 / H.265</span><span>Fixed · PTZ · ANPR</span><span>Any brand</span><span>Your VMS or NVR, through its API</span></div>
+    </div>
+    <div class="dp-reg" role="table" aria-label="Camera registry, sample data">
+      <div class="dp-reg-top" role="row"><b role="columnheader">Camera registry</b><span role="columnheader">Sample data</span></div>
+      <div class="dp-reg-act">
+        <button type="button" class="dp-act" id="dpDisc"><svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="15" stroke="#C5D4E2"/><circle cx="17" cy="17" r="9" stroke="#C5D4E2"/><path class="sweep" d="M17 17L17 2" stroke="#2673B5" stroke-width="2" stroke-linecap="round"/><circle cx="23" cy="10" r="2" fill="#2673B5"/><circle cx="9" cy="22" r="2" fill="#5A9FD4"/></svg>
+          <span><b>ONVIF discovery</b><small id="dpDiscTxt">Finds cameras on the network</small><span class="pb"><i id="dpDiscBar"></i></span></span></button>
+        <button type="button" class="dp-act" id="dpCsv"><svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M8 3h13l6 6v22H8z" fill="#fff" stroke="#0E3B66" stroke-width="1.6"/><path d="M21 3v6h6" stroke="#0E3B66" stroke-width="1.6"/><path d="M12 15h11M12 19h11M12 23h8" stroke="#5A9FD4" stroke-width="1.6"/></svg>
+          <span><b>Bulk import</b><small id="dpCsvTxt">Add cameras from CSV or Excel</small><span class="pb"><i id="dpCsvBar"></i></span></span></button>
+      </div>
+      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Bullet"><use href="#ic-bullet" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">CAM-HW-012<small>Highway gantry</small></span><span class="dp-reg-pr" role="cell">ONVIF S · H.265</span><span class="dp-on" role="cell">Online</span></div>
+      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="PTZ"><use href="#ic-ptz" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">GGN-JN-07<small>City junction</small></span><span class="dp-reg-pr" role="cell">ONVIF S/T · H.264</span><span class="dp-on" role="cell">Online</span></div>
+      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="ANPR"><use href="#ic-anpr" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">CMP-GATE-03<small>Campus gate</small></span><span class="dp-reg-pr" role="cell">RTSP · H.264</span><span class="dp-on" role="cell">Online</span></div>
+      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Box"><use href="#ic-box" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">PLT-GATE-02<small>Plant gate</small></span><span class="dp-reg-pr" role="cell">RTSP · H.265</span><span class="dp-on" role="cell">Online</span></div>
+      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Dome"><use href="#ic-dome" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">IND-YARD-11<small>Warehouse yard</small></span><span class="dp-reg-pr" role="cell">ONVIF T · H.265</span><span class="dp-on off" role="cell">Moved · view changed</span></div>
+      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Fisheye"><use href="#ic-fisheye" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">CMP-PARK-03<small>Campus parking</small></span><span class="dp-reg-pr" role="cell">ONVIF S · H.264</span><span class="dp-on" role="cell">Online</span></div>
+    </div>
+  </div>
+  <div class="wrap dp-mq" id="dpMq" role="region" aria-label="Camera brands that work with InfraX AI">
+    <p class="dp-mq-h">Camera brands that work with Cygnus</p>
+    <div class="dp-mq-row r1"><ul class="dp-mq-track"><li class="grp">India-made / India-focused</li><li class="lg"><img src="img/brands/cp-plus.png" alt="CP Plus" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/matrix.png" alt="Matrix" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/prama.png" alt="Prama" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/godrej.svg" alt="Godrej" width="136" height="44" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/sparsh.png" alt="Sparsh" class="dk" width="136" height="34" loading="lazy" decoding="async"></li><li class="grp">Global</li><li class="lg"><img src="img/brands/axis.svg" alt="Axis" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/hanwha.svg" alt="Hanwha Vision (Wisenet)" width="136" height="44" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/bosch.svg" alt="Bosch" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/i-pro.png" alt="i-PRO" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/sony.svg" alt="Sony" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/honeywell.svg" alt="Honeywell" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/vivotek.png" alt="Vivotek" width="136" height="34" loading="lazy" decoding="async"></li></ul><ul class="dp-mq-track" aria-hidden="true"><li class="grp">India-made / India-focused</li><li class="lg"><img src="img/brands/cp-plus.png" alt="CP Plus" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/matrix.png" alt="Matrix" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/prama.png" alt="Prama" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/godrej.svg" alt="Godrej" width="136" height="44" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/sparsh.png" alt="Sparsh" class="dk" width="136" height="34" loading="lazy" decoding="async"></li><li class="grp">Global</li><li class="lg"><img src="img/brands/axis.svg" alt="Axis" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/hanwha.svg" alt="Hanwha Vision (Wisenet)" width="136" height="44" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/bosch.svg" alt="Bosch" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/i-pro.png" alt="i-PRO" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/sony.svg" alt="Sony" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/honeywell.svg" alt="Honeywell" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/vivotek.png" alt="Vivotek" width="136" height="34" loading="lazy" decoding="async"></li></ul></div>
+    <div class="dp-mq-row r2"><ul class="dp-mq-track"><li class="grp">Global</li><li class="lg"><img src="img/brands/avigilon.svg" alt="Avigilon" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/mobotix.svg" alt="Mobotix" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/pelco.svg" alt="Pelco" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/uniview.png" alt="Uniview" width="136" height="44" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/hikvision.svg" alt="Hikvision" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/dahua.svg" alt="Dahua" width="136" height="34" loading="lazy" decoding="async"></li><li>Tiandy</li><li class="grp">Budget / SMB</li><li class="lg"><img src="img/brands/tp-link.svg" alt="TP-Link VIGI" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/reolink.svg" alt="Reolink" class="dk" width="136" height="34" loading="lazy" decoding="async"></li><li>Amcrest</li></ul><ul class="dp-mq-track" aria-hidden="true"><li class="grp">Global</li><li class="lg"><img src="img/brands/avigilon.svg" alt="Avigilon" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/mobotix.svg" alt="Mobotix" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/pelco.svg" alt="Pelco" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/uniview.png" alt="Uniview" width="136" height="44" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/hikvision.svg" alt="Hikvision" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/dahua.svg" alt="Dahua" width="136" height="34" loading="lazy" decoding="async"></li><li>Tiandy</li><li class="grp">Budget / SMB</li><li class="lg"><img src="img/brands/tp-link.svg" alt="TP-Link VIGI" width="136" height="34" loading="lazy" decoding="async"></li><li class="lg"><img src="img/brands/reolink.svg" alt="Reolink" class="dk" width="136" height="34" loading="lazy" decoding="async"></li><li>Amcrest</li></ul></div>
+    <ul class="dp-mq-static"><li><b>India-made / India-focused</b> CP Plus · Matrix · Prama · Godrej · Sparsh</li><li><b>Global</b> Axis · Hanwha Vision (Wisenet) · Bosch · i-PRO · Sony · Honeywell · Vivotek · Avigilon · Mobotix · Pelco · Uniview · Hikvision · Dahua · Tiandy</li><li><b>Budget / SMB</b> TP-Link VIGI · Reolink · Amcrest</li></ul>
+    <p class="dp-mq-note">Support is checked per model. For tenders we match the list to its rules, such as STQC.</p>
+  </div>
+</section>
+
+<section class="scene" aria-labelledby="dp-edge-h" style="padding-top:0">
+  <div class="wrap dp-edge">
+    <figure class="dp-photo" id="dpPhoto">
+      <img decoding="async" src="img/edge-box-sm.jpg" srcset="img/edge-box-sm.jpg 768w, img/edge-box.jpg 1536w" sizes="(min-width:1024.02px) 55vw, 100vw" alt="An engineer connecting the AI box inside a roadside cabinet, next to a network switch and fibre patch panel" loading="lazy" width="1536" height="864">
+      <button class="dp-hot" style="left:39%;top:19%" data-n="0" aria-label="Note 1: the box on the gantry">1</button>
+      <button class="dp-hot" style="left:32%;top:37%" data-n="1" aria-label="Note 2: keeps reading offline">2</button>
+      <button class="dp-hot" style="left:48.5%;top:40%" data-n="2" aria-label="Note 3: what goes to the control room">3</button>
+      <button class="dp-hot" style="left:37%;top:79%" data-n="3" aria-label="Note 4: the network you already have">4</button>
+    </figure>
+    <div>
+      <h2 class="h-2" id="dp-edge-h" data-reveal>Keeps working<br>when the link drops.</h2>
+      <ul class="dp-notes" id="dpNotes">
+        <li data-n="0"><b>1</b><p><strong>The AI runs in the box on the gantry,</strong> next to the cameras and radar.</p></li>
+        <li data-n="1"><b>2</b><p><strong>If the link drops, it keeps reading.</strong> Reads sync once the link is back.</p></li>
+        <li data-n="2"><b>3</b><p><strong>Results go to Central Plexus (ATMS)</strong> with images attached, ready for e-challan.</p></li>
+        <li data-n="3"><b>4</b><p><strong>It plugs into the gantry network you already have.</strong></p></li>
+      </ul>
+      <div class="dp-up">
+        <figure><figcaption><b>Raw video</b> · stays at the gantry</figcaption></figure>
+        <figure><figcaption><b>Plates, classes &amp; cases</b> · go to Central Plexus (ATMS)</figcaption></figure>
+      </div>
+      <div class="dp-chips"><a class="dp-chip" href="products.html#d-highways">Highways &amp; expressways</a><a class="dp-chip" href="products.html#vides">Speed enforcement gantries</a><a class="dp-chip" href="products.html#central-plexus">Control rooms</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="scene tight" aria-labelledby="dp-sec-h" style="padding-top:0">
+  <div class="wrap">
+    <h2 class="h-2" id="dp-sec-h">Built for public-sector data rules.</h2>
+    <div class="dp-sec" id="dpSec">
+      <div><span class="ix" data-ix="server" data-size="28" aria-hidden="true"></span><h3>Data stays on site</h3><p>Video, evidence and records never leave your premises.</p></div>
+      <div><span class="ix" data-ix="operator" data-size="28" aria-hidden="true"></span><h3>Roles and audit log</h3><p>Five roles, rights per feature, and a full audit trail.</p></div>
+      <div><span class="ix" data-ix="lock" data-size="28" aria-hidden="true"></span><h3>Encryption</h3><p>Data is encrypted in transit and at rest.</p></div>
+      <div><span class="ix" data-ix="server" data-size="28" aria-hidden="true"></span><h3>Backups with tested restores</h3><p>Recovery is tested, not assumed.</p></div>
+      <div><span class="ix" data-ix="check" data-size="28" aria-hidden="true"></span><h3>DPDP Act, 2023</h3><p>Designed for India's Digital Personal Data Protection Act, 2023 (DPDP), including how face data is handled.</p></div>
+    </div>
+    <a class="next-band" href="integrations.html" style="margin-top:calc(72*var(--s))">
+      <div><p class="eyebrow">Next</p><p class="h-1">How InfraX AI connects<br>with your systems</p></div>
+      <span class="arrow" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13h16M14 6l7 7-7 7"/></svg></span>
+    </a>
+  </div>
+</section>
+
+<!--PAGE-SCRIPTS-->
+<script>
+(function () {
+  var X = window.INFRAX || {}, reduce = !!X.reduce, hasG = !!window.gsap;
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = document.getElementById('dpSvg'), stage = document.getElementById('dpStage');
+  var gZ = document.getElementById('dpZones'), gL = document.getElementById('dpLinks'), gP = document.getElementById('dpPackets'), gN = document.getElementById('dpNodes');
+  var gA = document.createElementNS('http://www.w3.org/2000/svg', 'g'); svg.appendChild(gA);
+
+  /* ---------- data ---------- */
+  var NODES = {
+    cam1: ['ic-bullet', 'Bullet', 'ONVIF'], cam2: ['ic-dome', 'Dome', 'RTSP'], cam3: ['ic-anpr', 'ANPR camera', 'IR · plates'],
+    radar: ['ic-radar', 'Gantry radar', 'speed'], aibox: ['ic-edge', 'Box on the gantry', 'InfraX VIDES · offline-ready'],
+    ecb: ['ic-callbox', 'Call box', 'AstraAlert'], vms: ['ic-vms', 'LED message sign', 'from the control room'],
+    fw: ['ic-fw', 'Your network', 'fibre · site LAN'], srv: ['ic-rack', 'Your servers', 'Cygnus · AstraAlert'],
+    srv2: ['ic-rack', 'Site node', 'Site A · Cygnus'], srv3: ['ic-rack', 'Site node', 'Site B · its own VMS'], console1: ['ic-console', 'Control room', 'operators act here'],
+    console2: ['ic-console', 'Site desk', 'local security'], aibox2: ['ic-edge', 'Edge box', 'beside site cameras']
+  };
+  var MODES = {
+    centralised: {
+      pos: { cam1: [100, 130], cam2: [100, 280], cam3: [100, 430], fw: [360, 280], srv: [660, 280], console1: [980, 280] },
+      vpos: { cam1: [90, 110], cam2: [270, 110], cam3: [450, 110] },
+      labels: { cam3: ['ANPR camera', 'plates'], srv: ['Analytics servers', 'in the control room · CPU, GPU to scale'], console1: ['Control room', 'video wall · map · incidents'] },
+      zones: [[40, 46, 220, 468, 'Cameras'], [540, 70, 250, 420, 'Control-room servers'], [850, 70, 260, 420, 'Control room'], [16, 18, 1168, 524, 'Your network · on your servers', 'dash', 'end']],
+      links: [['cam1', 'fw', 'v'], ['cam2', 'fw', 'v'], ['cam3', 'fw', 'v'], ['fw', 'srv', 'v'], ['srv', 'console1', 'e']],
+      ai: ['srv'],
+      title: 'Centralised: analytics on control-room servers.',
+      best: [['Campuses', 'products.html#d-campuses'], ['Industrial sites', 'products.html#d-warehouses'], ['City control rooms', 'products.html#d-cities']],
+      where: [['Video', 'Streams to your control-room servers and is recorded there'], ['AI', 'Analytics servers in the control room'], ['Results', 'Events, clips and plate reads in Cygnus'], ['Console', 'One console in the browser, on your network']],
+      needs: ['Standard CPU servers sized to your cameras', 'The ONVIF or RTSP cameras you already have', 'A network from the cameras to the control room']
+    },
+    edge: {
+      pos: { cam3: [95, 80], cam1: [95, 205], aibox: [290, 142], cam2: [95, 345], ecb: [95, 470], aibox2: [290, 345], fw: [520, 300], srv: [790, 300], console1: [1060, 300] },
+      vpos: { cam3: [90, 110], cam1: [270, 110], cam2: [450, 110], aibox: [130, 270], aibox2: [310, 270], ecb: [480, 270] },
+      labels: { aibox: ['Edge box', 'beside the cameras'], aibox2: ['Edge box', 'beside site cameras'], ecb: ['Call box', 'AstraAlert'], srv: ['Cygnus core', 'events · clips · incidents'] },
+      zones: [[40, 30, 360, 500, 'Beside the cameras'], [700, 110, 190, 380, 'Your servers'], [960, 110, 210, 380, 'Control room'], [16, 8, 1168, 544, 'Your network · results travel, video stays', 'dash', 'end']],
+      links: [['cam3', 'aibox', 'v'], ['cam1', 'aibox', 'v'], ['cam2', 'aibox2', 'v'], ['aibox', 'fw', 'e'], ['aibox2', 'fw', 'e'], ['ecb', 'aibox2', 'e'], ['fw', 'srv', 'e'], ['srv', 'console1', 'e']],
+      ai: ['aibox', 'aibox2'],
+      title: 'Edge: analytics on boxes beside the cameras.',
+      best: [['Highway corridors', 'products.html#d-highways'], ['Ports, transport & utilities', 'products.html#d-ports'], ['Remote sites on thin links', 'products.html#d-ports']],
+      where: [['Video', 'Stays beside the cameras, on the edge box'], ['AI', 'Edge boxes run the detections on CPU'], ['Results', 'Plates, events and clips travel up, not video'], ['Console', 'One control room for every edge box']],
+      needs: ['An edge box for each group of cameras', 'A link from each box for results and clips', 'Your servers for the Cygnus core and the console']
+    },
+    hybrid: {
+      pos: { cam3: [95, 80], radar: [95, 205], aibox: [270, 142], ecb: [95, 330], cam1: [95, 455], fw: [470, 300], srv: [745, 300], console1: [1045, 300] },
+      vpos: { cam3: [90, 110], radar: [270, 110], ecb: [450, 110], aibox: [180, 270], cam1: [450, 270] },
+      labels: { aibox: ['Edge box', 'on the gantry · VIDES'], radar: ['Gantry radar', 'beside the cameras'], srv: ['Analytics servers', 'control room · one console'] },
+      zones: [[40, 20, 360, 520, 'On the road and at the site', '', 'end'], [640, 110, 240, 380, 'Control-room servers'], [940, 110, 230, 380, 'Control room'], [16, 8, 1168, 544, 'Your network · on your servers', 'dash', 'end']],
+      links: [['cam3', 'aibox', 'v'], ['radar', 'aibox', 'v'], ['aibox', 'fw', 'e'], ['ecb', 'fw', 'e'], ['cam1', 'fw', 'v'], ['fw', 'srv', 'm'], ['srv', 'console1', 'e']],
+      ai: ['aibox', 'srv'],
+      title: 'Hybrid: edge and centre together, one console.',
+      best: [['Highway concessionaires', 'products.html#d-highways'], ['EPC & O&M contractors', 'products.html#d-highways'], ['Authorities running control rooms', 'products.html#d-highways']],
+      where: [['Video', 'Gantry video stays on the edge box; site cameras record centrally'], ['AI', 'Edge boxes on the gantries and analytics servers in the control room'], ['Calls', 'AstraAlert puts each call box through to the control room'], ['Console', 'One console for edge and centre']],
+      needs: ['Edge boxes where links are thin or reads must survive a dropped link', 'Analytics servers in the control room for the other cameras', 'Your servers for Cygnus and AstraAlert']
+    },
+    federated: {
+      pos: { cam3: [95, 95], cam1: [95, 205], srv2: [290, 150], cam2: [95, 410], srv3: [290, 410], srv: [700, 300], console1: [1040, 190], console2: [1040, 420] },
+      vpos: { cam3: [90, 110], cam1: [270, 110], cam2: [450, 110], srv2: [180, 270], srv3: [450, 270] },
+      labels: { srv: ['One view on top', 'multi-site view'], console1: ['Head office', 'every site in one tree'], console2: ['Site desk', 'keeps its own control'] },
+      zones: [[40, 40, 360, 240, 'Site A · its own node', '', '', 'Site A'], [40, 310, 360, 240, 'Site B · its own VMS', '', '', 'Site B'], [570, 110, 260, 380, 'One view'], [930, 40, 240, 480, 'Where people act']],
+      links: [['cam3', 'srv2', 'v'], ['cam1', 'srv2', 'v'], ['cam2', 'srv3', 'v'], ['srv2', 'srv', 'e'], ['srv3', 'srv', 'e'], ['srv', 'console1', 'e'], ['srv', 'console2', 'e']],
+      ai: ['srv2', 'srv3'],
+      title: 'Federated: many sites and VMSs, one view.',
+      best: [['Multi-stretch highway operators', 'products.html#d-highways'], ['City-wide security', 'products.html#d-cities'], ['Campus & industrial groups', 'products.html#d-campuses']],
+      where: [['Video', 'Kept at each site, on its own node'], ['AI', 'Runs at each site'], ['Results', 'Alerts and evidence roll up to one view'], ['Console', 'Head office sees every site; each site keeps its own desk']],
+      needs: ['A Cygnus node at each site', 'A link from each site for alerts and clips', 'Ask us about connecting other VMSs']
+    }
+  };
+  var ORDER = ['centralised', 'edge', 'hybrid', 'federated'];
+  var ALIAS = { one: 'centralised', corridor: 'hybrid', many: 'federated', onprem: 'centralised', cloud: 'centralised' };
+
+  /* ---------- orientation ---------- */
+  var vert = false;
+  function O(p) { return vert ? [p[1], p[0] + 30] : [p[0], p[1]]; } // vertical: nodes sit below zone titles
+  function OR(z) { return vert ? [z[1], z[0], z[3], z[2]] : [z[0], z[1], z[2], z[3]]; }
+  function setOrient() {
+    vert = stage.getBoundingClientRect().width < 900;
+    svg.setAttribute('viewBox', vert ? '0 0 560 1200' : '0 0 1200 560');
+    svg.classList.toggle('dp-vert', vert);
+  }
+
+  /* ---------- build nodes ---------- */
+  var live = {};
+  Object.keys(NODES).forEach(function (id, i) {
+    var n = NODES[id], g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'dp-node');
+    g.innerHTML = '<use href="#' + n[0] + '" x="-48" y="-36" width="96" height="72"/><text class="dp-l1" y="56">' + n[1] + '</text><text class="dp-l2" y="73">' + n[2] + '</text>';
+    gN.appendChild(g);
+    live[id] = { g: g, x: 600, y: 280, o: 0, s: .6, i: i, t1: g.querySelector('.dp-l1'), t2: g.querySelector('.dp-l2') };
+  });
+  var moved = 3; // frames left in which link paths must follow moving nodes
+  function paintNode(n) { n.g.setAttribute('transform', 'translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ') scale(' + n.s.toFixed(3) + ')'); n.g.style.opacity = n.o; moved = 3; }
+
+  /* ---------- zones ---------- */
+  var zones = [0, 1, 2, 3, 4].map(function () {
+    var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'dp-zone');
+    g.innerHTML = '<rect rx="18"/><text></text>'; gZ.appendChild(g);
+    return { g: g, r: g.firstChild, t: g.lastChild, v: { x: 600, y: 280, w: 0, h: 0, o: 0 } };
+  });
+  function paintZone(z, anchorEnd) {
+    var v = z.v; z.r.setAttribute('x', v.x); z.r.setAttribute('y', v.y); z.r.setAttribute('width', Math.max(0, v.w)); z.r.setAttribute('height', Math.max(0, v.h));
+    z.g.style.opacity = v.o;
+    if (anchorEnd) { z.t.setAttribute('x', v.x + v.w - 18); z.t.setAttribute('y', v.y + v.h - 16); z.t.setAttribute('text-anchor', 'end'); }
+    else { z.t.setAttribute('x', v.x + 18); z.t.setAttribute('y', v.y + (vert ? 34 : 28)); z.t.setAttribute('text-anchor', 'start'); }
+  }
+
+  /* ---------- links + packets ---------- */
+  var links = [];
+  function anchor(n, out) {
+    var d = 44 * n.s;
+    return vert ? [n.x, n.y + (out ? d : -d)] : [n.x + (out ? d : -d), n.y];
+  }
+  function bez(a, b) {
+    var k = vert ? (b[1] - a[1]) * .5 : (b[0] - a[0]) * .5;
+    return vert ? [a, [a[0], a[1] + k], [b[0], b[1] - k], b] : [a, [a[0] + k, a[1]], [b[0] - k, b[1]], b];
+  }
+  function pt(c, t) {
+    var u = 1 - t;
+    return [u * u * u * c[0][0] + 3 * u * u * t * c[1][0] + 3 * u * t * t * c[2][0] + t * t * t * c[3][0],
+            u * u * u * c[0][1] + 3 * u * u * t * c[1][1] + 3 * u * t * t * c[2][1] + t * t * t * c[3][1]];
+  }
+  function makeLink(def, rank) {
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('class', 'dp-link' + (def[2] === 'v' ? '' : ' ev'));
+    p.setAttribute('pathLength', '1'); p.style.strokeDasharray = '1'; p.style.strokeDashoffset = '1';
+    gL.appendChild(p);
+    var dots = [], k = def[2] === 'v' ? 5 : 3;
+    for (var i = 0; i < k; i++) {
+      var c = document.createElementNS(NS, 'circle');
+      var isEv = def[2] === 'e' || (def[2] === 'm' && i % 2);
+      c.setAttribute('r', isEv ? 4.2 : 3.2); c.setAttribute('fill', isEv ? '#2673B5' : '#5A9FD4');
+      gP.appendChild(c); dots.push({ c: c, ph: i / k });
+    }
+    var L = { a: def[0], b: def[1], kind: def[2], rev: def[3] === 'rev', p: p, dots: dots, draw: 0, o: 1, rank: rank };
+    links.push(L);
+    return L;
+  }
+  function removeLink(L) {
+    if (L.gone) return; L.gone = L.dead = true;
+    L.p.remove(); L.dots.forEach(function (d) { d.c.remove(); });
+    var i = links.indexOf(L); if (i > -1) links.splice(i, 1);
+  }
+  function killLink(L) {
+    if (L.dead) return; L.dead = true;
+    if (hasG && !reduce) gsap.to(L, { o: 0, duration: .35, ease: 'sine.in', onComplete: function () { removeLink(L); } }); else removeLink(L);
+  }
+  // drop every link at once (orientation flip, first-view reset); kills pending fades so none splice later
+  function dropLinks() { links.slice().forEach(function (L) { if (hasG) gsap.killTweensOf(L); removeLink(L); }); }
+
+  /* ---------- mode switching ---------- */
+  var mode = null;
+  function labelFor(id, m) { var l = MODES[m].labels[id]; return l || [NODES[id][1], NODES[id][2]]; }
+  function setMode(m, instant) {
+    if (m === mode) return;
+    mode = m;
+    var M = MODES[m], anim = hasG && !reduce && !instant;
+    // tabs
+    document.querySelectorAll('.dp-tab').forEach(function (b) { var on = b.dataset.mode === m; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+    movePill();
+    document.getElementById('dpPanel').setAttribute('aria-labelledby', 'tab-' + m);
+    // nodes travel on sine paths, in a wave ordered by their target position along the flow
+    var ids = Object.keys(live), ranked = ids.slice().sort(function (a, b) { var pa = M.pos[a] || [600, 0], pb = M.pos[b] || [600, 0]; return pa[0] - pb[0] || pa[1] - pb[1]; });
+    ranked.forEach(function (id, r) {
+      var n = live[id], target = M.pos[id], lab = labelFor(id, m);
+      n.t1.textContent = lab[0]; n.t2.textContent = lab[1];
+      if (hasG) { gsap.killTweensOf(n); if (n._tw) n._tw.kill(); }
+      if (!target) { // leave
+        if (anim) gsap.to(n, { o: 0, s: .6, duration: .45, ease: 'sine.in', onUpdate: paintNode, onUpdateParams: [n] });
+        else { n.o = 0; n.s = .6; paintNode(n); }
+        return;
+      }
+      var to = (vert && M.vpos && M.vpos[id]) ? M.vpos[id] : O(target);
+      if (!anim) { n.x = to[0]; n.y = to[1]; n.o = 1; n.s = 1; paintNode(n); return; }
+      var from = n.o > .05 ? [n.x, n.y] : [to[0] - (vert ? 0 : 120), to[1] - (vert ? 120 : 0)];
+      var dx = to[0] - from[0], dy = to[1] - from[1], len = Math.hypot(dx, dy) || 1;
+      var nx = -dy / len, ny = dx / len, amp = (28 + 26 * Math.abs(Math.sin(r * 1.7))) * (r % 2 ? 1 : -1);
+      var prox = { k: 0 }, o0 = n.o, s0 = n.s;
+      n._tw = gsap.to(prox, {
+        k: 1, duration: .55, delay: .03 * r, ease: 'power2.inOut',
+        onUpdate: function () {
+          var k = prox.k, bump = Math.sin(Math.PI * k) * amp;
+          n.x = from[0] + dx * k + nx * bump; n.y = from[1] + dy * k + ny * bump;
+          n.o = o0 + (1 - o0) * Math.min(1, k * 2); n.s = s0 + (1 - s0) * k; paintNode(n);
+        }
+      });
+    });
+    // zones
+    zones.forEach(function (z, i) {
+      var d = M.zones[i];
+      if (hasG) gsap.killTweensOf(z.v);
+      z.g.setAttribute('class', 'dp-zone' + (d && d[5] === 'dash' ? ' dash' : ''));
+      var end = d && d[6] === 'end';
+      if (!d) { if (anim) gsap.to(z.v, { o: 0, duration: .4, onUpdate: function () { paintZone(z, end); } }); else { z.v.o = 0; paintZone(z, end); } return; }
+      z.t.textContent = (vert && d[7]) ? d[7] : d[4];
+      var r = OR(d), tgt = { x: r[0], y: r[1], w: r[2], h: r[3], o: 1 };
+      if (anim) gsap.to(z.v, Object.assign(tgt, { duration: .5, delay: .03 * i, ease: 'power2.inOut', onUpdate: function () { paintZone(z, end); } }));
+      else { Object.assign(z.v, tgt); paintZone(z, end); }
+    });
+    // links: old ones ebb away, new ones draw in after their source node lands
+    links.slice().forEach(killLink);
+    M.links.forEach(function (def) {
+      var L = makeLink(def, ranked.indexOf(def[0]));
+      if (anim) gsap.to(L, { draw: 1, duration: .45, delay: .3 + .04 * L.rank, ease: 'sine.out' }); else L.draw = 1;
+    });
+    // "AI here" markers ride on the nodes where analytics run
+    aiTags.slice().forEach(function (A) { if (hasG && !reduce) gsap.to(A, { o: 0, duration: .3, onComplete: function () { A.g.remove(); } }); else A.g.remove(); });
+    aiTags = (M.ai || []).map(function (id, k) {
+      var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'dp-ai');
+      g.innerHTML = vert ? '<circle class="ring" r="58"/><rect x="-22" y="-15" width="44" height="30" rx="15"/><text y="6">AI</text>'
+                         : '<circle class="ring" r="58"/><rect x="-36" y="-13" width="72" height="26" rx="13"/><text y="4.5">AI HERE</text>';
+      gA.appendChild(g);
+      var A = { g: g, id: id, o: 0, ring: g.firstChild };
+      if (anim) gsap.to(A, { o: 1, duration: .4, delay: .6 + .08 * k, ease: 'sine.out' }); else A.o = 1;
+      return A;
+    });
+    renderPanel(M, anim);
+    wake();
+  }
+  var aiTags = [];
+
+  /* ---------- per-frame: links follow nodes, packets travel in waves ---------- */
+  var vis = true, t0 = performance.now(), raf = 0;
+  function covered() { return !!(window.INFRAX && INFRAX.covered); }
+  // the loop sleeps while offscreen, hidden or covered (and after each change under reduced motion)
+  function wake() { if (!raf) raf = requestAnimationFrame(frame); }
+  new IntersectionObserver(function (es) { vis = es[0].isIntersecting; if (vis) wake(); }).observe(stage);
+  document.addEventListener('visibilitychange', wake); document.addEventListener('infrax:cover', wake);
+  function frame(now) {
+    raf = 0;
+    if (!vis || document.hidden || covered()) return;
+    if (!reduce) raf = requestAnimationFrame(frame);
+    var t = reduce ? 0 : (now - t0) / 1000, rebuild = moved > 0;
+    if (rebuild) moved--;
+    aiTags.forEach(function (A, k) {
+      var n = live[A.id]; if (!n) return;
+      // desktop: the tag sits above the node; phone: beside it, so it never covers the labels under the nodes
+      var ox = vert ? 50 * n.s : 0, oy = vert ? -34 * n.s : -78 * n.s, pulse = reduce ? 0 : (t * .8 + k * .5) % 1;
+      A.g.setAttribute('transform', 'translate(' + (n.x + ox).toFixed(1) + ',' + (n.y + oy).toFixed(1) + ')');
+      A.g.style.opacity = A.o * n.o;
+      A.ring.setAttribute('transform', 'translate(' + (-ox).toFixed(1) + ',' + (-oy).toFixed(1) + ') scale(' + (.6 + pulse * .7).toFixed(3) + ')');
+      A.ring.style.opacity = ((1 - pulse) * .6).toFixed(2);
+    });
+    links.forEach(function (L) {
+      var c = L.c;
+      if (rebuild || !c) {
+        c = L.c = bez(anchor(live[L.a], true), anchor(live[L.b], false));
+        L.p.setAttribute('d', 'M' + c[0] + 'C' + c[1] + ' ' + c[2] + ' ' + c[3]);
+      }
+      if (L._d !== L.draw) { L._d = L.draw; L.p.style.strokeDashoffset = 1 - L.draw; }
+      if (L._o !== L.o) { L._o = L.o; L.p.style.opacity = L.o; }
+      var speed = L.kind === 'v' ? .42 : .3;
+      L.dots.forEach(function (d) {
+        var u = reduce ? d.ph : ((t * speed + d.ph) % 1); if (L.rev) u = 1 - u;
+        var q = pt(c, u), env = Math.sin(Math.PI * u);
+        var wob = 0; // packets travel straight along the link
+        d.c.setAttribute('cx', (q[0] + (vert ? wob : 0)).toFixed(1)); d.c.setAttribute('cy', (q[1] + (vert ? 0 : wob)).toFixed(1));
+        d.c.style.opacity = L.draw < .98 || L.dead ? 0 : (.25 + .75 * env) * L.o;
+      });
+    });
+  }
+
+  /* ---------- panel ---------- */
+  var tick = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5l4 4 8-9"/></svg>';
+  function esc(s) { return s.replace(/&/g, '&amp;'); }
+  function renderPanel(M, anim) {
+    var el = document.getElementById('dpPanel');
+    el.innerHTML =
+      '<div><h3>' + M.title + '</h3><h4 role="none" style="margin-top:calc(22*var(--s))">Best for</h4><div class="dp-chips" style="margin-top:0">' +
+      M.best.map(function (b) { return '<a class="dp-chip" href="' + b[1] + '">' + esc(b[0]) + '</a>'; }).join('') + '</div></div>' +
+      '<div><h4 role="none">Where your data lives</h4><dl class="dp-where">' +
+      M.where.map(function (w) { return '<div><dt>' + esc(w[0]) + '</dt><dd>' + w[1] + '</dd></div>'; }).join('') + '</dl></div>' +
+      '<div><h4 role="none">What you need</h4><ul class="dp-needs">' + M.needs.map(function (n) { return '<li>' + tick + '<span>' + n + '</span></li>'; }).join('') + '</ul></div>';
+    if (anim) {
+      var items = el.querySelectorAll('h3,.dp-chip,.dp-where div,.dp-needs li');
+      gsap.from(items, { y: 16, opacity: 0, duration: .45, ease: 'sine.out', stagger: function (i) { return .05 * i + .04 * Math.sin(i * .9); } });
+    }
+  }
+
+  /* ---------- tabs ---------- */
+  var tabs = [].slice.call(document.querySelectorAll('.dp-tab')), pill = document.getElementById('dpPill');
+  function movePill() {
+    var on = tabs.filter(function (b) { return b.getAttribute('aria-selected') === 'true'; })[0]; if (!on) return;
+    pill.style.width = on.offsetWidth + 'px'; pill.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+  }
+  var auto = !reduce, autoTimer = null, autoNote = document.getElementById('dpAuto');
+  function stopAuto() { auto = false; if (autoTimer) autoTimer.kill ? autoTimer.kill() : clearTimeout(autoTimer); autoNote.textContent = 'Pick a model to compare'; }
+  tabs.forEach(function (b, i) {
+    b.addEventListener('click', function () { stopAuto(); setMode(b.dataset.mode); });
+    b.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!d) return;
+      e.preventDefault(); var nb = tabs[(i + d + tabs.length) % tabs.length]; nb.focus(); nb.click();
+    });
+  });
+  function scheduleAuto() {
+    if (!auto) return;
+    autoTimer = setTimeout(function () {
+      if (!auto) return;
+      if (vis && !document.hidden && !covered()) setMode(ORDER[(ORDER.indexOf(mode) + 1) % ORDER.length]);
+      scheduleAuto();
+    }, 7000);
+  }
+  if (!auto) autoNote.textContent = 'Pick a model to compare';
+
+  /* ---------- boot ---------- */
+  setOrient();
+  // deep links: deployment.html#centralised | #edge | #hybrid | #federated (old #one/#corridor/#many still work)
+  function hashToMode(hs) { hs = (hs || '').replace(/^#/, ''); hs = ALIAS[hs] || hs; return ORDER.indexOf(hs) > -1 ? hs : null; }
+  var hashMode = hashToMode(location.hash);
+  setMode(hashMode || 'centralised', true);
+  if (hashMode) { stopAuto(); document.getElementById('tab-' + hashMode).scrollIntoView({ block: 'center' }); }
+  addEventListener('hashchange', function () { var m = hashToMode(location.hash); if (m) { stopAuto(); setMode(m); } });
+  // the first view assembles in a wave from a loose line of equipment
+  if (hasG && !reduce) {
+    Object.keys(live).forEach(function (id, i) { var n = live[id]; if (n.o > 0) { n.y += (vert ? 0 : 1) * Math.sin(i * 1.3) * 60; n.x += (vert ? 1 : 0) * Math.sin(i * 1.3) * 60; n.o = 0; n.s = .7; paintNode(n); } });
+    var first = mode; mode = null;
+    dropLinks();
+    ScrollTrigger.create({ trigger: stage, start: 'top 85%', once: true, onEnter: function () { setMode(first); scheduleAuto(); } });
+  } else scheduleAuto();
+  wake();
+  var lastV = vert, lastW = document.documentElement.clientWidth, rzT = 0;
+  addEventListener('resize', function () {
+    clearTimeout(rzT);
+    rzT = setTimeout(function () {
+      var w = document.documentElement.clientWidth; if (w === lastW) return; lastW = w; // height-only (URL bar) resizes skip
+      movePill(); setOrient();
+      if (vert !== lastV) { lastV = vert; var m = mode; mode = null; dropLinks(); setMode(m, true); }
+    }, 120);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(movePill);
+
+  /* ---------- camera registry: ONVIF discovery and CSV import, then icons fly from the tray on a wave ---------- */
+  var tray = [].slice.call(document.querySelectorAll('#dpTray li')), rows = [].slice.call(document.querySelectorAll('.dp-reg-row'));
+  var disc = document.getElementById('dpDisc'), csv = document.getElementById('dpCsv');
+  function runAct(btn, bar, txt, busy, done, cb) {
+    var b = document.getElementById(bar), tx = document.getElementById(txt), sw = btn.querySelector('.sweep');
+    if (!hasG || reduce) { b.style.transform = 'scaleX(1)'; tx.textContent = done; cb && cb(); return; }
+    tx.textContent = busy; gsap.fromTo(b, { scaleX: 0 }, { scaleX: 1, duration: .55, ease: 'sine.inOut', onComplete: function () { tx.textContent = done; cb && cb(); } });
+    if (sw) gsap.fromTo(sw, { rotation: 0 }, { rotation: 720, duration: .55, ease: 'sine.inOut', svgOrigin: '17 17' });
+  }
+  function flashRows(list) { list.forEach(function (r, i) { r.classList.add('new'); setTimeout(function () { r.classList.remove('new'); }, 1400 + i * 120); }); }
+  disc.addEventListener('click', function () { runAct(disc, 'dpDiscBar', 'dpDiscTxt', 'Scanning the network · ONVIF', '6 cameras found · added to the registry', function () { flashRows(rows); }); });
+  csv.addEventListener('click', function () { runAct(csv, 'dpCsvBar', 'dpCsvTxt', 'Reading cameras.xlsx', 'Imported · names, sites and map positions', function () { flashRows(rows.slice(2)); }); });
+  if (hasG && !reduce) {
+    ScrollTrigger.create({
+      trigger: '#dpCams', start: 'top 70%', once: true, onEnter: function () {
+        runAct(disc, 'dpDiscBar', 'dpDiscTxt', 'Scanning the network · ONVIF', '6 cameras found · added to the registry');
+        rows.forEach(function (row, i) {
+          var ic = row.querySelector('.dp-reg-ic'), src = tray[i].querySelector('svg');
+          var a = src.getBoundingClientRect(), b = ic.getBoundingClientRect();
+          var dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2);
+          var lift = 46 * (i % 2 ? 1 : -1);
+          var rest = row.querySelectorAll('.dp-reg-id,.dp-reg-pr,.dp-on');
+          gsap.set(ic, { x: dx, y: dy, scale: 1.25 }); gsap.set(rest, { opacity: 0, x: -10 });
+          var tl = gsap.timeline({ delay: .12 * i + .05 * Math.sin(i) });
+          tl.to(ic, { keyframes: [{ x: dx * .5, y: dy * .5 + lift, scale: 1.1, duration: .45, ease: 'sine.out' }, { x: 0, y: 0, scale: 1, duration: .5, ease: 'sine.in' }] })
+            .add(function () { tray[i].classList.add('done'); })
+            .to(rest, { opacity: 1, x: 0, duration: .45, stagger: .04, ease: 'expo.out' }, '-=.1');
+        });
+        setTimeout(function () { runAct(csv, 'dpCsvBar', 'dpCsvTxt', 'Reading cameras.xlsx', 'Imported · names, sites and map positions'); }, 2600);
+      }
+    });
+  } else { tray.forEach(function (li) { li.classList.add('done'); }); runAct(disc, 'dpDiscBar', 'dpDiscTxt', '', '6 cameras found · added to the registry'); runAct(csv, 'dpCsvBar', 'dpCsvTxt', '', 'Imported · names, sites and map positions'); }
+
+  /* ---------- edge photo notes ---------- */
+  var hots = [].slice.call(document.querySelectorAll('.dp-hot')), notes = [].slice.call(document.querySelectorAll('#dpNotes li'));
+  function focusNote(n) { hots.forEach(function (h) { h.classList.toggle('on', +h.dataset.n === n); }); notes.forEach(function (l) { l.classList.toggle('on', +l.dataset.n === n); }); }
+  hots.forEach(function (h) { ['pointerenter', 'focus', 'click'].forEach(function (ev) { h.addEventListener(ev, function () { focusNote(+h.dataset.n); }); }); });
+  notes.forEach(function (l) { l.addEventListener('pointerenter', function () { focusNote(+l.dataset.n); }); });
+  focusNote(0);
+  if (hasG && !reduce) {
+    gsap.from(hots, { scale: 0, duration: .5, ease: 'back.out(2)', stagger: function (i) { return .14 * i + .06 * Math.sin(i * 1.4); }, scrollTrigger: { trigger: '#dpPhoto', start: 'top 75%' } });
+    // notes cycle only while the photo is on screen
+    var ni = 0, niT = 0;
+    new IntersectionObserver(function (es) {
+      if (es[0].isIntersecting) { if (!niT) niT = setInterval(function () { if (!document.hidden && !covered()) { ni = (ni + 1) % 4; focusNote(ni); } }, 4200); }
+      else { clearInterval(niT); niT = 0; }
+    }).observe(document.getElementById('dpPhoto'));
+  }
+
+})();
+</script>
+<script>
+if(!window.INFRAX_ICONS){var s=document.createElement('script');s.src='assets/icons.js';document.body.appendChild(s);}
+else if(window.INFRAX&&INFRAX.icons){INFRAX.icons.render();}
+</script>

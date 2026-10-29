@@ -1,0 +1,446 @@
+<!--META title="AI Video Analytics and Plate Recognition | InfraX AI" desc="Number plates, vehicle classes, watchlist alerts, plate search and camera health on your cameras, running on standard CPU servers." page="analytics" libs="gsap"-->
+<style>
+/* Layout: hero + sticky domain filter, then a grid of live analytic cards (each runs a small simulation),
+   a second group of live cards, and the day / night plate reads. */
+.an-hero{padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) calc(40*var(--s))}
+.an-hero .h-hero{max-width:12em}
+.an-bar{position:sticky;top:calc(var(--nav-h) + env(safe-area-inset-top,0px));z-index:5;background:rgba(255,255,255,.97);border-block:1px solid var(--line)}
+.an-filter{display:flex;gap:calc(6*var(--s));overflow-x:auto;padding-block:calc(12*var(--s));scrollbar-width:none}
+.an-filter::-webkit-scrollbar{display:none}
+.an-filter button{all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:max(44px,calc(44*var(--s)));padding:0 calc(16*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line-2);font:500 max(12px,calc(14*var(--s)))/calc(44*var(--s)) var(--f-body);color:var(--ink-2);background:#fff;transition:background .2s,color .2s,border-color .2s}
+.an-filter button:hover{border-color:var(--blue);color:var(--ink)}
+.an-filter button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.an-filter button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.an-filter .count{font:500 max(12px,calc(12*var(--s))) var(--f-mono);margin-left:calc(6*var(--s));opacity:.75}
+.an-groups{padding-block:var(--gap-c) var(--sec-t)}
+.an-ghead{display:flex;align-items:baseline;justify-content:space-between;gap:calc(16*var(--s));margin-bottom:calc(32*var(--s));flex-wrap:wrap}
+.an-ghead p{margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--muted);max-width:40em}
+/* ~300px+ columns, never more than three; auto-fill keeps a filtered single card at column width */
+.an-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,max(300px,calc((100% - 2*var(--gap-g))/3))),1fr));gap:var(--gap-g)}
+.an-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:calc(14*var(--s));overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,box-shadow .25s}
+.an-card:hover{border-color:var(--line-2);box-shadow:0 calc(24*var(--s)) calc(50*var(--s)) calc(-36*var(--s)) rgba(10,26,43,.45)}
+.an-card[hidden]{display:none!important}
+.an-viz{position:relative;aspect-ratio:16/9;background:#fff;border-bottom:1px solid var(--line)}
+.an-viz canvas{position:absolute;inset:0;width:100%;height:100%}
+.an-body{padding:14px var(--pad-card) 16px;display:flex;flex-direction:column;gap:7px;flex:1}
+.an-top{display:flex;justify-content:space-between;align-items:center;gap:calc(8*var(--s))}
+.an-top h3{font:600 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+.an-body p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+.an-doms{display:flex;flex-wrap:wrap;gap:calc(4*var(--s)) calc(10*var(--s));margin-top:auto;padding-top:calc(6*var(--s));font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted);letter-spacing:.02em}
+.an-doms span::before{content:"";display:inline-block;width:calc(5*var(--s));height:calc(5*var(--s));border-radius:50%;background:var(--blue-soft);margin-right:calc(5*var(--s));vertical-align:1px}
+.an-prod{font:500 max(12px,calc(12*var(--s)))/1.3 var(--f-mono);letter-spacing:.03em;color:var(--blue);margin:0}
+.an-body p.an-prod{font-size:max(12px,calc(12*var(--s)));line-height:1.3}
+.an-empty{padding:calc(20*var(--s)) 0;color:var(--muted)}
+.an-ghead2{margin-top:clamp(calc(64*var(--s)),7vw,calc(96*var(--s)))}
+.an-also{margin:calc(18*var(--s)) 0 0;color:var(--ink-2)}
+.an-grid{grid-auto-rows:1fr}
+.an-dn-grid{max-width:1040px}
+/* day / night */
+.an-dn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(360px,calc((100% - var(--gap-g))/2))),1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
+.an-dn-card{margin:0;border:1px solid var(--line);border-radius:calc(16*var(--s));overflow:hidden;background:#fff;min-width:0;container:andn/inline-size}
+/* narrow cards: the labels under the boxes would run into the ones above, so only the boxes above keep their tags */
+@container andn (max-width:560px){.an-dn-box.below i{display:none}}
+.an-dn-shot{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0A1A2B}
+.an-dn-shot>img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+/* box positions are % of the visible frame: night/IR photos are 16:9 (exact); the 16:10 day photo is top-anchored, y scaled by 1.111 */
+.an-dn-box.below i{top:100%;bottom:auto;margin:calc(4*var(--s)) 0 0}
+.an-dn-box.rt i{left:auto;right:-2px}
+.an-dn-box.sub{animation-delay:.15s}
+.an-dn-box::before,.an-dn-box::after{content:"";position:absolute;width:calc(6*var(--s));height:calc(6*var(--s));border:2px solid #7FB8E8}
+.an-dn-box::before{left:calc(-4*var(--s));top:calc(-4*var(--s));border-right:0;border-bottom:0}.an-dn-box::after{right:calc(-4*var(--s));bottom:calc(-4*var(--s));border-left:0;border-top:0}
+.an-dn-irbox{position:absolute;border:1.5px solid #7FB8E8;border-radius:2px}
+.an-dn-scan{position:absolute;top:0;bottom:0;left:0;width:100%;pointer-events:none;animation:anDnScan 3.2s linear infinite}
+.an-dn-scan::before{content:"";position:absolute;top:0;bottom:0;left:0;width:2px;background:rgba(220,235,247,.9);box-shadow:0 0 calc(14*var(--s)) rgba(38,115,181,.9)}
+@keyframes anDnScan{from{transform:translateX(0)}to{transform:translateX(100%)}}
+.an-dn-box{position:absolute;border:2px solid #fff;border-radius:calc(3*var(--s));box-shadow:0 0 0 1px rgba(38,115,181,.9);animation:anDnBox 3.2s ease-out infinite}
+.an-dn-box i{position:absolute;left:-2px;bottom:100%;margin-bottom:calc(4*var(--s));white-space:nowrap;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);font-style:normal;color:#fff;background:var(--blue);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s))}
+@keyframes anDnBox{0%,20%{opacity:0;transform:scale(1.15)}32%,92%{opacity:1;transform:none}100%{opacity:0}}
+.an-dn-plate{position:absolute;font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--ink);background:#fff;border:1px solid var(--ink);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s));white-space:nowrap;animation:anDnBox 3.2s ease-out infinite;animation-delay:.25s}
+.an-dn-tag{position:absolute;right:calc(10*var(--s));top:calc(10*var(--s));display:inline-flex;align-items:center;gap:calc(6*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#fff;background:rgba(10,26,43,.72);padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(999*var(--s))}
+.an-dn-tag b{width:calc(7*var(--s));height:calc(7*var(--s));border-radius:50%;background:#E24B42;animation:livepulse 1.8s infinite}
+.an-dn-ir{position:absolute;right:calc(10*var(--s));bottom:calc(10*var(--s));width:34%;aspect-ratio:16/9;border:2px solid #fff;border-radius:calc(6*var(--s));overflow:hidden;box-shadow:0 calc(10*var(--s)) calc(24*var(--s)) calc(-12*var(--s)) rgba(0,0,0,.6)}
+.an-dn-ir img{width:100%;height:100%;object-fit:cover;display:block}
+.an-dn-ir em{position:absolute;left:calc(6*var(--s));top:calc(6*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);font-style:normal;color:#fff;background:rgba(10,26,43,.72);padding:calc(3*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s))}
+.an-dn-card figcaption{display:flex;flex-direction:column;gap:calc(4*var(--s));padding:calc(14*var(--s)) calc(16*var(--s)) calc(16*var(--s))}
+.an-dn-card figcaption b{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);color:var(--ink)}
+.an-dn-card figcaption span{font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
+.an-dn-note{margin:calc(12*var(--s)) 0 0;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){ .an-dn-scan{display:none} .an-dn-box,.an-dn-plate{animation:none;opacity:1} }
+.an-dn-box.s{border-width:1.5px;box-shadow:none;border-radius:2px}
+.an-dn-box.s::before,.an-dn-box.s::after{display:none}
+.an-dn-box.big i{font-size:max(12px,calc(12.5*var(--s)))}
+.an-dn-count{position:absolute;left:calc(10*var(--s));top:calc(10*var(--s));font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#fff;background:rgba(10,26,43,.78);border:1px solid rgba(127,184,232,.6);padding:calc(5*var(--s)) calc(8*var(--s));border-radius:calc(4*var(--s))}
+.an-dn-irbox.car{border-color:rgba(255,255,255,.85);border-width:1.5px}
+/* v17 calmer visuals */
+.an-dn-grid{max-width:1080px;margin-inline:auto}
+/* day / night: centred heading, 2pt larger than the other section headings; the note centred under the pictures */
+#anDnH{text-align:center;font-size:var(--fs-h2)}
+.an-dn-note{text-align:center}
+</style>
+
+<section class="an-hero"><div class="wrap">
+  <h1 class="h-hero" data-reveal>What your cameras read and flag.</h1>
+  <p class="lead">Cygnus runs them on the cameras you already own; VIDES runs them on the gantry. Everything marked Live is in production.</p>
+</div></section>
+
+<div class="an-bar"><div class="wrap">
+  <div class="an-filter" role="group" aria-label="Filter analytics by domain" id="anFilter">
+    <button type="button" data-f="all" aria-pressed="true">All<span class="count"></span></button>
+    <button type="button" data-f="hwy" aria-pressed="false">Highways<span class="count"></span></button>
+    <button type="button" data-f="city" aria-pressed="false">Cities<span class="count"></span></button>
+    <button type="button" data-f="campus" aria-pressed="false">Campuses<span class="count"></span></button>
+    <button type="button" data-f="ports" aria-pressed="false">Ports<span class="count"></span></button>
+    <button type="button" data-f="wh" aria-pressed="false">Warehouses<span class="count"></span></button>
+    <button type="button" data-f="cons" aria-pressed="false">Construction<span class="count"></span></button>
+  </div>
+</div></div>
+
+<section class="an-groups"><div class="wrap" id="anWrap">
+  <div class="an-ghead"><h2 class="h-sub">Plates and vehicles. Live today.</h2></div>
+  <div class="an-grid">
+    <article class="an-card" data-sim="anpr" data-d="hwy city campus ports wh cons" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Number plate recognition</h3><span class="st st-live">Live</span></div><p>Indian plates, including two-row, HSRP and BH series, with a confidence score.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="classify" data-d="hwy city ports" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Vehicle detection &amp; classification</h3><span class="st st-live">Live</span></div><p>Car, truck, bus or two-wheeler for every vehicle.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="watch" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Watchlist vehicle alerts</h3><span class="st st-live">Live</span></div><p>An alarm the moment a flagged vehicle is read on any camera or gantry.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="journey" data-d="hwy city ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Plate search &amp; journeys</h3><span class="st st-live">Live</span></div><p>Search a plate and see every camera that read it, in order, on the map, with the clips.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="health" data-d="hwy city campus ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Camera tamper &amp; health</h3><span class="st st-live">Live</span></div><p>A warning the moment a camera is blinded, moved or drops its stream.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="count" data-d="hwy city" data-p="VIDES · Central Plexus (ATMS)"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Traffic counts by lane and hour</h3><span class="st st-live">Live</span></div><p>Every vehicle counted by lane and hour, for traffic reports.</p><div class="an-doms"></div></div></article>
+  </div>
+  <p class="an-empty" id="anEmpty" hidden>No live analytics for this domain yet. Ask us about it.</p>
+
+  <div class="an-ghead an-ghead2"><h2 class="h-sub">Incidents, safety and sites. Also live.</h2><p>Incident, safety and site analytics on the same cameras.</p></div>
+  <div class="an-grid an-grid2">
+    <article class="an-card" data-sim="wrongway" data-d="hwy" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Wrong-way driving</h3><span class="st st-live">Live</span></div><p>A vehicle moving against the traffic raises an alert with the clip and the lane.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="stopped" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Stopped or stalled vehicle</h3><span class="st st-live">Live</span></div><p>A vehicle stopped on the carriageway or shoulder is flagged with its location.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="speed" data-d="hwy" data-p="InfraX VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Radar speed fusion</h3><span class="st st-live">Live</span></div><p>Camera and radar on the gantry give every vehicle a speed in km/h, with images for overspeed cases.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="track" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Camera-to-camera tracking</h3><span class="st st-live">Live</span></div><p>Follows one vehicle across cameras by its plate and its look.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="people" data-d="campus ports wh" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>People counting</h3><span class="st st-live">Live</span></div><p>In and out counts at gates, lobbies and walkways, by hour.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="zone" data-d="campus ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Zone intrusion · line crossing</h3><span class="st st-live">Live</span></div><p>An alert when someone enters a marked zone or crosses a line.</p><div class="an-doms"></div></div></article>
+  </div>
+  <p class="an-also mono">Also live: search recorded video in plain words, such as “two-wheeler on the road”.</p>
+</div></section>
+
+<section class="scene tight an-dn" aria-labelledby="anDnH"><div class="wrap">
+  <h2 class="h-2" id="anDnH" data-reveal>Reads plates day and night, even on infrared.</h2>
+  <div class="an-dn-grid">
+    <figure class="an-dn-card">
+      <div class="an-dn-shot"><img decoding="async" src="img/real/tiles/t1-corridor.jpg" alt="Daytime highway camera view (masked corridor feed)" loading="lazy" width="640" height="400">
+        <span class="an-dn-scan" aria-hidden="true"></span>
+        <span class="an-dn-box below rt" style="left:57.6%;top:6.2%;width:4.2%;height:6.7%" aria-hidden="true"><i>Van · 0.96 · 64 km/h</i></span>
+        <span class="an-dn-box sub" style="left:53.8%;top:7.1%;width:2.4%;height:4%" aria-hidden="true"></span>
+        <span class="an-dn-plate" style="right:38.2%;top:24%" aria-hidden="true">XX 00 AB 1234</span>
+        <span class="an-dn-tag" aria-hidden="true"><b></b>Day · live</span></div>
+      <figcaption><b>Day</b><span>Plate, class and speed from the gantry and roadside cameras.</span></figcaption>
+    </figure>
+    <figure class="an-dn-card">
+      <div class="an-dn-shot an-dn-night"><img decoding="async" src="img/night-highway-sm.jpg" srcset="img/night-highway-sm.jpg 768w, img/night-highway.jpg 1536w" sizes="(min-width:1024.02px) 540px, (min-width:768.02px) 50vw, 100vw" alt="Night highway camera view with headlights and streetlights (illustrative)" loading="lazy" width="768" height="432">
+        <span class="an-dn-scan" aria-hidden="true"></span>
+        <span class="an-dn-box big" style="left:16.80%;top:64.58%;width:11.33%;height:15.51%;animation-delay:0.00s" aria-hidden="true"><i>Car · 0.97</i></span>
+        <span class="an-dn-box" style="left:41.41%;top:52.55%;width:7.16%;height:12.04%;animation-delay:0.12s" aria-hidden="true"><i>Car · 0.95</i></span>
+        <span class="an-dn-box below" style="left:26.04%;top:31.83%;width:10.81%;height:21.64%;animation-delay:0.24s" aria-hidden="true"><i>Truck · 0.93</i></span>
+        <span class="an-dn-box" style="left:40.23%;top:37.96%;width:4.69%;height:6.94%;animation-delay:0.36s" aria-hidden="true"></span>
+        <span class="an-dn-box" style="left:46.48%;top:39.35%;width:4.56%;height:7.18%;animation-delay:0.48s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:39.26%;top:26.97%;width:2.34%;height:3.24%;animation-delay:0.60s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:38.09%;top:23.15%;width:1.76%;height:2.43%;animation-delay:0.72s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:40.76%;top:21.76%;width:1.56%;height:2.20%;animation-delay:0.00s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:46.88%;top:22.57%;width:1.43%;height:2.20%;animation-delay:0.12s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:42.84%;top:20.60%;width:1.56%;height:2.20%;animation-delay:0.24s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:44.66%;top:20.14%;width:1.30%;height:1.97%;animation-delay:0.36s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:27.86%;top:26.50%;width:1.95%;height:2.20%;animation-delay:0.48s" aria-hidden="true"></span>
+        <span class="an-dn-box" style="left:80.47%;top:32.64%;width:11.85%;height:15.51%;animation-delay:0.60s" aria-hidden="true"><i>Bus · 0.94</i></span>
+        <span class="an-dn-box below" style="left:67.19%;top:42.82%;width:5.86%;height:8.56%;animation-delay:0.72s" aria-hidden="true"><i>Car · 0.92</i></span>
+        <span class="an-dn-box" style="left:71.61%;top:38.54%;width:5.08%;height:6.37%;animation-delay:0.00s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:62.89%;top:22.69%;width:3.78%;height:6.94%;animation-delay:0.12s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:60.55%;top:30.67%;width:3.12%;height:4.28%;animation-delay:0.24s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:55.86%;top:25.23%;width:1.95%;height:2.78%;animation-delay:0.36s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:60.55%;top:24.31%;width:2.08%;height:2.55%;animation-delay:0.48s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:53.52%;top:21.06%;width:1.56%;height:1.85%;animation-delay:0.60s" aria-hidden="true"></span>
+        <span class="an-dn-plate" style="left:16.80%;top:81.02%" aria-hidden="true">XX 07 KD 4410</span>
+        <span class="an-dn-count" aria-hidden="true">20 vehicles</span>
+        <span class="an-dn-ir"><img decoding="async" src="img/night-ir-sm.jpg" alt="Infrared night view of the same lane (illustrative)" loading="lazy" width="768" height="432"><span class="an-dn-irbox car" style="left:33.9%;top:23.1%;width:22.1%;height:39.8%"></span><span class="an-dn-irbox car" style="left:37.5%;top:0%;width:10.9%;height:3.4%"></span><span class="an-dn-irbox" style="left:41.9%;top:51.4%;width:6.8%;height:3.7%"></span><em>IR · plate</em></span>
+        <span class="an-dn-tag" aria-hidden="true"><b></b>Night · IR · live</span></div>
+      <figcaption><b>Night</b><span>Infrared cameras keep the plate readable when the road goes dark.</span></figcaption>
+    </figure>
+  </div>
+  <p class="an-dn-note mono">Day view: masked corridor feed · night views illustrative · dummy plates</p>
+</div></section>
+<div class="wrap"><a class="next-band" href="deployment.html"><div><p class="eyebrow">Next</p><p class="h-1">Runs on your own servers</p></div><span class="arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a></div>
+<!--PAGE-SCRIPTS-->
+<script>
+(function () {
+  var X = window.INFRAX || {}, reduce = !!X.reduce;
+  var lite = X.lite !== undefined ? !!X.lite : !!(window.matchMedia && matchMedia('(max-width:768px),(pointer:coarse)').matches);
+  var dpr = lite ? 1 : Math.min(devicePixelRatio || 1, 2);
+  var DOM = { hwy: 'Highways', city: 'Cities', campus: 'Campuses', ports: 'Ports', wh: 'Warehouses', cons: 'Construction' };
+  var B = '38,115,181', D = '14,59,102', S = '90,159,212', A = '214,69,61', INK = '10,26,43', MUT = '91,110,130';
+  var cards = [].slice.call(document.querySelectorAll('.an-card'));
+  cards.forEach(function (c) {
+    c.querySelector('.an-doms').innerHTML = c.dataset.d.split(' ').map(function (k) { return '<span>' + DOM[k] + '</span>'; }).join('');
+    if (c.dataset.p) { var pp = document.createElement('p'); pp.className = 'an-prod'; pp.textContent = 'In ' + c.dataset.p; c.querySelector('.an-doms').before(pp); }
+  });
+
+  function ease(k) { k = Math.max(0, Math.min(1, k)); return 1 - Math.pow(1 - k, 3); }
+  function font(c, px, w) { c.font = (w || 500) + ' ' + Math.max(12, px) + 'px "Geist Mono",monospace'; }
+  function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  function car(c, x, y, w, h, col) { rr(c, x, y, w, h, Math.min(w, h) * .25); c.fillStyle = col; c.fill(); }
+  function lanes(c, W, H, n, top, bot, t, dash) {
+    c.strokeStyle = 'rgba(' + B + ',.18)'; c.lineWidth = 1;
+    for (var i = 0; i <= n; i++) { var y = top + (bot - top) * i / n; c.setLineDash(i === 0 || i === n ? [] : [10, 10]); c.lineDashOffset = dash ? -t * 40 : 0; c.beginPath(); c.moveTo(0, y); c.lineTo(W, y); c.stroke(); }
+    c.setLineDash([]);
+  }
+  function pill(c, x, y, s, col) {
+    font(c, 12); var tw = c.measureText(s).width + 12, th = 19;
+    c.fillStyle = 'rgba(' + col + ',1)'; rr(c, x, y - th, tw, th, 3); c.fill();
+    c.fillStyle = '#fff'; c.fillText(s, x + 6, y - 5);
+  }
+  function vline(c, x, y0, y1, col, w) { c.strokeStyle = col; c.lineWidth = w || 2; c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); }
+
+  var PLATES = ['XX 26 AB 1234', 'XX 03 CD 1290', 'XX 16 CT 4411', 'XX 04 KU 6620', '22 BH 0000 XX', 'XX 05 MN 7720'];
+  var SIMS = {
+    wrongway: function (c, W, H, t) {
+      lanes(c, W, H, 3, H * .2, H * .9, t, true);
+      for (var i = 0; i < 6; i++) {
+        var ln = i % 2 ? 2 : 0, slot = Math.floor(i / 2), x = ((t * (ln ? .14 : .12) + slot / 3 * 1.25) % 1.25 - .1) * W, y = H * .2 + (ln + .5) * (H * .7 / 3);
+        car(c, x, y - 7, W * .085, 14, 'rgba(' + S + ',.6)');
+      }
+      var k = (t % 4) / 4, wx = (1.05 - k * 1.2) * W, wy = H * .2 + 1.5 * (H * .7 / 3);
+      car(c, wx, wy - 8, W * .09, 16, 'rgba(' + A + ',.95)');
+      var r = 8 + ((t * 28) % 20); c.beginPath(); c.arc(wx + W * .045, wy, r, 0, 7); c.strokeStyle = 'rgba(' + A + ',' + (1 - r / 30) + ')'; c.lineWidth = 2; c.stroke();
+      pill(c, Math.max(4, Math.min(W - 120, wx - 10)), wy - 14, 'WRONG WAY · lane 2', A);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('clip + lane attached · sample', 14, H - 10);
+    },
+    stopped: function (c, W, H, t) {
+      lanes(c, W, H, 2, H * .18, H * .7, t, true);
+      for (var i = 0; i < 7; i++) {
+        var ln = i % 2, slot = Math.floor(i / 2), x = ((t * (ln ? .15 : .13) + slot / 4 * 1.2) % 1.2 - .1) * W, y = H * .18 + (ln + .5) * (H * .52 / 2);
+        car(c, x, y - 7, W * .08, 14, 'rgba(' + S + ',.6)');
+      }
+      c.fillStyle = 'rgba(' + B + ',.08)'; c.fillRect(0, H * .72, W, H * .14);
+      var sx = W * .58, sy = H * .79, dwell = Math.floor(t * 8) % 90;
+      car(c, sx, sy - 8, W * .1, 16, dwell > 30 ? 'rgba(' + A + ',.95)' : 'rgba(' + D + ',.85)');
+      pill(c, Math.min(W - 150, sx - 20), sy - 14, (dwell > 30 ? 'STOPPED · ' : 'dwell · ') + '00:' + String(dwell % 60).padStart(2, '0'), dwell > 30 ? A : D);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('shoulder · threshold 30 s · sample', 14, H - 6);
+    },
+    speed: function (c, W, H, t) {
+      lanes(c, W, H, 3, H * .3, H * .92, t, true);
+      var gx = W * .5;
+      for (var a = 0; a < 3; a++) { var r = ((t * 70 + a * 40) % 120); c.beginPath(); c.arc(gx, H * .12, r, .35 * Math.PI, .65 * Math.PI); c.strokeStyle = 'rgba(' + B + ',' + Math.max(0, .6 - r / 200) + ')'; c.lineWidth = 2; c.stroke(); }
+      c.fillStyle = 'rgba(' + D + ',1)'; c.fillRect(gx - 14, H * .08, 28, 10);
+      var SP = [88, 112, 74, 96, 104];
+      for (var i = 0; i < 5; i++) {
+        var ln = i % 3, slot = Math.floor(i / 3), x = ((t * (.1 + ln * .03) + slot / 2 * 1.25) % 1.25 - .12) * W, y = H * .3 + (ln + .5) * (H * .62 / 3), over = SP[i] > 100;
+        car(c, x, y - 7, W * .085, 14, over ? 'rgba(' + A + ',.9)' : 'rgba(' + B + ',.8)');
+        if (x > gx - W * .2 && x < gx + W * .25) pill(c, x, y - 10, SP[i] + ' km/h', over ? A : B);
+      }
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('limit 100 · camera + radar · sample', 14, H - 6);
+    },
+    track: function (c, W, H, t) {
+      var n = 3, gw = (W - 24 - 16) / n, gh = H * .55, cyc = 4.5, k = (t % cyc) / cyc;
+      for (var i = 0; i < n; i++) {
+        var x = 12 + i * (gw + 8), y = 14, on = k * 3.4 > i + .3;
+        rr(c, x, y, gw, gh, 6); c.fillStyle = 'rgba(' + D + ',.9)'; c.fill();
+        c.strokeStyle = 'rgba(255,255,255,.18)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + gw * .5, y + 6); c.lineTo(x + gw * .2, y + gh - 4); c.moveTo(x + gw * .5, y + 6); c.lineTo(x + gw * .8, y + gh - 4); c.stroke();
+        font(c, 12); c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('CAM-0' + (3 + i * 4), x + 6, y + 16);
+        if (on) { var cx = x + gw * (.42 + .06 * Math.sin(t + i)), cy = y + gh * .62; car(c, cx - 10, cy - 7, 22, 14, 'rgba(255,255,255,.95)'); c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.strokeRect(cx - 14, cy - 11, 30, 22); }
+      }
+      var m = Math.min(3, Math.floor(k * 3.4 - .3) + 1);
+      font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('XX 26 AB 1234 · white hatchback', 14, H * .55 + 38);
+      c.fillStyle = 'rgba(' + B + ',1)'; c.fillText(Math.max(0, m) + ' of 3 cameras · match 0.94 · sample', 14, H * .55 + 58);
+    },
+    people: function (c, W, H, t) {
+      var line = W * .5, inN = 0, outN = 0;
+      c.fillStyle = 'rgba(' + B + ',.06)'; c.fillRect(0, H * .2, W, H * .6);
+      for (var i = 0; i < 14; i++) {
+        var dir = i % 3 ? 1 : -1, sp = .08 + (i % 4) * .015, p = (t * sp + i * .13) % 1.1 - .05;
+        var x = (dir > 0 ? p : 1 - p) * W, y = H * .26 + ((i * 37) % 100) / 100 * H * .48;
+        if (dir > 0 && x > line) inN++; if (dir < 0 && x < line) outN++;
+        c.beginPath(); c.arc(x, y, 4.5, 0, 7); c.fillStyle = (dir > 0 ? (x > line ? 'rgba(' + B + ',1)' : 'rgba(' + S + ',.6)') : (x < line ? 'rgba(' + D + ',1)' : 'rgba(' + S + ',.6)')); c.fill();
+      }
+      vline(c, line, H * .16, H * .84, 'rgba(' + D + ',.8)', 2);
+      var base = 300 + Math.floor(t * 2);
+      font(c, 12, 600); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('IN ' + (base + inN), 14, 22); c.fillText('OUT ' + (base - 40 + outN), W - 84, 22);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Gate 2 walkway · by hour · sample', 14, H - 8);
+    },
+    zone: function (c, W, H, t) {
+      var Z = [[.52, .22], [.9, .3], [.86, .78], [.5, .7]], inside = false;
+      var k = (t % 5) / 5, px = W * (.2 + k * .55), py = H * (.55 + .1 * Math.sin(t * 2));
+      inside = px > W * .52 && px < W * .86;
+      c.beginPath(); Z.forEach(function (p, i) { i ? c.lineTo(p[0] * W, p[1] * H) : c.moveTo(p[0] * W, p[1] * H); }); c.closePath();
+      c.fillStyle = inside ? 'rgba(' + A + ',.12)' : 'rgba(' + B + ',.08)'; c.fill();
+      c.setLineDash([7, 5]); c.strokeStyle = inside ? 'rgba(' + A + ',.9)' : 'rgba(' + B + ',.8)'; c.lineWidth = 2; c.stroke(); c.setLineDash([]);
+      vline(c, W * .3, H * .15, H * .9, 'rgba(' + D + ',.6)', 2);
+      c.beginPath(); c.arc(px, py - 10, 5, 0, 7); c.fillStyle = inside ? 'rgba(' + A + ',1)' : 'rgba(' + D + ',1)'; c.fill();
+      c.fillRect(px - 3, py - 4, 6, 14);
+      if (inside) pill(c, Math.min(W - 140, W * .55), H * .2, 'ZONE INTRUSION', A);
+      else if (px > W * .3) pill(c, W * .32, H * .2, 'LINE CROSSED', B);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('excavation zone · sample', 14, H - 8);
+    },
+    anpr: function (c, W, H, t) {
+      var cyc = 3.2, k = (t % cyc) / cyc, p = PLATES[Math.floor(t / cyc) % PLATES.length];
+      var pw = Math.min(W * .8, 280), ph = pw * .26, x = (W - pw) / 2, y = H * .3;
+      rr(c, x, y, pw, ph, 6); c.fillStyle = '#fff'; c.fill(); c.strokeStyle = 'rgba(' + INK + ',.85)'; c.lineWidth = 2; c.stroke();
+      c.fillStyle = 'rgba(' + B + ',1)'; c.fillRect(x + 4, y + 4, pw * .07, ph - 8);
+      var chars = p.split(''), cw = (pw * .86) / chars.length;
+      chars.forEach(function (ch, i) {
+        var lock = ease((k * 1.8 - i / chars.length) * 4), cx = x + pw * .11 + i * cw;
+        c.font = '700 ' + (ph * .5) + 'px "Geist Mono",monospace'; c.fillStyle = 'rgba(' + INK + ',' + (.25 + lock * .75) + ')';
+        c.fillText(lock > .5 ? ch : '0123456789ABCDEFGHJKLMNPRSTUVWXYZ'.charAt(Math.floor(t * 20 + i * 7) % 33), cx, y + ph * .7);
+        if (ch !== ' ' && lock > .1) { c.strokeStyle = 'rgba(' + B + ',' + lock + ')'; c.lineWidth = 1.2; c.strokeRect(cx - 2, y + ph * .18, cw - 2, ph * .66); }
+      });
+      vline(c, x + pw * Math.min(1, k * 1.6), y - 8, y + ph + 8, 'rgba(' + B + ',.85)', 2);
+      font(c, 12); c.fillStyle = 'rgba(' + D + ',' + ease(k * 2 - .9) + ')';
+      c.fillText('conf ' + (0.95 + (Math.floor(t / cyc) % 4) * .01).toFixed(2) + ' · CAM-041 · sample', x, y + ph + 28);
+    },
+    classify: function (c, W, H, t) {
+      lanes(c, W, H, 3, H * .22, H * .9, t, true);
+      var cls = [['CAR', .1, .13], ['TRUCK', .2, .17], ['2W', .06, .1], ['BUS', .24, .17], ['3W', .08, .12]];
+      var scan = W * .55;
+      for (var i = 0; i < 6; i++) {
+        var cl = cls[i % cls.length], ln = i % 3, sp = .1 + ln * .025, slot = Math.floor(i / 3);
+        var x = ((t * sp + slot / 2 * 1.3) % 1.3 - .15) * W, y = H * .22 + (ln + .5) * (H * .68 / 3);
+        var w = cl[1] * W, h = cl[2] * H, known = x + w > scan;
+        car(c, x, y - h / 2, w, h, known ? 'rgba(' + B + ',.85)' : 'rgba(' + MUT + ',.35)');
+        if (known) pill(c, x, y - h / 2 - 3, cl[0], B);
+      }
+      vline(c, scan, 0, H, 'rgba(' + D + ',.7)', 1.5);
+    },
+    count: function (c, W, H, t) {
+      lanes(c, W, H, 2, H * .44, H * .92, t, true);
+      var line = W * .5;
+      for (var i = 0; i < 10; i++) {
+        var ln = i % 2, sp = ln ? .135 : .12, slot = Math.floor(i / 2), pos = (t * sp + slot / 5 * 1.2), x = (pos % 1.2 - .1) * W, y = H * .44 + (ln + .5) * (H * .48 / 2);
+        car(c, x, y - 7, W * .08, 14, x > line ? 'rgba(' + B + ',.9)' : 'rgba(' + S + ',.55)');
+      }
+      vline(c, line, H * .4, H * .96, 'rgba(' + D + ',.8)', 2);
+      c.font = '600 ' + Math.min(34, H * .2) + 'px "Geist Mono",monospace'; c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText(String(1200 + Math.floor(t * 1.9)), 14, H * .27);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('vehicles this hour · lanes 1 + 2 · sample', 14, H * .27 + 18);
+    },
+    journey: function (c, W, H, t) {
+      // a plate is typed into search; the cameras that READ it light up in time order (past reads only, no path lines)
+      var plate = 'XX 26 AB 1234', cyc = 5.5, k = (t % cyc) / cyc;
+      rr(c, 12, 12, W - 24, 28, 14); c.fillStyle = '#fff'; c.fill(); c.strokeStyle = 'rgba(' + B + ',.5)'; c.lineWidth = 1; c.stroke();
+      var typed = plate.slice(0, Math.max(0, Math.min(plate.length, Math.floor(k * 60))));
+      font(c, 12, 600); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('Search  ' + typed + (k < .23 && Math.floor(t * 3) % 2 ? '|' : ''), 24, 31);
+      var P = [[.12, .62], [.36, .8], [.6, .56], [.86, .74]], TM = ['07:42', '07:51', '08:03', '08:16'];
+      var reach = Math.max(0, (k - .25) / .45);
+      P.forEach(function (p, i) {
+        var on = reach * 3 >= i - .02, x = p[0] * W, y = p[1] * H;
+        c.beginPath(); c.arc(x, y, on ? 6 : 4, 0, 7); c.fillStyle = on ? 'rgba(' + B + ',1)' : 'rgba(' + MUT + ',.35)'; c.fill();
+        if (on) pill(c, Math.min(W - 108, Math.max(4, x - 30)), y - 12, 'CAM-0' + (3 + i * 2) + ' ' + TM[i], D);
+      });
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText(Math.min(4, Math.max(0, Math.floor(reach * 3 + 1.01))) + ' reads · clips ready · sample', 12, H - 10);
+    },
+    watch: function (c, W, H, t) {
+      var rowH = 26, list = ['XX 14 CV 0021', 'XX 51 BQ 7740', 'XX 08 AF 3302', 'XX 32 MN 7781', 'XX 10 GH 1188', 'XX 26 AZ 0456', 'XX 01 BX 9921'];
+      var off = (t * 16) % (rowH * list.length);
+      c.save(); c.beginPath(); c.rect(0, 0, W, H - 30); c.clip();
+      for (var i = 0; i < list.length + 6; i++) {
+        var y = i * rowH - off + 18, p = list[i % list.length], hit = p === 'XX 32 MN 7781';
+        font(c, 13, hit ? 600 : 500); c.fillStyle = hit ? 'rgba(' + A + ',1)' : 'rgba(' + INK + ',.55)';
+        c.fillText(p, 16, y);
+        if (hit) { var cy = y - 4, r = 6 + ((t * 30) % 22); c.beginPath(); c.arc(W - 30, cy, r, 0, 7); c.strokeStyle = 'rgba(' + A + ',' + (1 - r / 28) + ')'; c.lineWidth = 2; c.stroke(); c.beginPath(); c.arc(W - 30, cy, 4, 0, 7); c.fillStyle = 'rgba(' + A + ',1)'; c.fill(); font(c, 12); c.fillText('MATCH', W - 96, y); }
+      }
+      c.restore();
+      font(c, 12); c.fillStyle = 'rgba(' + D + ',1)'; c.fillText('Watchlist · sample data', 14, H - 11);
+    },
+    health: function (c, W, H, t) {
+      // six cameras with a bitrate bar sparkline; one goes dark (blinded), then recovers
+      var cols = 3, rows = 2, gw = (W - 24 - (cols - 1) * 8) / cols, gh = (H - 24 - (rows - 1) * 8) / rows;
+      for (var i = 0; i < 6; i++) {
+        var x = 12 + (i % cols) * (gw + 8), y = 12 + Math.floor(i / cols) * (gh + 8);
+        var k = t % 6, down = i === 4 && k > 2 && k < 4.2;
+        rr(c, x, y, gw, gh, 6); c.fillStyle = '#fff'; c.fill(); c.strokeStyle = down ? 'rgba(' + A + ',.8)' : 'rgba(' + B + ',.18)'; c.lineWidth = 1; c.stroke();
+        var bars = 10, bw = (gw - 16) / bars;
+        for (var j = 0; j < bars; j++) {
+          var v = down ? .05 : .45 + .35 * Math.abs(Math.sin(j * 1.7 + Math.floor(t * 4) * .9 + i));
+          c.fillStyle = 'rgba(' + (down ? A : B) + ',' + (down ? .6 : .75) + ')';
+          c.fillRect(x + 8 + j * bw, y + gh * .62 - v * gh * .38, bw - 2, v * gh * .38);
+        }
+        font(c, 12); c.fillStyle = 'rgba(' + (down ? A : MUT) + ',1)'; c.fillText(down ? 'CAM-0' + (i + 1) + ' BLINDED' : 'CAM-0' + (i + 1) + ' OK', x + 8, y + gh - 8, gw - 14);
+      }
+    }
+  };
+
+  /* ---- canvases: size, visibility, one shared loop ---- */
+  var items = cards.map(function (card) {
+    var cv = card.querySelector('canvas');
+    return { card: card, cv: cv, c: fitText(cv.getContext('2d')), fn: SIMS[card.dataset.sim], vis: false, t0: performance.now() - Math.random() * 3000 };
+  });
+  // a caption wider than the room left (to the canvas edge, or the given max width) shrinks to 10px, then ends in an ellipsis
+  function fitText(c) {
+    var f = c.fillText, re = /(\d+(?:\.\d+)?)px/;
+    c.fillText = function (s, x, y, mw) {
+      s = String(s); var lim = mw || (c.canvas.width / dpr - x - 6), f0 = c.font;
+      if (lim > 0 && c.measureText(s).width > lim) {
+        var m = re.exec(f0), px = m ? +m[1] : 12;
+        while (px > 10 && c.measureText(s).width > lim) { px -= .5; c.font = f0.replace(re, px + 'px'); }
+        if (c.measureText(s).width > lim) { while (s.length > 1 && c.measureText(s + '\u2026').width > lim) s = s.slice(0, -1); s += '\u2026'; }
+      }
+      f.call(c, s, x, y); c.font = f0;
+    };
+    return c;
+  }
+  // canvas buffers follow each canvas's CSS size; unchanged sizes are skipped (setting width clears and reallocates)
+  function size(it) {
+    var w = it.cv.clientWidth, h = it.cv.clientHeight; if (w === it.W && h === it.H) return;
+    it.W = w; it.H = h; it.cv.width = Math.max(1, Math.round(w * dpr)); it.cv.height = Math.max(1, Math.round(h * dpr)); it.c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    it.drawn = false; wake();
+  }
+  var rzT = 0, pend = [];
+  function later(list) { list.forEach(function (it) { if (pend.indexOf(it) < 0) pend.push(it); }); clearTimeout(rzT); rzT = setTimeout(function () { var p = pend; pend = []; p.forEach(size); }, 120); }
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(function (es) { later(es.map(function (e) { return items.find(function (x) { return x.cv === e.target; }); }).filter(Boolean)); });
+    items.forEach(function (it) { ro.observe(it.cv); });
+  } else addEventListener('resize', function () { later(items); });
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { var it = items.find(function (x) { return x.cv === e.target; }); if (it) { it.vis = e.isIntersecting; if (it.vis) { if (!it.W) size(it); wake(); } } }); });
+  items.forEach(function (it) { io.observe(it.cv); });
+  // one shared loop; it sleeps when nothing is on screen, the tab is hidden or the demo modal covers the page.
+  // reduced motion: each canvas is drawn once (again only after a resize), no loop
+  var raf = 0;
+  function covered() { return !!(window.INFRAX && INFRAX.covered); }
+  function wake() { if (!raf) raf = requestAnimationFrame(loop); }
+  function loop(now) {
+    raf = 0; if (document.hidden || covered()) return;
+    var any = false;
+    items.forEach(function (it) {
+      if (!it.vis || it.card.hidden || !it.fn || !it.W) return;
+      any = true; if (reduce) { if (it.drawn) return; it.drawn = true; }
+      it.c.clearRect(0, 0, it.W, it.H);
+      it.fn(it.c, it.W, it.H, reduce ? 3.3 : (now - it.t0) / 1000);
+    });
+    if (any && !reduce) raf = requestAnimationFrame(loop);
+  }
+  document.addEventListener('visibilitychange', wake); document.addEventListener('infrax:cover', wake);
+  items.forEach(size);
+
+  /* ---- domain filter with a quick FLIP reflow ---- */
+  var btns = [].slice.call(document.querySelectorAll('#anFilter button'));
+  btns.forEach(function (b) { var f = b.dataset.f; b.querySelector('.count').textContent = cards.filter(function (c) { return f === 'all' || c.dataset.d.split(' ').indexOf(f) > -1; }).length; });
+  function apply(f) {
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.f === f); });
+    var first = new Map(); cards.forEach(function (c) { if (!c.hidden) first.set(c, c.getBoundingClientRect()); });
+    cards.forEach(function (c) { c.hidden = !(f === 'all' || c.dataset.d.split(' ').indexOf(f) > -1); });
+    document.getElementById('anEmpty').hidden = !!document.querySelector('.an-card:not([hidden])');
+    items.forEach(function (it) { if (!it.card.hidden) size(it); });
+    wake();
+    if (reduce || !window.gsap) return;
+    cards.forEach(function (c, i) {
+      if (c.hidden) return;
+      var last = c.getBoundingClientRect(), f0 = first.get(c);
+      if (f0) gsap.fromTo(c, { x: f0.left - last.left, y: f0.top - last.top }, { x: 0, y: 0, opacity: 1, duration: .45, ease: 'expo.out', overwrite: 'auto' });
+      else gsap.fromTo(c, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .45, ease: 'expo.out', delay: i * .03, overwrite: true });
+    });
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.f); }); });
+
+  /* ---- entrance: cards rise quickly ---- */
+  if (!reduce && window.gsap && window.ScrollTrigger) {
+    document.querySelectorAll('.an-grid').forEach(function (g) { gsap.from(g.children, { y: 20, opacity: 0, duration: .45, ease: 'expo.out', stagger: .04, scrollTrigger: { trigger: g, start: 'top 90%', once: true } }); });
+  }
+})();
+</script>
+
+<script>
+if(!window.INFRAX_ICONS){var s=document.createElement('script');s.src='assets/icons.js';document.body.appendChild(s);}
+else if(window.INFRAX&&INFRAX.icons){INFRAX.icons.render();}
+</script>

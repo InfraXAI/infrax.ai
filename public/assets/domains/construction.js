@@ -44,7 +44,7 @@
   };
 
   function build(host, ctx) {
-    var T = ctx.THREE, MOB = !!ctx.mobile, REDUCE = !!ctx.reduce, SH = !MOB;
+    var T = ctx.THREE, MOB = !!ctx.mobile, REDUCE = !!ctx.reduce, LOW = !!ctx.lowGpu, SH = !MOB && !LOW; // integrated GPUs: no shadows, no MSAA
     if (T.ColorManagement) T.ColorManagement.legacyMode = false;
     if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
 
@@ -58,13 +58,14 @@
     tags.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden';
     host.appendChild(tags);
 
-    var renderer = new T.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    var renderer = new T.WebGLRenderer({ canvas: canvas, antialias: !MOB && !LOW && (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance' });
+    renderer.debug.checkShaderErrors = false; // no synchronous compile-log reads
     renderer.setPixelRatio(Math.min(ctx.dpr || devicePixelRatio || 1, MOB ? 1.25 : 1.75));
     renderer.setClearColor(0xffffff, 0);
     renderer.physicallyCorrectLights = true;
     renderer.outputEncoding = T.sRGBEncoding;
     renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
-    if (SH) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap; }
+    if (SH) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap; renderer.shadowMap.autoUpdate = false; }
 
     var scene = new T.Scene();
     scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .0075 : .0058);
@@ -81,15 +82,17 @@
     })();
     scene.add(new T.HemisphereLight(0xF4F8FC, 0x8C97A3, 1.0));
     var sun = new T.DirectionalLight(0xFFF4E6, 2.6); sun.position.set(40, 60, 35); scene.add(sun); scene.add(sun.target);
-    if (SH) { sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); var sc = sun.shadow.camera; sc.left = -60; sc.right = 60; sc.top = 60; sc.bottom = -60; sc.near = 5; sc.far = 220; sun.shadow.bias = -.0004; sun.shadow.normalBias = .03; sun.shadow.radius = 2; }
+    if (SH) { sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); var sc = sun.shadow.camera; sc.left = -60; sc.right = 60; sc.top = 60; sc.bottom = -60; sc.near = 5; sc.far = 220; sun.shadow.bias = -.0004; sun.shadow.normalBias = .03; sun.shadow.radius = 2; }
     // shadow frustum follows the station in view (centre x, y, z, half-size) so shadows stay crisp in every shot
-    var SUNOFF = new T.Vector3(40, 60, 35), _sfa = new T.Vector3(), shR = 60;
+    // the shadow map is redrawn when the frustum moves, on a station change, and every 4th frame for moving things
+    var SUNOFF = new T.Vector3(40, 60, 35), _sfa = new T.Vector3(), shR = 60, shDirty = true, shN = 0;
     function shadowFocus(a, b, k) {
       if (!SH) return;
       _sfa.set(a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k);
       var r = a[3] + (b[3] - a[3]) * k, px = (r * 2) / 2048; _sfa.x = Math.round(_sfa.x / px) * px; _sfa.z = Math.round(_sfa.z / px) * px;
+      if (!sun.target.position.equals(_sfa)) shDirty = true;
       sun.target.position.copy(_sfa); sun.position.copy(_sfa).add(SUNOFF);
-      if (Math.abs(r - shR) > .05) { shR = r; sc.left = -r; sc.right = r; sc.top = r; sc.bottom = -r; sc.updateProjectionMatrix(); }
+      if (Math.abs(r - shR) > .05) { shR = r; shDirty = true; sc.left = -r; sc.right = r; sc.top = r; sc.bottom = -r; sc.updateProjectionMatrix(); }
     }
     // ground decals: stacked layers get a depth bias so coplanar planes never z-fight, even from far above
     function decal(m, k) { m.polygonOffset = true; m.polygonOffsetFactor = -k; m.polygonOffsetUnits = -4 * k; return m; }
@@ -1428,7 +1431,7 @@
       if (dead) return;
       dt = Math.max(0, Math.min(.05, dt || .016)); time += dt;   // never run backwards (a host can hand over a negative first dt)
       var nowS = performance.now() / 1000;
-      if (stationIndex !== lastStation) { lastStation = stationIndex; stStart = nowS; }
+      if (stationIndex !== lastStation) { lastStation = stationIndex; stStart = nowS; shDirty = true; }
       stT = nowS - stStart; var st = stationIndex;
       // transit mixer: approach (st 0) -> the full delivery on a loop (st 1) -> parked on the pump afterwards.
       // It stops at each barrier until the arm is fully up, and gives way to anyone already on the crossing.
@@ -1551,6 +1554,7 @@
       tZone.on = hit;
       CONES.forEach(function (c3, i) { c3.rotation.y += Math.sin(time * .3 + i) * .0006; });
       camAt(progress, time);
+      if (SH && (shDirty || ++shN % 4 === 0)) { renderer.shadowMap.needsUpdate = true; shDirty = false; }
       renderer.render(scene, cam);
       placeTags();
     }
@@ -1572,6 +1576,6 @@
       if (tags.parentNode) tags.parentNode.removeChild(tags);
     }
     var r0 = host.getBoundingClientRect(); resize(r0.width || 800, r0.height || 500);
-    return { update: update, resize: resize, dispose: dispose };
+    return { update: update, warm: function (done) { (window.INFRAX_WARM || function (r, s, c, d) { d(); })(renderer, scene, cam, done); }, resize: resize, setDpr: function (v) { renderer.setPixelRatio(v); renderer.setSize(W, H, false); }, dispose: dispose };
   }
 })();

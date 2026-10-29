@@ -18,7 +18,52 @@
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var X = (window.INFRAX = window.INFRAX || {});
   X.reduce = reduce;
-  X.isMobile = function () { return innerWidth < 768; };
+  // shared breakpoints (same values as site.css) and the light-motion flag for phones/touch
+  X.mq = { phone: '(max-width:480px)', tablet: '(max-width:768px)', laptop: '(max-width:1024px)', wide: '(min-width:1440px)' };
+  function mm(q) { return window.matchMedia ? matchMedia(q) : { matches: false }; }
+  function onMq(m, fn) { if (m.addEventListener) m.addEventListener('change', fn); else if (m.addListener) m.addListener(fn); }
+  var liteQ = mm('(max-width:768px),(pointer:coarse)');
+  X.lite = liteQ.matches;
+  onMq(liteQ, function () { X.lite = liteQ.matches; });
+  // integrated and phone GPUs (Intel UHD/Iris, Mali, Adreno ...): the 3D scenes drop MSAA and shadows there, which
+  // roughly doubles their frame rate. Read once, on first use, from a throwaway WebGL context.
+  var lowGpu = null;
+  Object.defineProperty(X, 'lowGPU', { get: function () {
+    if (lowGpu === null) try {
+      var g = document.createElement('canvas').getContext('webgl'), e = g && g.getExtension('WEBGL_debug_renderer_info');
+      lowGpu = !!e && /Intel|UHD|Iris|HD Graphics|Mali|Adreno|PowerVR|SwiftShader|llvmpipe|Basic Render/i.test(g.getParameter(e.UNMASKED_RENDERER_WEBGL));
+      var lc = g && g.getExtension('WEBGL_lose_context'); if (lc) lc.loseContext();
+    } catch (err) { lowGpu = false; }
+    return lowGpu;
+  } });
+  // compile a three.js scene's shaders without freezing the page: start every program link at once and let the GPU
+  // work while the page stays responsive (renderer.compile alone waits on each link in turn, which takes seconds on
+  // office laptops). done() runs when they are ready. Shadow-pass shaders still compile on the first draw.
+  X.warmGL = window.INFRAX_WARM = function (renderer, scene, cam, done) {
+    var gl = renderer.getContext(), ext = gl.getExtension('KHR_parallel_shader_compile'), t0 = performance.now();
+    if (!ext) { try { renderer.compile(scene, cam); } catch (e) { } return done(); }
+    // pass 1: three.js links a program and then reads its uniforms, which waits for the link; stop each object there
+    // (the program stays cached) so the next one starts linking at once
+    var gpp = gl.getProgramParameter, PEND = {}, proxy = Object.create(scene);
+    // compile() briefly flips a transparent double-sided material to back then front side; a bail-out mid-way must put it back
+    proxy.traverse = function (cb) { scene.traverse(function (o) {
+      var mats = [].concat(o.material || []), sides = mats.map(function (m) { return m.side; });
+      try { cb(o); } catch (e) { mats.forEach(function (m, i) { m.side = sides[i]; }); if (e !== PEND) throw e; }
+    }); };
+    gl.getProgramParameter = function (p, k) { if (k === gl.ACTIVE_UNIFORMS && !gpp.call(gl, p, ext.COMPLETION_STATUS_KHR)) throw PEND; return gpp.call(gl, p, k); };
+    try { renderer.compile(proxy, cam); } catch (e) { } finally { delete gl.getProgramParameter; }
+    (function poll() {
+      var ps = renderer.info.programs || [], ok = true;
+      for (var i = 0; i < ps.length && ok; i++) if (!gpp.call(gl, ps[i].program, ext.COMPLETION_STATUS_KHR)) ok = false;
+      if (!ok && performance.now() - t0 < 8000) return setTimeout(poll, 40);
+      try { renderer.compile(scene, cam); } catch (e) { } // pass 2: every link is done, so this only reads uniforms
+      done();
+    })();
+  };
+  X.isMobile = function () { return mm(X.mq.tablet).matches; };
+  // true while the demo modal covers the page; 'infrax:cover' fires on document when it changes
+  X.covered = false;
+  function setCovered(v) { if (X.covered === v) return; X.covered = v; try { document.dispatchEvent(new CustomEvent('infrax:cover', { detail: { covered: v } })); } catch (e) {} }
 
   /* ---------- original plexus background ---------- */
   (function plexus() {
@@ -27,13 +72,13 @@
     canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.25';
     document.body.prepend(canvas);
     // opaque canvas (page is white): cheaper to composite; prefilled white so the trail fade looks identical
-    var ctx = canvas.getContext('2d', { alpha: false }); if (!ctx) return;
+    var ctx = canvas.getContext('2d', { alpha: false }); if (!ctx) { X.pausePlexus = function () {}; return; }
     var particles = [], W = 0, H = 0;
+    function vw() { return document.documentElement.clientWidth || innerWidth; }
     // 1 canvas px per CSS px (as the original); the layer sits at 25% opacity so higher DPR buys nothing
-    function count() { var w = innerWidth; return w < 640 ? 40 : w < 1024 ? 60 : 100; }
-    // glow sprites: the per-particle radial gradient only depends on connection count (0..5), so draw each once
-    // into one atlas (6 glows + the drifting blob) and upload it as an ImageBitmap, so drawImage never re-uploads
-    var SPR = 32, atlas = document.createElement('canvas'); atlas.width = SPR * 6 + 100; atlas.height = 100;
+    function count() { return X.lite ? 40 : vw() <= 1024 ? 60 : 100; }
+    // sprite atlas, uploaded once as an ImageBitmap: 6 glows (by connection count 0..5), the drifting blob, 2 solid dots
+    var SPR = 32, D = 16, DOT = SPR * 6 + 100, atlas = document.createElement('canvas'); atlas.width = DOT + D * 2; atlas.height = 100;
     (function () {
       var ax = atlas.getContext('2d');
       for (var b = 0; b <= 5; b++) {
@@ -44,14 +89,16 @@
       var bx = SPR * 6 + 50, g2 = ax.createRadialGradient(bx, 50, 0, bx, 50, 50);
       g2.addColorStop(0, 'rgba(38,115,181,0.35)'); g2.addColorStop(.5, 'rgba(58,143,212,0.2)'); g2.addColorStop(1, 'rgba(96,165,250,0)');
       ax.fillStyle = g2; ax.fillRect(SPR * 6, 0, 100, 100);
+      ['#2673B5', '#5a9fd4'].forEach(function (col, i) { ax.fillStyle = col; ax.beginPath(); ax.arc(DOT + i * D + D / 2, D / 2, D / 2, 0, Math.PI * 2); ax.fill(); });
     })();
     var src = atlas;
-    if (window.createImageBitmap) createImageBitmap(atlas).then(function (bm) { src = bm; }, function () {});
+    if (window.createImageBitmap) createImageBitmap(atlas).then(function (bm) { src = bm; if (reduce) still(); }, function () {});
     function init() {
-      var oldW = W, oldH = H;
-      W = canvas.width = innerWidth; H = canvas.height = innerHeight;
+      var oldW = W, oldH = H, n = count(), w = vw(), h = innerHeight;
+      // mobile URL bar showing/hiding only changes the height a little: keep the scene (the canvas just stretches)
+      if (oldW && w === oldW && Math.abs(h - oldH) < 150 && particles.length === n) return;
+      W = canvas.width = w; H = canvas.height = h;
       ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
-      var n = count();
       if (particles.length !== n || oldW === 0) {
         particles = [];
         for (var i = 0; i < n; i++) particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .5, vy: (Math.random() - .5) * .5, radius: Math.random() * 2 + 1, connections: 0 });
@@ -59,12 +106,13 @@
         var sx = W / oldW, sy = H / oldH;
         particles.forEach(function (p) { p.x *= sx; p.y *= sy; });
       }
+      if (reduce) still();
     }
     var NB = 8, buckets = []; for (var q = 0; q < NB; q++) buckets.push([]);
     var grid = new Map();
     function frame(dtk) {
       ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fillRect(0, 0, W, H);
-      var maxD = W < 640 ? 100 : 150, maxD2 = maxD * maxD, mob = W < 640, n = particles.length, i, p;
+      var mob = W <= 768, maxD = mob ? 100 : 150, maxD2 = maxD * maxD, n = particles.length, i, p;
       grid.clear();
       for (i = 0; i < n; i++) {
         p = particles[i];
@@ -94,49 +142,71 @@
           }
         }
       }
-      // one stroke per alpha bucket instead of one per line
+      // one path and one stroke per alpha bucket
       ctx.lineWidth = mob ? .8 : 1;
       for (q = 0; q < NB; q++) {
         var L = buckets[q]; if (!L.length) continue;
         ctx.strokeStyle = 'rgba(38,115,181,' + ((q + .5) / NB * .25).toFixed(3) + ')';
-        // single-segment paths keep Skia on its fast line path (one big multi-contour path rasterises slower)
-        for (var e = 0; e < L.length; e += 4) { ctx.beginPath(); ctx.moveTo(L[e], L[e + 1]); ctx.lineTo(L[e + 2], L[e + 3]); ctx.stroke(); }
+        ctx.beginPath();
+        for (var e = 0; e < L.length; e += 4) { ctx.moveTo(L[e], L[e + 1]); ctx.lineTo(L[e + 2], L[e + 3]); }
+        ctx.stroke();
       }
       for (i = 0; i < n; i++) { p = particles[i]; var R = p.radius * 3; ctx.drawImage(src, Math.min(5, p.connections) * SPR, 0, SPR, SPR, p.x - R, p.y - R, R * 2, R * 2); }
-      ['#2673B5', '#5a9fd4'].forEach(function (col, ci) {
-        ctx.fillStyle = col;
-        for (i = 0; i < n; i++) { p = particles[i]; if ((p.connections > 3) !== (ci === 0)) continue; ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill(); }
-      });
+      for (i = 0; i < n; i++) { p = particles[i]; var r = p.radius; ctx.drawImage(src, DOT + (p.connections > 3 ? 0 : D), 0, D, D, p.x - r, p.y - r, r * 2, r * 2); }
       var cc = mob ? 2 : 3, cs = mob ? 35 : 50, t = reduce ? 0 : Date.now() * .001;
       for (var kk = 0; kk < cc; kk++) {
         var x = (Math.sin(t + kk * 2) * .5 + .5) * W, y = (Math.cos(t * .7 + kk * 2) * .5 + .5) * H;
         ctx.drawImage(src, SPR * 6, 0, 100, 100, x - cs, y - cs, cs * 2, cs * 2);
       }
     }
-    // the background holds still while the page scrolls and otherwise draws at most 30 fps (motion is time-based); saves battery
-    var last = 0, scrollingUntil = 0;
-    addEventListener('scroll', function () { scrollingUntil = performance.now() + 180; }, { passive: true });
+    // reduced motion: no loop; paint the settled still (the trail fade needs a few passes to reach it)
+    function still() { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H); for (var k = 0; k < 30; k++) frame(0); }
+    // keeps moving while the page scrolls, time-based at 15 fps (10 on phones/touch: the drift is slow, so this reads as smooth); sleeps while hidden, covered or paused
+    var last = 0, raf = 0, paused = false;
+    function idle() { return reduce || paused || X.covered || document.hidden; }
     function loop(now) {
-      requestAnimationFrame(loop);
-      if (document.hidden) { last = 0; return; }
-      if (now < scrollingUntil || (last && now - last < 32)) return;
+      raf = 0;
+      if (idle()) { last = 0; return; }
+      raf = requestAnimationFrame(loop);
+      if (last && now - last < (X.lite ? 100 : 64)) return;
       var dtk = last ? Math.min(3, (now - last) / 16.667) : 1; last = now;
       frame(dtk);
     }
+    function wake() { if (!raf && !idle()) { last = 0; raf = requestAnimationFrame(loop); } }
+    X.pausePlexus = function (v) { paused = !!v; if (paused) { cancelAnimationFrame(raf); raf = 0; } else wake(); };
+    // a full-screen opaque stage ([data-plexus-off]: the products tunnel, the home twin) hides the background, so it sleeps meanwhile
+    var covers = document.querySelectorAll('[data-plexus-off]'), under = [];
+    if (covers.length && window.IntersectionObserver) {
+      var cio = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { var k = under.indexOf(e.target); if (e.intersectionRatio >= .97) { if (k < 0) under.push(e.target); } else if (k > -1) under.splice(k, 1); });
+        X.pausePlexus(under.length > 0);
+      }, { threshold: [0, .97, 1] });
+      covers.forEach(function (el) { cio.observe(el); });
+    }
+    document.addEventListener('visibilitychange', wake);
+    document.addEventListener('infrax:cover', wake);
     var rsT = 0;
-    init(); requestAnimationFrame(loop);
+    init(); wake();
     addEventListener('resize', function () { clearTimeout(rsT); rsT = setTimeout(init, 120); });
+    onMq(liteQ, init);
   })();
 
   /* ---------- small particle network (the page background's style) for light side panels: start/stop while shown ---------- */
   function makeNet(cv) {
-      var cx = cv && cv.getContext && cv.getContext('2d'), P = [], W = 0, H = 0, raf = 0, last = 0;
+      var cx = cv && cv.getContext && cv.getContext('2d'), P = [], W = 0, H = 0, raf = 0, sr = 0, on = false, last = 0;
       if (!cx) return { start: function () {}, stop: function () {} };
+      // seeded once; later sizes keep the particles and rescale their positions
       function size() {
-        var r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height;
-        cv.width = Math.round(W * d); cv.height = Math.round(H * d); cx.setTransform(d, 0, 0, d, 0, 0);
-        var n = Math.round(Math.min(70, W * H / 7000)); P = [];
-        for (var i = 0; i < n; i++) P.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1.2 + Math.random() * 2.2 });
+        var r = cv.getBoundingClientRect(), d = X.lite ? 1 : Math.min(devicePixelRatio || 1, 2), w = r.width, h = r.height, i;
+        if (!w || !h) return false;
+        var cw = Math.round(w * d), ch = Math.round(h * d);
+        if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
+        cx.setTransform(d, 0, 0, d, 0, 0);
+        if (!P.length) {
+          var n = Math.round(Math.min(70, w * h / 7000));
+          for (i = 0; i < n; i++) P.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1.2 + Math.random() * 2.2 });
+        } else if (W && H && (w !== W || h !== H)) for (i = 0; i < P.length; i++) { P[i].x *= w / W; P[i].y *= h / H; }
+        W = w; H = h; return true;
       }
       function draw(dt) {
         cx.clearRect(0, 0, W, H);
@@ -149,22 +219,30 @@
         for (i = 0; i < P.length; i++) { a = P[i]; cx.fillStyle = i % 5 ? 'rgba(38,115,181,.55)' : 'rgba(14,59,102,.7)'; cx.beginPath(); cx.arc(a.x, a.y, a.r, 0, Math.PI * 2); cx.fill(); }
       }
       function loop(now) { raf = requestAnimationFrame(loop); var dt = last ? Math.min(3, (now - last) / 16.7) : 1; last = now; draw(dt); }
+      // resizing clears the canvas: repaint at once so a running net never shows a blank frame
+      if (window.ResizeObserver) new ResizeObserver(function () { if (on && size()) draw(0); }).observe(cv);
       return {
-        start: function () { requestAnimationFrame(function () { size(); if (reduce) draw(0); else if (!raf) { last = 0; raf = requestAnimationFrame(loop); } }); },
-        stop: function () { cancelAnimationFrame(raf); raf = 0; }
+        start: function () {
+          on = true; if (sr) return;
+          sr = requestAnimationFrame(function () { sr = 0; if (!on) return; size(); if (reduce) draw(0); else if (!raf) { last = 0; raf = requestAnimationFrame(loop); } });
+        },
+        stop: function () { on = false; cancelAnimationFrame(sr); sr = 0; cancelAnimationFrame(raf); raf = 0; }
       };
     }
   X.makeNet = makeNet;
-  // any canvas[data-net] runs while it is on screen
+  // any canvas[data-net] runs while it is on screen and the demo modal is not over it
   if ('IntersectionObserver' in window) document.querySelectorAll('canvas[data-net]').forEach(function (cv) {
-    var n = makeNet(cv); new IntersectionObserver(function (es) { if (es[0].isIntersecting) n.start(); else n.stop(); }).observe(cv);
+    var n = makeNet(cv), vis = false;
+    function sync() { if (vis && !X.covered) n.start(); else n.stop(); }
+    new IntersectionObserver(function (es) { vis = es[es.length - 1].isIntersecting; sync(); }).observe(cv);
+    document.addEventListener('infrax:cover', sync);
   });
 
   /* ---------- sections off screen pause their CSS loops (icons, overlays, pulses) ---------- */
   (function () {
     if (!('IntersectionObserver' in window)) return;
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.toggleAttribute('data-off', !e.isIntersecting); }); }, { rootMargin: '200px 0px' });
-    function watch() { document.querySelectorAll('main > section, .site-foot').forEach(function (s) { io.observe(s); }); }
+    function watch() { document.querySelectorAll('main > section, .site-foot, .hm-pc-vis, .hm-agc, .hw-step').forEach(function (s) { io.observe(s); }); }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
   })();
 
@@ -202,6 +280,8 @@
     ['main', '.site-foot'].forEach(function (s) { var el = document.querySelector(s); if (el) el.inert = o; });
     if (!o) toggle.focus();
   });
+  // the sheet only exists up to the laptop breakpoint: growing past it with the sheet open would leave the page inert
+  if (toggle && sheet) onMq(mm(X.mq.laptop), function (e) { if (!e.matches && sheet.classList.contains('open')) toggle.click(); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if (sheet && sheet.classList.contains('open')) toggle.click();
@@ -212,7 +292,9 @@
   });
 
   /* ---------- smooth scroll ---------- */
-  if (!reduce && window.Lenis) {
+  // not inside a frame (the claude.ai preview): there JS-driven scrolling turns every busy frame into scroll stutter, so the browser scrolls natively
+  var framed = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
+  if (!reduce && !framed && window.Lenis) {
     // lerp-based (frame-rate independent in Lenis 1.1), driven by GSAP's ticker below: one rAF loop for scroll + ScrollTrigger
     var lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 1, smoothWheel: true, syncTouch: false });
     X.lenis = lenis;
@@ -285,6 +367,15 @@
     gsap.from(parts, { yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05, scrollTrigger: el.closest('[data-reveal-now]') ? null : { trigger: el, start: 'top 85%' } });
   });
 
+  /* ---------- email links: every mailto link opens a Gmail compose window addressed to it, in a new tab ---------- */
+  (function mailToGmail() {
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
+      var to = a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0];
+      a.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to);
+      a.target = '_blank'; a.rel = 'noopener';
+    });
+  })();
+
   /* ---------- Book a demo: centred modal for every a[href$="#demo"] (markup from build.py) ---------- */
   (function demoModal() {
     var dm = document.getElementById('demoModal'); if (!dm) return;
@@ -298,7 +389,7 @@
       [].forEach.call(dm.querySelectorAll('.dm-steps li'), function (li, i) { li.style.setProperty('--d', (d + .15 + i * .1).toFixed(2) + 's'); });
     })();
     var dlg = dm.querySelector('.dm-dialog'), form = document.getElementById('dmForm'), ok = document.getElementById('dmOk');
-    var net = makeNet(dm.querySelector('.dm-net'));
+    var net = null; // built on first open
     var trigger = null, closeT = 0, padR = document.body.style.paddingRight;
     var FOC = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
     function focusables() { return [].filter.call(dlg.querySelectorAll(FOC), function (n) { return n.offsetParent !== null || n === document.activeElement; }); }
@@ -314,14 +405,15 @@
       if (X.lenis) X.lenis.stop();
       dm.hidden = false; dlg.scrollTop = 0;
       void dm.offsetWidth; // commit the hidden state so the open transition runs
-      dm.classList.add('is-open'); net.start();
+      if (!net) net = makeNet(dm.querySelector('.dm-net'));
+      dm.classList.add('is-open'); net.start(); setCovered(true);
       ['main', '.site-nav', '.site-foot'].forEach(function (s) { var el = document.querySelector(s); if (el) el.inert = true; });
       var first = form.hidden ? ok : dlg;
       setTimeout(function () { try { (first || dlg).focus({ preventScroll: true }); } catch (e) { (first || dlg).focus(); } }, 30);
     }
     function close() {
       if (dm.hidden) return;
-      dm.classList.remove('is-open'); net.stop();
+      dm.classList.remove('is-open'); if (net) net.stop(); setCovered(false);
       ['main', '.site-nav', '.site-foot'].forEach(function (s) { var el = document.querySelector(s); if (el) el.inert = false; });
       closeT = setTimeout(function () {
         dm.hidden = true;
@@ -357,52 +449,49 @@
       e.preventDefault();
       var good = [
         setErr('dmName', v('dmName') ? '' : 'Please add your name.'),
-        setErr('dmOrg', v('dmOrg') ? '' : 'Please add your organisation.'),
-        setErr('dmEmail', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('dmEmail')) ? '' : 'Please enter a work email, like name@company.com.'),
+        setErr('dmPhone', /^\+?[\d\s()-]{10,20}$/.test(v('dmPhone')) && v('dmPhone').replace(/\D/g, '').length >= 10 ? '' : 'Please add a mobile number, like +91 98765 43210.'),
+        setErr('dmEmail', /^[A-Za-z0-9._%+'-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/.test(v('dmEmail')) /* same rule as app/api/leads */ ? '' : 'Please enter a work email, like name@company.com.'),
         setErr('dmDomain', v('dmDomain') ? '' : 'Pick the closest domain.')
       ].every(Boolean);
       if (!good) { var bad = form.querySelector('[aria-invalid="true"]'); if (bad) bad.focus(); return; }
       var picks = [].map.call(form.querySelectorAll('input[name="interest"]:checked'), function (i) { return i.value; });
       var lead = { name: v('dmName'), org: v('dmOrg'), email: v('dmEmail'), phone: v('dmPhone'), domain: v('dmDomain'), products: picks, message: v('dmMsg') };
-      var body = 'Demo request\n\nName: ' + lead.name + '\nOrganisation: ' + lead.org + '\nWork email: ' + lead.email +
-        (lead.phone ? '\nPhone: ' + lead.phone : '') + '\nDomain: ' + lead.domain +
-        (picks.length ? '\nProducts of interest: ' + picks.join(', ') : '') + (lead.message ? '\nAbout our sites: ' + lead.message : '') +
-        '\n\nSent from: ' + (document.title || 'infrax.ai');
-      var subject = 'Demo request: ' + lead.org + ' (' + lead.domain + ')';
-      var mailto = 'mailto:sales@infrax.ai?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      document.getElementById('dmSum').value = body;
-      document.getElementById('dmMail').href = mailto;
-      // sent: a plain thank-you. Not sent (preview host, or the route failed): say so, and hand over the details to email.
-      // Never open the mail app by itself: sandboxed previews block it and blank the page.
-      function done(sent) {
-        document.getElementById('dmOkH').textContent = sent ? 'Thank you.' : 'One more step.';
-        document.getElementById('dmOkText').hidden = !sent;
-        ['dmAlt', 'dmSum'].forEach(function (id) { document.getElementById(id).hidden = sent; });
-        var lbl = ok.querySelector('.dm-sumlbl'); if (lbl) lbl.hidden = sent;
+      var sendErr = document.getElementById('dmSendErr'), btn = form.querySelector('[type="submit"]');
+      if (sendErr) sendErr.hidden = true;
+      // sent: "Request received", one step, nothing else to do
+      function done() {
+        document.getElementById('dmOkText').textContent = 'Thank you, ' + lead.name.split(/\s+/)[0] + '. We’ll reply to ' + lead.email + ' within one working day to set up the demo.';
         form.hidden = true; ok.hidden = false; dlg.scrollTop = 0; ok.focus();
+        form.reset();
       }
-      // on the real site, save the lead through the Notion route; anywhere else (or if it fails) fall back to email
-      var onSite = /^https?:$/.test(location.protocol) && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-      if (!onSite || !window.fetch) { done(false); return; }
-      var btn = form.querySelector('[type="submit"]'); if (btn) btn.disabled = true;
+      // the lead is emailed to info@infrax.ai by /api/leads (SMTP) on any real host. The claude.ai review preview has no
+      // backend, so there the form only shows the confirmation
+      var onSite = /^https?:$/.test(location.protocol) && !/(^|\.)claude\.ai$|claudeusercontent\.com$/.test(location.hostname);
+      if (!onSite || !window.fetch) { done(); return; }
+      if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
       fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-        name: lead.name, organization: lead.org, email: lead.email, phone: lead.phone, audience: lead.domain,
-        message: (picks.length ? 'Products: ' + picks.join(', ') + '. ' : '') + lead.message, source: 'website · ' + location.pathname
-      }) }).then(function (r) { if (!r.ok) throw new Error(r.status); return true; }).catch(function () { return false; }).then(function (sent) { if (btn) btn.disabled = false; done(sent); });
+        name: lead.name, organization: lead.org, email: lead.email, phone: lead.phone, domain: lead.domain, products: picks,
+        message: lead.message, source: 'website · ' + location.pathname, website: v('dmWebsite')
+      }) }).then(function (r) { if (!r.ok) throw new Error(r.status); return true; }).catch(function () { return false; }).then(function (sent) {
+        if (btn) { btn.disabled = false; btn.removeAttribute('aria-busy'); }
+        // not saved: keep what they typed and say so, with the address to email instead
+        if (sent) done(); else if (sendErr) { sendErr.hidden = false; sendErr.focus(); }
+      });
     });
-    document.getElementById('dmAgain').addEventListener('click', function () { ok.hidden = true; form.hidden = false; document.getElementById('dmName').focus(); });
     if (/#demo$/.test(location.hash)) addEventListener('load', function () { setTimeout(function () { open(null); }, 120); });
   })();
 
   /* ---------- wave page transitions ---------- */
+  // the veil stays out of layout (display:none, 0x0 canvas) until a transition starts
   var veil = document.createElement('div'); veil.className = 'wave-veil'; veil.setAttribute('aria-hidden', 'true');
-  var vc = document.createElement('canvas'); veil.appendChild(vc); document.body.appendChild(veil);
-  var vctx = vc.getContext('2d');
-  function sizeVeil() { var d = Math.min(devicePixelRatio || 1, 1.5); vc.width = innerWidth * d; vc.height = innerHeight * d; vctx.setTransform(d, 0, 0, d, 0, 0); }
-  sizeVeil(); addEventListener('resize', sizeVeil);
+  var vc = document.createElement('canvas'); vc.width = vc.height = 0; veil.appendChild(vc); document.body.appendChild(veil);
+  var vctx = vc.getContext('2d'), VW = 0, VH = 0;
+  function sizeVeil() { if (!vctx) return; var d = Math.min(devicePixelRatio || 1, 1.5); VW = document.documentElement.clientWidth || innerWidth; VH = innerHeight; vc.width = VW * d; vc.height = VH * d; vctx.setTransform(d, 0, 0, d, 0, 0); }
+  function hideVeil() { veil.classList.remove('on'); vc.width = vc.height = 0; VW = VH = 0; }
   // p: 0..1 coverage; dir: 1 = wave rises from the bottom (leaving), -1 = wave clears upward (arriving)
   function paintVeil(p, dir) {
-    var W = innerWidth, H = innerHeight, t = performance.now() * .002;
+    if (!vctx || !VW) return;
+    var W = VW, H = VH, t = performance.now() * .002;
     vctx.clearRect(0, 0, W, H);
     if (p <= 0) return;
     var layers = [['14,59,102', 0], ['38,115,181', .08], ['220,235,247', .16]];
@@ -426,6 +515,7 @@
   }
   function animateVeil(from, to, dir, ms, done) {
     var s = performance.now();
+    veil.classList.add('on'); sizeVeil();
     (function step(n) {
       var k = Math.min(1, (n - s) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
       paintVeil(from + (to - from) * e, dir);
@@ -443,6 +533,10 @@
     var u = a.getAttribute('href').split('#')[0]; if (!u || pre[u] || /^https?:/.test(u)) return;
     pre[u] = 1; var l = document.createElement('link'); l.rel = 'prefetch'; l.href = u; document.head.appendChild(l);
   }, { passive: true });
+  // one in-page glide at a time; the visitor's own wheel/touch cancels it
+  var glide = null, glideT = 0;
+  function stopGlide() { clearTimeout(glideT); glideT = 0; if (glide) glide.kill(); glide = null; }
+  ['wheel', 'touchstart'].forEach(function (ev) { addEventListener(ev, function () { if (glide || glideT) stopGlide(); }, { passive: true }); });
   document.addEventListener('click', function (e) {
     var a = e.target.closest && e.target.closest('a[href]');
     if (!a || e.defaultPrevented || reduce || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
@@ -459,11 +553,11 @@
         e.preventDefault();
         var y = (window.INFRAX && INFRAX.anchorY) ? INFRAX.anchorY(el) : el.getBoundingClientRect().top + scrollY - 96;
         var jumpTo = function (v) { if (X.lenis) X.lenis.scrollTo(v, { immediate: true, force: true }); window.scrollTo(0, v); };
-        var glide = null;
+        stopGlide();
         if (window.gsap) { var pos = { v: scrollY }; glide = gsap.to(pos, { v: y, duration: 1.1, ease: 'power2.inOut', overwrite: true, onUpdate: function () { jumpTo(pos.v); } }); }
         else jumpTo(y);
         // always finish exactly on the heading (also if the glide could not run)
-        setTimeout(function () { if (glide) glide.kill(); jumpTo((window.INFRAX && INFRAX.anchorY) ? INFRAX.anchorY(el) : y); }, 1300);
+        glideT = setTimeout(function () { glideT = 0; if (glide) glide.kill(); glide = null; jumpTo((window.INFRAX && INFRAX.anchorY) ? INFRAX.anchorY(el) : y); }, 1300);
         try { history.replaceState(null, '', '#' + id); } catch (err) {}
       }
       return;
@@ -473,7 +567,18 @@
     try { sessionStorage.setItem('infrax-wave', '1'); } catch (err) {}
     animateVeil(0, 1, 1, 180, function () { location.href = href; });
   });
-  addEventListener('pageshow', function (e) { if (e.persisted) paintVeil(0, 1); });
+  addEventListener('pageshow', function (e) { if (e.persisted) hideVeil(); });
+
+  /* ---------- photos: once the page has loaded, fetch its lazy images a few at a time, so they are ready before the
+     visitor scrolls to them (skipped when the visitor asked to save data) ---------- */
+  addEventListener('load', function () {
+    var c = navigator.connection; if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
+    var go = function () {
+      var imgs = [].slice.call(document.querySelectorAll('img[loading="lazy"]')), i = 0;
+      (function next() { for (var k = 0; k < 4 && i < imgs.length; k++) imgs[i++].loading = 'eager'; if (i < imgs.length) setTimeout(next, 200); })();
+    };
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1500);
+  });
 
   /* ---------- footer year + copy email ---------- */
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });

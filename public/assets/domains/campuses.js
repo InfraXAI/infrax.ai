@@ -7,18 +7,19 @@
      procedural sky for reflections, soft sun shadows on desktop only.
      --------------------------------------------------------------------------------------------- */
   function makeKit(host, ctx) {
-    var T = ctx.THREE, MOB = !!ctx.mobile, SH = !MOB;
+    var T = ctx.THREE, MOB = !!ctx.mobile, LOW = !!ctx.lowGpu, SH = !MOB && !LOW; // integrated GPUs: no shadows, no MSAA
     var owned = [];                       // textures / render targets we must dispose
     var gcache = {}, mcache = {};
     if (T.ColorManagement) T.ColorManagement.legacyMode = false;
 
-    var renderer = new T.WebGLRenderer({ antialias: !MOB, alpha: true, powerPreference: 'high-performance' });
+    var renderer = new T.WebGLRenderer({ antialias: !MOB && !LOW && (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance' });
+    renderer.debug.checkShaderErrors = false; // no synchronous compile-log reads
     renderer.setPixelRatio(Math.min(ctx.dpr || 1, MOB ? 1.25 : 1.75));
     renderer.setClearColor(0xffffff, 0);
     renderer.physicallyCorrectLights = true;
     renderer.outputEncoding = T.sRGBEncoding;
     renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
-    if (SH) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap; }
+    if (SH) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap; renderer.shadowMap.autoUpdate = false; }
     var cv = renderer.domElement; cv.setAttribute('aria-hidden', 'true');
     cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block';
     if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
@@ -42,7 +43,7 @@
     scene.add(new T.HemisphereLight(0xF4F8FC, 0x8C97A3, .78));
     var sun = new T.DirectionalLight(0xFFF4E6, 2.9); sun.position.set(40, 70, 35); scene.add(sun); scene.add(sun.target);
     if (SH) {
-      sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+      sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
       var shc = sun.shadow.camera; shc.left = -60; shc.right = 60; shc.top = 60; shc.bottom = -60; shc.near = 5; shc.far = 220;
       sun.shadow.bias = -.0005; sun.shadow.normalBias = .04; sun.shadow.radius = 3;
     }
@@ -825,25 +826,34 @@
       // shadow frustum follows the framed area: a station's own radius (key.sh) or one fitted to the view distance
       var base = camPos.distanceTo(camLook) * 1.3 + 10, ra = shA != null ? shA : base, rb = shB != null ? shB : base;
       shFocus.copy(camLook).lerp(camPos, .2); fitShadow(shFocus, ra + (rb - ra) * m);
+      if (i !== shI) { shI = i; shDirty = true; }
       return { i: i, local: t < hold ? t / hold : 1, moving: m > 0 };
     }
 
     /* sun shadow map re-centred on the framed area each frame and sized to it (snapped to texels and 4 m steps so
        it does not shimmer); a station close-up gets crisp contact shadows, an aerial view still gets them all */
-    var sunOff = null, shR = 0, shFocus = new T.Vector3(), MAXSH = 100;
+    // the shadow map is redrawn when the frustum moves, on a station change, and every 4th frame for moving things
+    var sunOff = null, shR = 0, shFocus = new T.Vector3(), MAXSH = 100, shDirty = true, shN = 0, shI = -1;
     function fitShadow(look, r) {
       if (!SH) return;
       if (!sunOff) sunOff = new T.Vector3().subVectors(sun.position, sun.target.position).normalize().multiplyScalar(160);
       r = Math.ceil(Math.max(12, Math.min(MAXSH, r)) / 4) * 4;
       var tex = 2 * r / sun.shadow.mapSize.x;
-      sun.target.position.set(Math.round(look.x / tex) * tex, 0, Math.round(look.z / tex) * tex); sun.position.copy(sun.target.position).add(sunOff);
-      if (r !== shR) { shR = r; shc.left = -r; shc.right = r; shc.top = r; shc.bottom = -r; shc.near = 30; shc.far = 320; shc.updateProjectionMatrix(); }
+      var nx = Math.round(look.x / tex) * tex, nz = Math.round(look.z / tex) * tex;
+      if (nx !== sun.target.position.x || nz !== sun.target.position.z) shDirty = true;
+      sun.target.position.set(nx, 0, nz); sun.position.copy(sun.target.position).add(sunOff);
+      if (r !== shR) { shR = r; shDirty = true; shc.left = -r; shc.right = r; shc.top = r; shc.bottom = -r; shc.near = 30; shc.far = 320; shc.updateProjectionMatrix(); }
     }
     function resize(w, h) {
       W = Math.max(1, w); H = Math.max(1, h);
       renderer.setSize(W, H, false); camera.aspect = W / H; camera.updateProjectionMatrix();
     }
-    function render() { flushQueues(); renderer.render(scene, camera); placeTags(); }
+    // the products page lowers the pixel ratio on a slow GPU
+    function setDpr(v) { renderer.setPixelRatio(v); renderer.setSize(W, H, false); }
+    function render() {
+      if (SH && (shDirty || ++shN % 4 === 0)) { renderer.shadowMap.needsUpdate = true; shDirty = false; }
+      flushQueues(); renderer.render(scene, camera); placeTags();
+    }
     function dispose() {
       scene.traverse(function (o) {
         if (o.geometry) o.geometry.dispose();
@@ -862,7 +872,7 @@
       builder: builder, meshes: meshes, instMerged: instMerged, jitter: jitter, shapeOf: shapeOf, profileX: profileX, X: X, vcMats: vcMats, fitShadow: fitShadow,
       asphaltTex: asphaltTex, pavingTex: pavingTex, grassTex: grassTex, windowTex: windowTex, videoWall: videoWall,
       inst: inst, facing: facing, rod: rod, windowPair: windowPair,
-      tag: tag, journey: journey, resize: resize, render: render, dispose: dispose, ease: ease
+      tag: tag, journey: journey, resize: resize, setDpr: setDpr, render: render, dispose: dispose, ease: ease
     };
   }
 
@@ -1844,7 +1854,7 @@
       tLine.on = i === 4 && lt > .3;
       K.render();
     }
-    return { update: update, resize: K.resize, dispose: K.dispose };
+    return { update: update, warm: function (done) { (window.INFRAX_WARM || function (r, s, c, d) { d(); })(K.renderer, K.scene, K.camera, done); }, resize: K.resize, setDpr: K.setDpr, dispose: K.dispose };
   }
 
   window.INFRAX_DOMAINS = window.INFRAX_DOMAINS || {};

@@ -29,7 +29,7 @@
   ];
 
   function create(host, ctx) {
-    var T = ctx.THREE, MOB = !!ctx.mobile, REDUCE = !!ctx.reduce, SHADOWS = !MOB;
+    var T = ctx.THREE, MOB = !!ctx.mobile, REDUCE = !!ctx.reduce, LOW = !!ctx.lowGpu, SHADOWS = !MOB && !LOW; // integrated GPUs: no shadows, no MSAA
     if (T.ColorManagement) T.ColorManagement.legacyMode = false;
 
     /* ---------- dom ---------- */
@@ -48,13 +48,14 @@
     function tag(cls, text) { var e = document.createElement('div'); e.className = 'cx-tag ' + (cls || ''); e.textContent = text; labels.appendChild(e); return e; }
 
     /* ---------- renderer / scene ---------- */
-    var renderer = new T.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    var renderer = new T.WebGLRenderer({ canvas: canvas, antialias: !MOB && !LOW && (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance' });
+    renderer.debug.checkShaderErrors = false; // no synchronous compile-log reads
     renderer.setPixelRatio(Math.min(ctx.dpr || 1, MOB ? 1.25 : 1.75));
     renderer.setClearColor(0xffffff, 0);
     renderer.physicallyCorrectLights = true;
     renderer.outputEncoding = T.sRGBEncoding;
     renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
-    if (SHADOWS) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap; }
+    if (SHADOWS) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap; renderer.shadowMap.autoUpdate = false; }
     var scene = new T.Scene();
     // fog: thinner than before so the city reads to the horizon; thinned further when the camera rises (see update)
     var FOG0 = MOB ? .0046 : .0032;
@@ -73,7 +74,7 @@
     })();
     scene.add(new T.HemisphereLight(0xF4F8FC, 0x8C97A3, .9));
     var sun = new T.DirectionalLight(0xFFF4E6, 2.6); sun.position.set(60, 90, 50); scene.add(sun); scene.add(sun.target);
-    if (SHADOWS) { sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); var shc = sun.shadow.camera; shc.left = -120; shc.right = 120; shc.top = 120; shc.bottom = -120; shc.near = 10; shc.far = 320; sun.shadow.bias = -.0006; sun.shadow.normalBias = .05; sun.shadow.radius = 3; }
+    if (SHADOWS) { sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024); var shc = sun.shadow.camera; shc.left = -120; shc.right = 120; shc.top = 120; shc.bottom = -120; shc.near = 10; shc.far = 320; sun.shadow.bias = -.0006; sun.shadow.normalBias = .05; sun.shadow.radius = 3; }
 
     var TEX = [];
     function M(c, o) { return new T.MeshStandardMaterial(Object.assign({ color: c, roughness: .78, metalness: .05 }, o || {})); }
@@ -1443,7 +1444,8 @@
 
     /* ---------- projection helpers ---------- */
     var W = 1, H = 1, pv = new T.Vector3();
-    function project(p) { pv.copy(p).project(cam); return { x: (pv.x * .5 + .5) * W, y: (-pv.y * .5 + .5) * H, ok: pv.z > -1 && pv.z < 1 }; }
+    var PQ = { x: 0, y: 0, ok: false }; // reused: callers read it at once
+    function project(p) { pv.copy(p).project(cam); PQ.x = (pv.x * .5 + .5) * W; PQ.y = (-pv.y * .5 + .5) * H; PQ.ok = pv.z > -1 && pv.z < 1; return PQ; }
     var limitX = function () { return MOB ? W - 30 : W * .62; };
     function tagAt(el, p, op) {
       if (op <= .01) { el.style.opacity = 0; return; }
@@ -1574,7 +1576,8 @@
     // static instanced meshes: their bounding sphere is the unit geometry at the origin, so never frustum-cull them
     scene.traverse(function (o) { if (o.isInstancedMesh) o.frustumCulled = false; });
     var SUN_DIR = new T.Vector3(60, 110, 40).normalize(), LX = new T.Vector3().crossVectors(new T.Vector3(0, 1, 0), SUN_DIR).normalize(), LY = new T.Vector3().crossVectors(SUN_DIR, LX);
-    var shC = new T.Vector3(), lastExt = -1, lastNear = -1, SHMAP = 2048;
+    // the shadow map is redrawn when the frustum moves, on a station change, and every 4th frame for moving things
+    var shC = new T.Vector3(), lastExt = -1, lastNear = -1, SHMAP = 2048, shDirty = true, shN = 0, shSt = -1;
     function tuneView() {
       var hgt = cam.position.y, a = Math.max(0, Math.min(1, (hgt - 18) / 140)), dl = cam.position.distanceTo(camL);
       // thinner fog as the camera climbs, so the aerial view keeps its detail out to the horizon blocks
@@ -1585,19 +1588,21 @@
       // half-size of the shadow box: tight at street level (crisp), wide enough to cover the whole frame from above
       var ext = Math.round(Math.max(46, Math.min(200, Math.max(hgt * 1.05, dl * 1.45))));
       if (ext !== lastExt) {
-        lastExt = ext; var sc = sun.shadow.camera; sc.left = -ext; sc.right = ext; sc.top = ext; sc.bottom = -ext; sc.near = 20; sc.far = 260 + ext * 1.3; sc.updateProjectionMatrix();
+        lastExt = ext; shDirty = true; var sc = sun.shadow.camera; sc.left = -ext; sc.right = ext; sc.top = ext; sc.bottom = -ext; sc.near = 20; sc.far = 260 + ext * 1.3; sc.updateProjectionMatrix();
         sun.shadow.normalBias = .02 + (2 * ext / SHMAP) * .55; sun.shadow.bias = -.0004;
       }
       // centre between the look point and the camera, snapped to whole shadow texels so edges never crawl
       shC.copy(camL).lerp(cam.position, .3); shC.y = 0;
       var texel = 2 * ext / SHMAP, u = shC.dot(LX), v = shC.dot(LY), du = Math.round(u / texel) * texel - u, dv = Math.round(v / texel) * texel - v;
       shC.addScaledVector(LX, du).addScaledVector(LY, dv);
+      if (!sun.target.position.equals(shC)) shDirty = true;
       sun.target.position.copy(shC); sun.target.updateMatrixWorld();
       sun.position.copy(shC).addScaledVector(SUN_DIR, 230); sun.updateMatrixWorld();
     }
 
     /* ---------- per-frame update from the host ---------- */
     function wgt(s, i) { return Math.max(0, Math.min(1, 1 - Math.abs(s - i) * 1.6)); }
+    var P_WALL = new T.Vector3(CC.x, 10.6, CC.z - 12), P_APPR = new T.Vector3(CC.x, 5.6, CC.z - 3.8), FP = new T.Vector3(); // per-frame temporaries, allocated once
     function update(progress, stationIndex, dt) {
       if (dead) return;
       dt = Math.min(.05, dt || .016); clock += dt;
@@ -1609,7 +1614,7 @@
       var w0 = wgt(s, 0), w1 = wgt(s, 1), w2 = wgt(s, 2), w3 = wgt(s, 3), w4 = wgt(s, 4);
       // 01 wall: tiles frame up in sequence; the city tile carries a detection
       wallTiles.forEach(function (Ti) { Ti.fr.material.opacity = Math.max(0, Math.min(1, (w0 + w4) * 2 - Ti.k * .12)) * .9; });
-      tagAt(tWall, new T.Vector3(CC.x, 10.6, CC.z - 12), w0 > .45 ? 1 : 0);
+      tagAt(tWall, P_WALL, w0 > .45 ? 1 : 0);
       ccLeds.forEach(function (L, k) { L.material.color.setHex(Math.sin(t * 6 + k) > 0 ? 0x5A9FD4 : 0x2673B5); });
       // 02 watchlist hit at J-04: the flagged car turns red, gets a box and a ring
       var hot = w1 > .25;
@@ -1620,7 +1625,7 @@
       if (!hot && flagged) { meshes.car.setColorAt(flagged.idx, flagCol.setHex(carColor(flagged))); meshes.car.instanceColor.needsUpdate = true; flagged = null; }
       if (flagged) {
         meshes.car.setColorAt(flagged.idx, flagCol.setHex(0xD6453D)); meshes.car.instanceColor.needsUpdate = true;
-        var fp = vPos(flagged).clone(); ring.position.set(fp.x, .08, fp.z); ring.material.opacity = .35 + .3 * Math.sin(t * 6);
+        var fp = FP.copy(vPos(flagged)); ring.position.set(fp.x, .08, fp.z); ring.material.opacity = .35 + .3 * Math.sin(t * 6);
         boxAt(flagged, 1);
         tagAt(tWatch, fp.setY(3.4), w1 > .5 ? 1 : 0);
       } else { ring.material.opacity = 0; boxAt(null, 0); tWatch.style.opacity = 0; }
@@ -1630,7 +1635,7 @@
       pins.forEach(function (P, k) {
         var k2 = Math.max(0, Math.min(1, w2 * 2.2 - k * .35)), hgt = k2 * 9;
         P.m.scale.set(1, Math.max(.001, hgt), 1); P.m.position.y = hgt / 2; P.head.position.y = hgt + 1.2; P.head.scale.setScalar(Math.max(.001, k2));
-        tagAt(P.el, P.p.clone().setY(hgt + 3), k2 > .6 ? 1 : 0);
+        tagAt(P.el, FP.copy(P.p).setY(hgt + 3), k2 > .6 ? 1 : 0);
       });
       // 04 camera health: J-05 is knocked off its aim and its view goes dark
       var C5 = cams['J-05'];
@@ -1641,8 +1646,10 @@
       tagAt(tTamper, C5.top, w3 > .45 ? 1 : 0);
       // 05 the operator approves: the button on the console pulses
       if (opBtn) opBtn.material.opacity = w4 > .3 ? .35 + .3 * Math.sin(t * 5) : 0;
-      tagAt(tApprove, new T.Vector3(CC.x, 5.6, CC.z - 3.8), w4 > .5 ? 1 : 0);
+      tagAt(tApprove, P_APPR, w4 > .5 ? 1 : 0);
 
+      if (stationIndex !== shSt) { shSt = stationIndex; shDirty = true; }
+      if (SHADOWS && (shDirty || ++shN % 4 === 0)) { renderer.shadowMap.needsUpdate = true; shDirty = false; }
       renderer.render(scene, cam);
     }
 
@@ -1661,7 +1668,7 @@
     }
 
     camAt(0);
-    return { update: update, resize: resize, dispose: dispose };
+    return { update: update, warm: function (done) { (window.INFRAX_WARM || function (r, s, c, d) { d(); })(renderer, scene, cam, done); }, resize: resize, setDpr: function (v) { renderer.setPixelRatio(v); renderer.setSize(W, H, false); }, dispose: dispose };
   }
 
   window.INFRAX_DOMAINS.cities = {
