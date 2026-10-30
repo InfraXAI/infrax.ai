@@ -60,8 +60,9 @@ export async function POST(request: NextRequest) {
   }
   if (!body || typeof body !== 'object' || Array.isArray(body)) return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
 
-  // the form's hidden field: people never fill it, bots usually do. Answer as if sent.
-  if (line(body.website, 200)) return NextResponse.json({ success: true });
+  // the form's hidden trap field: people never fill it, bots usually do. A browser's autofill can fill a field too, so a
+  // filled trap never drops the lead: it is still sent, marked for a human to check (a lost buyer costs more than spam).
+  const suspect = !!line(body.dm_trap ?? body.website, 200);
 
   const ip = clientIp(request);
   if (limited(ip)) return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
       from: { name: 'InfraX AI website', address: process.env.LEAD_FROM || (process.env.SMTP_USER as string) },
       to: TO,
       replyTo: { name: lead.name, address: lead.email },
-      subject: mail.subject,
+      subject: (suspect ? '[Check: possible spam] ' : '') + mail.subject,
       text: mail.text,
       html: mail.html,
     });

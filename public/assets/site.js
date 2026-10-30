@@ -380,6 +380,12 @@
 
   /* email links stay mailto: so they open the visitor's own mail app (NIC mail, Outlook, Gmail alike) */
 
+  /* which button opened the demo form (data-cta, or nav / page): it travels with the lead so we learn which asks work */
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest && e.target.closest('a[href$="#demo"]');
+    if (a) window.INFRAX_CTA = a.getAttribute('data-cta') || (a.closest('.site-nav,.sheet') ? 'nav' : 'page');
+  }, true);
+
   /* ---------- Book a demo: centred modal for every a[href$="#demo"] (markup from build.py) ---------- */
   (function demoModal() {
     var dm = document.getElementById('demoModal'); if (!dm) return;
@@ -533,14 +539,14 @@
         form.hidden = true; ok.hidden = false; dlg.scrollTop = 0; ok.focus();
         form.reset();
       }
-      // the lead is sent to BOOK_DEMO_TO by /api/leads (Microsoft Graph) on any real host. The claude.ai review preview has no
+      // the lead is emailed to info@infrax.ai by /api/leads (SMTP) on any real host. The claude.ai review preview has no
       // backend, so there the form only shows the confirmation
       var onSite = /^https?:$/.test(location.protocol) && !/(^|\.)claude\.ai$|claudeusercontent\.com$/.test(location.hostname);
       if (!onSite || !window.fetch) { done(); return; }
       if (btn) { btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
       fetch('/api/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
         name: lead.name, organization: lead.org, email: lead.email, phone: lead.phone, domain: lead.domain, products: picks,
-        message: lead.message, source: 'website · ' + location.pathname, website: v('dmWebsite')
+        message: lead.message, source: 'website · ' + location.pathname + (window.INFRAX_CTA ? ' · ' + window.INFRAX_CTA : ''), dm_trap: v('dmTrap')
       }) }).then(function (r) { if (!r.ok) throw new Error(r.status); return true; }).catch(function () { return false; }).then(function (sent) {
         if (btn) { btn.disabled = false; btn.removeAttribute('aria-busy'); }
         // not saved: keep what they typed and say so, with the address to email instead

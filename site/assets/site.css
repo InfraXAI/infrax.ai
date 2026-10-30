@@ -142,7 +142,11 @@ p,li,dd{text-wrap:pretty}
 .menu{max-height:calc(100dvh - var(--nav-h) - 24px);overflow-y:auto;overscroll-behavior:contain}
 @media (pointer:coarse){.nav-links>li>a,.nav-links>li>button{height:44px}.menu a{min-height:44px}}
 @media (max-width:1024px){
-  .nav-links,.nav-cta{display:none}
+  .nav-links{display:none}
+  /* the demo button stays one tap away on phones and tablets, next to the menu button */
+  .nav-cta{display:block;margin-left:auto}
+  .nav-cta .btn{--h:42px;padding:0 14px;font-size:13.5px}
+  .site-nav .wrap{gap:10px}
   .nav-toggle{display:inline-flex}
   .sheet{display:block;position:fixed;inset:calc(var(--nav-h) + env(safe-area-inset-top,0px)) 0 0;z-index:49;background:#fff;padding:16px max(var(--gut),env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(var(--gut),env(safe-area-inset-left,0px));overflow:auto;clip-path:inset(0 0 100% 0);transition:clip-path .5s var(--ease);visibility:hidden}
   .sheet.open{clip-path:inset(0);visibility:visible}
@@ -184,6 +188,13 @@ p,li,dd{text-wrap:pretty}
 .wave-veil canvas{width:100%;height:100%;display:block}
 
 /* "next page" band at the bottom of each page */
+/* decision band: one page-specific ask at the end of a page, above "Next" */
+.decide{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:calc(16*var(--s)) calc(32*var(--s));margin-block:calc(24*var(--s)) calc(8*var(--s));padding:calc(28*var(--s)) calc(32*var(--s));border:1px solid var(--line);border-radius:calc(20*var(--s));background:linear-gradient(135deg,#fff,var(--mist))}
+.decide .h-2{margin:0}
+.decide-act{display:flex;flex-direction:column;align-items:flex-end;gap:calc(10*var(--s));text-align:right}
+.decide-note{font-size:max(12px,calc(13*var(--s)));line-height:1.45;color:var(--muted);max-width:26em}
+.decide.decide-in{margin-top:calc(40*var(--s))}
+@media (max-width:768px){.decide{grid-template-columns:1fr;padding:22px 18px}.decide-act{align-items:stretch;text-align:left}.decide-act .btn{justify-content:center}}
 .next-band{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:calc(24*var(--s));padding-block:calc(44*var(--s));text-decoration:none}
 .next-band .h-1{transition:color .3s}
 .next-band:hover .h-1{color:var(--blue)}
@@ -555,3 +566,5 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .dm-sel-list li[aria-selected="true"]::after{content:"";position:absolute;right:14px;top:50%;width:10px;height:5px;margin-top:-4px;border:solid var(--blue);border-width:0 0 2px 2px;transform:rotate(-45deg)}
 @keyframes dmSelIn{from{opacity:0;transform:translateY(-4px)}}
 @media (prefers-reduced-motion:reduce){.dm-sel-list{animation:none}}
+
+@media (max-width:380px){.nav-cta .btn svg{display:none}.nav-cta .btn{padding:0 12px}}

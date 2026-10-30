@@ -135,7 +135,7 @@ def demo_modal():
         <div class="dm-f full"><label for="dmDomain">Domain <span class="req" aria-hidden="true">*</span></label>
           <select id="dmDomain" aria-describedby="dmDomainErr" name="domain" required><option value="">Choose the closest match</option>{doms}</select><span class="err" id="dmDomainErr" aria-live="polite"></span></div>
         <fieldset class="dm-f full"><legend>Products of interest <small>(optional)</small></legend><div class="dm-opts">{opts}</div></fieldset>
-        <div class="dm-hp" aria-hidden="true"><label for="dmWebsite">Website</label><input id="dmWebsite" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="dm-hp" aria-hidden="true"><label for="dmTrap">Leave this field empty</label><input id="dmTrap" name="dm_trap" tabindex="-1" autocomplete="off"></div>
         <div class="dm-f full"><label for="dmMsg">About your sites <small>(optional)</small></label><textarea id="dmMsg" maxlength="1500" name="message" placeholder="e.g. a warehouse with two gates and existing IP cameras"></textarea></div>
         <div class="dm-submit"><button class="btn btn-primary" type="submit">Request a demo {ARROW}</button><p><span class="req" aria-hidden="true">*</span> Required. We use your details only to arrange the demo.</p></div>
         <p class="dm-senderr" id="dmSendErr" role="alert" tabindex="-1" hidden>We couldn't send your request. Please try again, or email <a href="mailto:info@infrax.ai">info@infrax.ai</a>.</p>

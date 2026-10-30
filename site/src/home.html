@@ -15,6 +15,8 @@
 .hx-l2{background:linear-gradient(90deg,var(--blue) 0%,var(--blue-soft) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
 .hx-sub{margin:clamp(14px,2svh,24px) 0 0;max-width:min(100%,44em);font-size:var(--fs-lead);line-height:1.6;color:var(--muted);text-wrap:balance}
 .hx-copy .btn-row{justify-content:center;margin-top:clamp(20px,2.8svh,34px)}
+.hx-proof{margin:clamp(14px,2svh,20px) 0 0;max-width:60em;font:500 max(11.5px,calc(12.5*var(--s)))/1.6 var(--f-mono);letter-spacing:.02em;color:var(--muted);text-wrap:balance}
+.hx-copy .hx-proof{animation-delay:.22s}
 .hx2-stage{position:relative;width:100%;height:clamp(500px,64svh,620px);margin-top:clamp(0px,1svh,12px)}
 .hx2-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 /* the card */
@@ -42,11 +44,13 @@
 .hc-plan li.done i::after{content:"";width:8px;height:4px;border:solid #fff;border-width:0 0 2px 2px;transform:translateY(-1px) rotate(-45deg)}
 .hc-plan small{display:block;font:500 max(11px,calc(11.5*var(--s)))/1.3 var(--f-mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
 .hc-act{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
-.hc-ok{padding:10px 18px;min-height:42px}
-.hc-ok[disabled]{opacity:.45;cursor:default;box-shadow:none}
-.hc-ok.ask{animation:hcAsk 1.8s ease-in-out infinite}
-@keyframes hcAsk{0%,100%{box-shadow:0 0 0 0 rgba(38,115,181,.45)}50%{box-shadow:0 0 0 9px rgba(38,115,181,0)}}
-.hc-state{font-size:max(13px,calc(13.5*var(--s)));line-height:1.35;color:var(--muted);flex:1;min-width:10em}
+/* Approve and Change sit inside the mock screen, smaller than the page's main button, so "Book a demo" stays the primary */
+.hc-ok,.hc-chg{padding:0 16px;min-height:40px;font-size:max(13px,calc(14*var(--s)))}
+.hc-ok[disabled],.hc-chg[disabled]{opacity:.45;cursor:default;box-shadow:none}
+.hc-ok.ask{box-shadow:0 0 0 4px rgba(38,115,181,.16)}
+.hc-state{margin:10px 0 0;font-size:max(13px,calc(13.5*var(--s)));line-height:1.4;color:var(--muted)}
+.hc-evd{font-size:max(12px,calc(12.5*var(--s)));line-height:1.35;color:var(--muted)}
+.hc-plan em{font-style:normal;font:500 max(10px,calc(10.5*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--mist);border-radius:999px;padding:3px 7px;margin-left:6px;vertical-align:1px}
 .hc-next{margin-left:auto;background:none;border:0;padding:6px 0;font:500 max(12px,calc(12.5*var(--s)))/1 var(--f-body);color:var(--blue);cursor:pointer}
 .hc-next:hover{text-decoration:underline}
 .hc-foot{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:max(13px,calc(13.5*var(--s)));line-height:1.45;color:var(--ink-2)}
@@ -69,7 +73,8 @@
   .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,320px)}
   .hx-copy .btn{justify-content:center}
 }
-@media (prefers-reduced-motion:reduce){.hx-copy>*,.hx2-card,.hc-dot,.hc-ok.ask{animation:none!important}.hc-plan li{transition:none}}
+@media (max-width:900px){.hc-ok,.hc-chg{min-height:44px}}
+@media (prefers-reduced-motion:reduce){.hx-copy>*,.hx2-card,.hc-dot{animation:none!important}.hc-plan li{transition:none}}
 
 /* section head (one pattern on every Home section): heading, then its one-line description directly under it */
 .hm-head{display:block;max-width:calc(760*var(--s));margin-bottom:var(--gap-c)}
@@ -551,16 +556,18 @@
         <a class="btn btn-primary" href="home.html#demo" data-magnetic>Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         <a class="btn btn-ghost" href="products.html">See the products <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
       </div>
+      <p class="hx-proof">Live 24×7 highway control room in Haryana · InfraX AI Ops live at ops.infrax.ai · Installs on your own servers · DPIIT-recognised startup</p>
     </div>
   </div>
   <div class="hx2-stage" id="hx2Stage">
     <canvas id="hx2Globe" aria-hidden="true"></canvas>
     <div class="hx2-card" id="hx2Card" role="group" aria-label="Example: an InfraX AI Being at work (illustrative)">
       <div class="hc-top"><span class="hc-who"><i class="hc-dot" aria-hidden="true"></i><b id="hcBeing">NOAH</b><span id="hcIn">in Central Plexus</span></span><span class="hc-tag" id="hcDom">Highway</span></div>
-      <div class="hc-ev" id="hcEv"><span class="hc-where" id="hcWhere">CAM-07 · km 42.6 · just now</span><span class="hc-what" id="hcWhat">Stopped vehicle on the shoulder</span></div>
+      <div class="hc-ev" id="hcEv"><span class="hc-where" id="hcWhere">CAM-07 · km 42.6</span><span class="hc-what" id="hcWhat">Stopped vehicle on the shoulder</span><span class="hc-evd" id="hcEvd">Evidence: 12 s clip · 3 frames · confidence 0.94</span></div>
       <ol class="hc-plan" id="hcPlan"></ol>
-      <div class="hc-act"><button class="btn btn-primary hc-ok" id="hcOk" type="button" disabled>Approve</button><span class="hc-state" id="hcState" aria-live="polite">NOAH is looking at it…</span><button class="hc-next" id="hcNext" type="button">Next example</button></div>
-      <p class="hc-foot" id="hcFoot" hidden>Every InfraX AI Being works this way: it proposes, you decide. <a href="home.html#demo">See it on your site →</a></p>
+      <div class="hc-act"><button class="btn btn-primary hc-ok" id="hcOk" type="button" disabled>Approve</button><button class="btn btn-ghost hc-chg" id="hcChg" type="button" disabled>Change</button><button class="hc-next" id="hcNext" type="button">Next example</button></div>
+      <p class="hc-state" id="hcState" aria-live="polite">NOAH is looking at it…</p>
+      <p class="hc-foot" id="hcFoot" hidden>Every InfraX AI Being works this way: it proposes, a person decides, and the audit log keeps who approved what. <a href="home.html#demo" data-cta="hero-card">See it on your site →</a></p>
       <span class="hc-ill" aria-hidden="true">Illustrative example</span>
     </div>
   </div>
@@ -788,6 +795,10 @@
       <div class="hw-bot" aria-hidden="true"><div class="hw-lg"><span style="--c:#5CB8FF">car</span><span style="--c:#F2B544">truck</span><span style="--c:#5FDDB0">bus</span></div><span id="hwEdge">Edge AI · on-prem</span></div>
     </figure>
   </div>
+  <div class="wrap"><div class="decide decide-in">
+  <p class="h-2">See it on your corridor.</p>
+  <div class="decide-act"><a class="btn btn-primary" href="home.html#demo" data-cta="home-proof-band">Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a><span class="decide-note">30-minute call · a live walkthrough · a rollout plan for your sites. We reply within one working day.</span></div>
+</div></div>
 </section>
 
 <!-- ============ COMPANY ============ -->
@@ -1003,63 +1014,75 @@
     }
     play();
 
-    /* ---------- the card: one Being at work ---------- */
+    /* ---------- the card: one Being at work ----------
+       Evidence first, then the Being's proposal; the visitor can Approve or Change it (people accept a system they can
+       adjust). Times are the visitor's own clock; the end is the audit-log line, not a claim about how fast a patrol
+       arrives. With no answer in 9 s the example is held: nothing is sent until a person approves. */
     var X$ = function (id) { return document.getElementById(id); };
-    var cBeing = X$('hcBeing'), cIn = X$('hcIn'), cDom = X$('hcDom'), cEv = X$('hcEv'), cWhere = X$('hcWhere'), cWhat = X$('hcWhat'),
-      cPlan = X$('hcPlan'), cOk = X$('hcOk'), cState = X$('hcState'), cNext = X$('hcNext'), cFoot = X$('hcFoot');
+    var cBeing = X$('hcBeing'), cIn = X$('hcIn'), cDom = X$('hcDom'), cEv = X$('hcEv'), cWhere = X$('hcWhere'), cWhat = X$('hcWhat'), cEvd = X$('hcEvd'),
+      cPlan = X$('hcPlan'), cOk = X$('hcOk'), cChg = X$('hcChg'), cState = X$('hcState'), cNext = X$('hcNext'), cFoot = X$('hcFoot');
     if (!cOk) return;
     var EX = [
-      { b: 'NOAH', in: 'in Central Plexus', d: 'Highway', w: 'CAM-07 · km 42.6', e: 'Stopped vehicle on the shoulder',
-        p: [['Patrol', 'Send Patrol 3 to km 42.6'], ['Sign', 'Show “Vehicle ahead, slow down” on SIGN-14']], t: '00:41', done: 'Patrol on the way, sign updated, clip saved' },
-      { b: 'VAYU', in: 'in Cygnus', d: 'Port', w: 'Gate 3 · XX 00 AB 1234', e: 'Truck not on today’s gate list',
-        p: [['Gate', 'Hold the barrier at Gate 3'], ['Security', 'Call the security desk with the plate and clip']], t: '00:18', done: 'Barrier held, security on the way' },
-      { b: 'ASTRA', in: 'in AstraAlert', d: 'Call box', w: 'ECB-07 · km 18.2', e: 'Driver reports a breakdown, in Hindi',
-        p: [['Incident', 'Open an incident at the call box’s location'], ['Patrol', 'Alert the nearest patrol']], t: '00:26', done: 'Incident opened, patrol alerted' },
-      { b: 'NOAH', in: 'in Central Plexus (ICCC)', d: 'City', w: 'Junction J-12 · camera 3', e: 'Junction blocked for 4 minutes',
-        p: [['Police', 'Alert the traffic police desk'], ['Wall', 'Put junction J-12 on the command-centre wall']], t: '00:12', done: 'Desk alerted, junction on the wall' },
-      { b: 'KRITYA', in: 'in InfraX AI Ops', d: 'Field ops', w: 'Daily plan · Field team 2', e: '6 maintenance orders drafted for today',
-        p: [['Orders', 'Send the 6 orders to Field team 2'], ['Asset', 'Book the lift truck for 11:00']], t: '00:09', done: 'Orders sent, team notified' }
+      { b: 'NOAH', in: 'in Central Plexus', d: 'Highway', w: 'CAM-07 · km 42.6 · lane 1 shoulder', e: 'Stopped vehicle on the shoulder', v: 'Evidence: 12 s clip · 3 frames · confidence 0.94',
+        p: [['Patrol', 'Send Patrol 3 to km 42.6', 'Send Patrol 2 to km 42.6, it is nearer'], ['Sign', 'Show “Vehicle ahead, slow down” on SIGN-14']], done: 'Patrol dispatched, SIGN-14 updated' },
+      { b: 'VAYU', in: 'in Cygnus', d: 'Port', w: 'Gate 3 · ANPR camera 2', e: 'Truck XX 00 AB 1234 is not on today’s gate list', v: 'Evidence: plate read 0.97 · 2 frames · last seen 41 days ago',
+        p: [['Gate', 'Hold the barrier at Gate 3', 'Let it through and flag it for the shift report'], ['Security', 'Call the security desk with the plate and the clip']], done: 'Barrier held, security desk called' },
+      { b: 'ASTRA', in: 'in AstraAlert', d: 'Call box', w: 'ECB-07 · km 18.2', e: 'A driver reports a breakdown, in Hindi', v: 'Evidence: 38 s call recording · summary in English',
+        p: [['Incident', 'Open an incident at the call box’s location', 'Call the driver back first, then open the incident'], ['Patrol', 'Alert the nearest patrol']], done: 'Incident opened, nearest patrol alerted' },
+      { b: 'NOAH', in: 'in Central Plexus (ICCC)', d: 'City', w: 'Junction J-12 · camera 3', e: 'Junction blocked for 4 minutes', v: 'Evidence: 20 s clip · queue length rising',
+        p: [['Police', 'Alert the traffic police desk', 'Alert the desk and the nearest traffic marshal'], ['Wall', 'Put junction J-12 on the command-centre wall']], done: 'Desk alerted, J-12 on the wall' },
+      { b: 'KRITYA', in: 'in InfraX AI Ops', d: 'Field ops', w: 'Daily plan · Field team 2', e: '6 maintenance orders drafted for today', v: 'Based on: 3 camera faults · 2 overdue checks · 1 lamp outage',
+        p: [['Orders', 'Send the 6 orders to Field team 2', 'Split the orders between Field teams 2 and 3'], ['Asset', 'Book the lift truck for 11:00']], done: 'Orders sent, lift truck booked' }
     ];
-    var cur = -1, timers = [], phase = '', approvedOnce = false;
+    var cur = -1, timers = [], phase = '', approvedOnce = false, alt = false;
     function later(fn, ms) { timers.push(setTimeout(function () { fn(); if (!running) draw(); }, ms)); }
     function clear() { timers.forEach(clearTimeout); timers = []; }
+    function clock(d) { var p = function (n) { return (n < 10 ? '0' : '') + n; }; return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()); }
+    function planHtml(x) { return x.p.map(function (s, k) { var t = k === 0 && alt ? s[2] : s[1]; return '<li class="on"><i aria-hidden="true"></i><span><small>' + s[0] + '</small>' + t + (k === 0 && alt ? '<em>changed by you</em>' : '') + '</span></li>'; }).join(''); }
+    function buttons(on) { cOk.disabled = cChg.disabled = !on; cOk.classList.toggle('ask', on); }
     function show(n) {
-      clear(); cur = (n + EX.length) % EX.length; var x = EX[cur];
-      cBeing.textContent = x.b; cIn.textContent = x.in; cDom.textContent = x.d; cWhere.textContent = x.w + ' · just now'; cWhat.textContent = x.e;
+      clear(); cur = (n + EX.length) % EX.length; alt = false; var x = EX[cur];
+      cBeing.textContent = x.b; cIn.textContent = x.in; cDom.textContent = x.d; cWhere.textContent = x.w + ' · ' + clock(new Date()); cWhat.textContent = x.e; cEvd.textContent = x.v;
       cEv.className = 'hc-ev';
       cPlan.innerHTML = x.p.map(function (s) { return '<li><i aria-hidden="true"></i><span><small>' + s[0] + '</small>' + s[1] + '</span></li>'; }).join('');
-      cOk.disabled = true; cOk.classList.remove('ask'); cState.textContent = x.b + ' is looking at it…'; phase = 'detect';
+      buttons(false); cState.textContent = x.b + ' is checking the evidence…'; phase = 'detect';
       ev = { g: pickEv(), st: 'ev' };
       var lis = cPlan.children;
       later(function () { lis[0] && lis[0].classList.add('on'); cState.textContent = x.b + ' proposes:'; }, reduce ? 0 : 800);
       later(function () {
-        lis[1] && lis[1].classList.add('on'); cOk.disabled = false; cOk.classList.add('ask'); phase = 'wait';
-        cState.textContent = 'Your call.';
+        lis[1] && lis[1].classList.add('on'); buttons(true); phase = 'wait';
+        cState.textContent = 'Waiting for your approval. Nothing is sent until a person approves.';
         if (!reduce) later(hold, 9000);
       }, reduce ? 0 : 1500);
     }
     function hold() {
       if (phase !== 'wait') return; phase = 'hold';
-      cOk.disabled = true; cOk.classList.remove('ask'); cEv.className = 'hc-ev hold'; if (ev) ev.st = 'hold';
+      buttons(false); cEv.className = 'hc-ev hold'; if (ev) ev.st = 'hold';
       cState.textContent = 'Held for the operator. Nothing moves without a person.';
       later(function () { show(cur + 1); }, 3000);
     }
+    function change() {
+      if (phase !== 'wait') return; clear(); alt = !alt;
+      cPlan.innerHTML = planHtml(EX[cur]);
+      cState.textContent = alt ? 'Changed. Approve when it looks right.' : 'Back to ' + EX[cur].b + '’s proposal.';
+      if (!reduce) later(hold, 12000);
+    }
     function approve() {
       if (phase !== 'wait') return; phase = 'act'; clear();
-      var x = EX[cur], lis = cPlan.children;
-      cOk.disabled = true; cOk.classList.remove('ask'); cState.textContent = 'On it…';
+      var x = EX[cur], lis = cPlan.children, at = clock(new Date());
+      buttons(false); cState.textContent = 'Sending…';
       later(function () { lis[0] && lis[0].classList.add('done'); }, reduce ? 0 : 350);
       later(function () {
         lis[1] && lis[1].classList.add('done'); cEv.className = 'hc-ev ok'; phase = 'done';
-        cWhere.textContent = x.w + ' · closed in ' + x.t; cState.textContent = x.done + '. On record.';
+        cState.textContent = x.done + '. Approved by you at ' + at + ' · in the audit log.';
         if (ev) { ev.st = 'ok'; addArc(ev.g, pick(.2, .8), '47,158,85', 2.2); addArc(ev.g, pick(.2, .8), '47,158,85', 2.6); }
-        if (!approvedOnce) { approvedOnce = true; cFoot.hidden = false; }
-        if (!reduce) later(function () { show(cur + 1); }, approvedOnce && cFoot.dataset.seen ? 3600 : 5200);
-        cFoot.dataset.seen = '1';
+        var first = !approvedOnce; if (first) { approvedOnce = true; cFoot.hidden = false; }
+        if (!reduce) later(function () { show(cur + 1); }, first ? 6500 : 4200);
       }, reduce ? 0 : 900);
     }
     cOk.addEventListener('click', function () { approve(); if (!running) draw(); });
-    cNext.addEventListener('click', function () { show(cur + 1); });
+    cChg.addEventListener('click', function () { change(); if (!running) draw(); });
+    cNext.addEventListener('click', function () { show(cur + 1); if (!running) draw(); });
     later(function () { show(0); }, reduce ? 0 : 900);
   })();
 
