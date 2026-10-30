@@ -148,7 +148,7 @@
       <h2 class="h-2" id="in-tog-title">Our products work as one.</h2>
       <p>Plates, clips, calls and work orders move between products as they happen.</p>
     </div>
-    <div class="hm-ex" id="hmEx" role="img" aria-label="Animated diagram: products exchange data. The centre rotates between Cygnus, Central Plexus (ATMS) and InfraX Ops; VIDES sends plates, speed, class and evidence and receives speed limits; AstraAlert, TollCloud and Access and parking send calls, toll sessions and gate reads.">
+    <div class="hm-ex" id="hmEx" role="img" aria-label="Animated diagram: products exchange data. The centre rotates between Cygnus, Central Plexus (ATMS / ICCC) and InfraX AI Ops; VIDES sends plates, speed, class and evidence and receives speed limits; AstraAlert, TollCloud and Access and parking send calls, toll sessions and gate reads.">
       <svg aria-hidden="true" id="hmExSvg"></svg>
     </div>
   </div>
@@ -196,13 +196,13 @@ var CATS=[
   {id:'callbox',name:'Emergency call boxes',short:'Call boxes',st:'live',via:'AstraAlert',dir:'both',proto:['Call boxes','Voice','Box health'],
    into:'Calls from drivers, plus each box\'s power, battery, solar and door status.',outof:'The call answered, and with the AI voice agent, a summary for the operator to confirm.',
    ex:[['Highways','Every box located on the map when it rings']]},
-  {id:'sign',name:'LED message signs',short:'LED signs',st:'live',via:'Central Plexus (ATMS)',dir:'out',proto:['Message signs','Gantry boards'],
+  {id:'sign',name:'LED message signs',short:'LED signs',st:'live',via:'Central Plexus (ATMS / ICCC)',dir:'out',proto:['Message signs','Gantry boards'],
    into:'Sign status from the road.',outof:'Messages to the LED signs, sent by the operator.',
    ex:[['Highways','"Accident ahead, keep left" upstream of an incident']]},
-  {id:'challan',name:'E-challan review',short:'E-challan',st:'live',via:'Central Plexus (ATMS)',dir:'out',proto:['Photo + video evidence','Review','Export'],
+  {id:'challan',name:'E-challan review',short:'E-challan',st:'live',via:'Central Plexus (ATMS / ICCC)',dir:'out',proto:['Photo + video evidence','Review','Export'],
    into:'Violations arriving with photo and video evidence.',outof:'Reviewed cases exported for e-challan.',
    ex:[['Highways','Violations reviewed by a person before export']]},
-  {id:'map',name:'Maps and GIS',short:'Maps / GIS',st:'live',via:'Central Plexus (ATMS)',dir:'both',proto:['GIS registry','Cameras','Roadside assets'],
+  {id:'map',name:'Maps and GIS',short:'Maps / GIS',st:'live',via:'Central Plexus (ATMS / ICCC)',dir:'both',proto:['GIS registry','Cameras','Roadside assets'],
    into:'Where every camera, gantry, sign and call box sits.',outof:'Alerts and incidents placed on the live map.',
    ex:[['Highways','Cameras linked to the roadside assets they can see'],['Warehouses','Cameras placed on the site plan']]},
   {id:'access',name:'Per-person access',short:'Access',st:'live',via:'Cygnus',dir:'in',proto:['5 roles','Per-feature rights','Audit trail'],
@@ -211,7 +211,7 @@ var CATS=[
   {id:'agent',name:'AI assistant with scoped rights',short:'AI assistant',st:'live',via:'VAYU, the AI operations assistant',dir:'both',proto:['The operator\'s own access','Confirm each change','Fully local on CPU'],
    into:'VAYU reads cameras, events, plates and incidents with the operator\'s own rights, and nothing more.',outof:'Proposed actions (raise an incident, update a watchlist, move a PTZ camera) that the operator confirms.',
    ex:[['Control rooms','"Which cameras need attention?" answered from your own data']]},
-  {id:'radar',name:'Gantry radar',short:'Gantry radar',st:'live',via:'InfraX VIDES',dir:'in',proto:['Radar speed','On the gantry'],
+  {id:'radar',name:'Gantry radar',short:'Gantry radar',st:'live',via:'InfraX AI VIDES',dir:'in',proto:['Radar speed','On the gantry'],
    into:'Speed for each vehicle the camera reads, from radar on the gantry.',outof:'Overspeed cases with images, for review before any e-challan.',
    ex:[['Highways','Speed enforcement gantries on expressways']]}
 ];
@@ -306,7 +306,7 @@ else if(window.INFRAX&&INFRAX.icons){INFRAX.icons.render();}
 "use strict";
 var reduce=!!(window.INFRAX&&INFRAX.reduce);
   /* ---------- products exchange: one rAF clock. Satellites orbit slowly on an ellipse; every 5.2 s the centre
-     (Cygnus -> Central Plexus -> InfraX Ops) swaps with a 1.2 s eased cross-move. Links are cubic Beziers rebuilt
+     (Cygnus -> Central Plexus -> InfraX AI Ops) swaps with a 1.2 s eased cross-move. Links are cubic Beziers rebuilt
      each frame from live positions; data boxes ride them at constant arc-length speed and fade at the ends. ---------- */
   (function () {
     var ex = document.getElementById('hmEx'), svg = document.getElementById('hmExSvg');
@@ -315,8 +315,8 @@ var reduce=!!(window.INFRAX&&INFRAX.reduce);
     var N = [
       { id: 'cy', name: 'Cygnus', sub: 'Video management', outs: ['Video walls', 'Plate search', 'Watchlist alarm'], to: ['clip', 'plate read'], from: ['camera move'] },
       { id: 'cp', name: 'Central Plexus', sub: 'ATMS', outs: ['Incidents', 'E-challan review', 'Sign messages'], to: ['incident', 'sign message'], from: ['evidence'] },
-      { id: 'ops', name: 'InfraX Ops', sub: 'Field teams', outs: ['Work orders', 'Shifts', 'Daily digest'], to: ['work order'], from: ['fault ticket'] },
-      { id: 'vides', name: 'InfraX VIDES', sub: 'Gantry', to: ['plate', 'speed', 'class', 'evidence'], from: ['speed limit', 'classes'] },
+      { id: 'ops', name: 'InfraX AI Ops', sub: 'Field teams', outs: ['Work orders', 'Shifts', 'Daily digest'], to: ['work order'], from: ['fault ticket'] },
+      { id: 'vides', name: 'InfraX AI VIDES', sub: 'Gantry', to: ['plate', 'speed', 'class', 'evidence'], from: ['speed limit', 'classes'] },
       { id: 'astra', name: 'AstraAlert', sub: 'Call boxes', to: ['call', 'box health'], from: ['callback'] },
       { id: 'toll', name: 'TollCloud', sub: 'Toll lanes', to: ['toll session', 'plate'], from: ['tariff'] },
       { id: 'access', name: 'Access and parking', sub: 'Gates', to: ['gate read'], from: ['allow list'] }

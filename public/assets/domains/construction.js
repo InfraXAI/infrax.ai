@@ -255,6 +255,7 @@
       var t = { el: el, p: new T.Vector3(), on: false }; TAGS.push(t); return t;
     }
     var _v = new T.Vector3(), W = 1, H = 1;
+    var _sz = function (el) { if (el._st !== el.textContent) { el._st = el.textContent; el._sw = el.offsetWidth; el._sh = el.offsetHeight; } return el; };
     function placeTags() {
       TAGS.forEach(function (t) {
         if (!t.on) { t.el.style.opacity = 0; return; }
@@ -263,7 +264,7 @@
         t.el.style.opacity = vis ? 1 : 0;
         var x = (_v.x * .5 + .5) * W, y = (-_v.y * .5 + .5) * H;
         x = Math.max(80, Math.min(W - 80, x));
-        t.el.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) translate(-50%,-100%)';
+        _sz(t.el); t.el.style.transform = 'translate(' + Math.round(x - t.el._sw / 2) + 'px,' + Math.round(y - t.el._sh) + 'px)'; // whole pixels: no blurred text
       });
     }
 

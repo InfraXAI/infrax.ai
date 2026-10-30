@@ -39,20 +39,23 @@ PLATFORM = [
 # INFRAX.AI product map (from the team): slug, name, one line. Slugs are products.html#<slug> stations.
 # Same order as the highway tunnel on the Products page, then the gate product
 PRODUCTS = [
-    ("vides", "InfraX VIDES", "Plate, speed and class at the gantry"),
+    ("vides", "InfraX AI VIDES", "Plate, speed and class at the gantry"),
     ("astraalert", "AstraAlert", "Every emergency call answered and located"),
     ("tollcloud", "TollCloud", "Toll lanes that keep running offline"),
     ("mlff", "MLFF", "Free-flow tolling gantry, no stopping"),
     ("cygnus", "Cygnus", "Video management with AI"),
-    ("central-plexus", "Central Plexus (ATMS)", "One live map, incidents, e-challan and signs"),
-    ("ops", "InfraX Ops", "Field operations, workforce and assets, run by AI agents"),
+    ("central-plexus", "Central Plexus (ATMS / ICCC)", "One live map, incidents, e-challan and signs"),
+    ("ops", "InfraX AI Ops", "Field operations, workforce and assets, run by AI agents"),
     ("access-parking", "Access and parking", "Entry and exit, plate reads"),
 ]
+# each product's mark in the menu: the InfraX AI logo mark in its own colour, turned to its own angle
+MARKS = {"vides": ("#2673B5", 0), "astraalert": ("#D6453D", 45), "tollcloud": ("#0E8A7E", 90), "mlff": ("#2E9E5B", 135),
+         "cygnus": ("#4C5FD5", 180), "central-plexus": ("#0E3B66", 225), "ops": ("#C9861A", 270), "access-parking": ("#5A7A99", 315)}
 
 def products_menu():
     items = "".join(
-        f'<a href="products.html#{s}" data-nav="products"><i>{i:02d}</i><b>{n}</b><span>{d}</span></a>'
-        for i, (s, n, d) in enumerate(PRODUCTS, 1))
+        f'<a href="products.html#{s}" data-nav="products"><i style="--pc:{MARKS[s][0]};--pr:{MARKS[s][1]}deg" aria-hidden="true"></i><b>{n}</b><span>{d}</span></a>'
+        for s, n, d in PRODUCTS)
     return f'<div class="menu menu-products"><div class="pm-row">{items}</div><a class="pm-all" href="products.html">See every product in action &rarr;</a></div>'
 
 def nav():
@@ -76,7 +79,7 @@ def nav():
 </div></header>
 <nav class="sheet" id="navSheet" aria-label="Mobile">
   <a href="home.html" data-nav="home">Home<small>INFRAX.AI</small></a>
-  <a href="products.html" data-nav="products">Products<small>Eight products</small></a>
+  <a href="products.html" data-nav="products">Products<small>Our products</small></a>
   {sheet}
   <a href="services.html" data-nav="services">Services<small>Integration &amp; delivery</small></a>
   <a href="home.html#company">Company<small>About</small></a>
@@ -89,21 +92,23 @@ FOOTER = '''<footer class="site-foot"><div class="wrap">
       <img src="assets/logo.svg" alt="INFRAX.AI" width="104" height="30">
       <p>InfraX AI builds control-room software and AI agents for infrastructure: video, plates, call boxes and field work in one place. Built in India.</p>
       <address><a class="foot-addr" href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City<br>Gurugram, Haryana 122002, India</a><span class="foot-contact"><span class="foot-h">Contact</span><a href="mailto:info@infrax.ai">info@infrax.ai</a></span></address>
+      <div class="foot-social"><a href="https://www.linkedin.com/company/infrax-ai/" target="_blank" rel="noopener" aria-label="InfraX AI on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.937 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a><a href="https://www.youtube.com/@infraxai" target="_blank" rel="noopener" aria-label="InfraX AI on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a><a href="https://github.com/InfraXAI" target="_blank" rel="noopener" aria-label="InfraX AI on GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a></div>
     </div>
-    <div><p class="foot-h">Products</p><ul><li><a href="products.html#central-plexus">Central Plexus (ATMS)</a></li><li><a href="products.html#cygnus">Cygnus</a></li><li><a href="products.html#vides">InfraX VIDES</a></li><li><a href="products.html#astraalert">AstraAlert</a></li><li><a href="products.html#tollcloud">TollCloud</a></li><li><a href="products.html#mlff">MLFF</a></li><li><a href="products.html#access-parking">Access and parking</a></li><li><a href="products.html#ops">InfraX Ops</a></li></ul></div>
+    <div><p class="foot-h">Products</p><ul><li><a href="products.html#central-plexus">Central Plexus (ATMS / ICCC)</a></li><li><a href="products.html#cygnus">Cygnus</a></li><li><a href="products.html#vides">InfraX AI VIDES</a></li><li><a href="products.html#astraalert">AstraAlert</a></li><li><a href="products.html#tollcloud">TollCloud</a></li><li><a href="products.html#mlff">MLFF</a></li><li><a href="products.html#access-parking">Access and parking</a></li><li><a href="products.html#ops">InfraX AI Ops</a></li></ul></div>
     <div><p class="foot-h">Domains</p><ul><li><a href="products.html#d-highways">Highways</a></li><li><a href="products.html#d-cities">Cities</a></li><li><a href="products.html#d-campuses">Campuses</a></li><li><a href="products.html#d-ports">Ports</a></li><li><a href="products.html#d-warehouses">Warehouses</a></li><li><a href="products.html#d-construction">Construction</a></li></ul></div>
     <div><p class="foot-h">Platform</p><ul><li><a href="how-it-works.html">How it works</a></li><li><a href="analytics.html">AI analytics</a></li><li><a href="deployment.html">Deployment</a></li><li><a href="integrations.html">Integrations</a></li><li><a href="services.html">Services</a></li><li><a href="home.html#company">About</a></li><li><a href="home.html#demo">Book a demo</a></li></ul></div>
+    <div><p class="foot-h">Open source software</p><ul><li><a href="https://github.com/InfraXAI" target="_blank" rel="noopener">InfraX AI on GitHub</a></li><li><a href="https://github.com/veltria" target="_blank" rel="noopener">Veltria</a></li></ul></div>
   </div>
   <div class="foot-base"><span>&copy; <span data-year>2026</span> NaturNest AI Private Limited</span><span>Made in Gurugram, India</span></div>
 </div></footer>'''
 
-DEMO_PRODUCTS = ["InfraX VIDES", "AstraAlert", "TollCloud", "MLFF", "Cygnus", "Central Plexus (ATMS)", "InfraX Ops", "Access and parking"]
+DEMO_PRODUCTS = ["InfraX AI VIDES", "AstraAlert", "TollCloud", "MLFF", "Cygnus", "Central Plexus (ATMS / ICCC)", "InfraX AI Ops", "Access and parking"]
 DEMO_DOMAINS = ["Highways", "Cities", "Campuses", "Ports", "Warehouses", "Construction", "System integrator"]
 TICK = '<i><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 5.2l2 2L8 3"/></svg></i>'
 
 def demo_modal():
     """Shared 'Book a demo' dialog. Opened by site.js for any a[href$="#demo"]."""
-    opts = "".join(f'<label><input type="checkbox" name="interest" value="{p}">{TICK}{p.replace("InfraX VIDES", "VIDES")}</label>'
+    opts = "".join(f'<label><input type="checkbox" name="interest" value="{p}">{TICK}{p.replace("InfraX AI VIDES", "VIDES")}</label>'
                    for p in DEMO_PRODUCTS)
     doms = "".join(f"<option>{d}</option>" for d in DEMO_DOMAINS)
     return f'''<div class="dm" id="demoModal" hidden>
@@ -127,7 +132,7 @@ def demo_modal():
       <form class="dm-form" id="dmForm" novalidate>
         <div class="dm-f"><label for="dmName">Name <span class="req" aria-hidden="true">*</span></label><input id="dmName" aria-describedby="dmNameErr" name="name" autocomplete="name" required><span class="err" id="dmNameErr" aria-live="polite"></span></div>
         <div class="dm-f"><label for="dmOrg">Organisation <small>(optional)</small></label><input id="dmOrg" aria-describedby="dmOrgErr" maxlength="200" name="org" autocomplete="organization"><span class="err" id="dmOrgErr" aria-live="polite"></span></div>
-        <div class="dm-f"><label for="dmEmail">Work email <span class="req" aria-hidden="true">*</span></label><input id="dmEmail" aria-describedby="dmEmailErr" name="email" type="email" autocomplete="email" required><span class="err" id="dmEmailErr" aria-live="polite"></span></div>
+        <div class="dm-f"><label for="dmEmail">Email <span class="req" aria-hidden="true">*</span></label><input id="dmEmail" aria-describedby="dmEmailErr" name="email" type="email" autocomplete="email" required><span class="err" id="dmEmailErr" aria-live="polite"></span></div>
         <div class="dm-f"><label for="dmPhone">Mobile number <span class="req" aria-hidden="true">*</span></label><input id="dmPhone" aria-describedby="dmPhoneErr" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" required><span class="err" id="dmPhoneErr" aria-live="polite"></span></div>
         <div class="dm-f full"><label for="dmDomain">Domain <span class="req" aria-hidden="true">*</span></label>
           <select id="dmDomain" aria-describedby="dmDomainErr" name="domain" required><option value="">Choose the closest match</option>{doms}</select><span class="err" id="dmDomainErr" aria-live="polite"></span></div>
@@ -174,7 +179,7 @@ def head(title, desc, name="home"):
           f'<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="{title}">\n'
           f'<meta name="twitter:description" content="{desc}">\n<meta name="twitter:image" content="{img}">\n')
     return (f'<title>{title}</title>\n'
-            f'<meta name="description" content="{desc}">\n<link rel="canonical" href="{url}">\n{og}{ld(name)}{FONTS}\n<link rel="stylesheet" href="assets/site.css">\n'
+            f'<meta name="description" content="{desc}">\n<link rel="canonical" href="{url}">\n<link rel="icon" href="assets/icon.svg" type="image/svg+xml">\n{og}{ld(name)}{FONTS}\n<link rel="stylesheet" href="assets/site.css">\n'
             # arriving from another page: start the bottom-to-top reveal at first paint, not after scripts load
             '<script>try{if(sessionStorage.getItem("infrax-wave")==="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)'
             'document.documentElement.classList.add("wave-in")}catch(e){}</script>\n')
@@ -218,7 +223,7 @@ def build(name):
     print(f"built {name} ({len(full)//1024} KB)")
 
 (OUT / "assets").mkdir(parents=True, exist_ok=True)
-for asset in ("site.css", "site.js", "icons.js"):
+for asset in ("site.css", "site.js", "icons.js", "icon.svg"):
     (OUT / "assets" / asset).write_text((ROOT / "assets" / asset).read_text(encoding="utf-8"), encoding="utf-8")
 # the original INFRAX.AI logo, byte for byte (never redrawn)
 (OUT / "assets" / "logo.svg").write_bytes((ROOT / "assets" / "logo.svg").read_bytes())

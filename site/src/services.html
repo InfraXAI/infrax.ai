@@ -38,7 +38,10 @@
 @media (max-width:768px){
   .sv-cards{grid-template-columns:1fr}
   .sv-rail-track{display:none}
-  .sv-phases{grid-template-columns:1fr 1fr;row-gap:calc(20*var(--s))}
+  .sv-phases{grid-template-columns:1fr;row-gap:calc(18*var(--s));counter-reset:ph;position:relative}
+  .sv-phases::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:var(--line)}
+  .sv-phases li{position:relative;padding-left:44px;counter-increment:ph}
+  .sv-phases li::before{content:counter(ph,decimal-leading-zero);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--blue);display:grid;place-items:center;font:600 11px/1 var(--f-mono);color:var(--blue)}
 }
 
 .sv-rail-dot{width:calc(40*var(--s));height:calc(40*var(--s));margin:calc(-20*var(--s)) 0 0 calc(-20*var(--s));color:var(--muted)}

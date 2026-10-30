@@ -69,27 +69,29 @@
   (function plexus() {
     var canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
-    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.25';
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.34';
     document.body.prepend(canvas);
     // opaque canvas (page is white): cheaper to composite; prefilled white so the trail fade looks identical
     var ctx = canvas.getContext('2d', { alpha: false }); if (!ctx) { X.pausePlexus = function () {}; return; }
-    var particles = [], W = 0, H = 0;
+    var particles = [], W = 0, H = 0, lineGrad = null;
     function vw() { return document.documentElement.clientWidth || innerWidth; }
-    // 1 canvas px per CSS px (as the original); the layer sits at 25% opacity so higher DPR buys nothing
+    // 1 canvas px per CSS px (as the original); the layer sits at 34% opacity so higher DPR buys nothing
     function count() { return X.lite ? 40 : vw() <= 1024 ? 60 : 100; }
-    // sprite atlas, uploaded once as an ImageBitmap: 6 glows (by connection count 0..5), the drifting blob, 2 solid dots
-    var SPR = 32, D = 16, DOT = SPR * 6 + 100, atlas = document.createElement('canvas'); atlas.width = DOT + D * 2; atlas.height = 100;
+    // sprite atlas, uploaded once as an ImageBitmap: 6 glows (by connection count 0..5), 2 drifting blobs, 3 solid dots (navy, blue, sky)
+    var SPR = 32, D = 16, DOT = SPR * 6 + 200, atlas = document.createElement('canvas'); atlas.width = DOT + D * 3; atlas.height = 100;
     (function () {
       var ax = atlas.getContext('2d');
       for (var b = 0; b <= 5; b++) {
         var k = b / 5, cx = b * SPR + SPR / 2, g = ax.createRadialGradient(cx, SPR / 2, 0, cx, SPR / 2, SPR / 2);
-        g.addColorStop(0, 'rgba(38,115,181,' + (.6 + k * .3) + ')'); g.addColorStop(.5, 'rgba(58,143,212,' + (.3 + k * .2) + ')'); g.addColorStop(1, 'rgba(96,165,250,0)');
+        g.addColorStop(0, 'rgba(30,95,160,' + (.7 + k * .3) + ')'); g.addColorStop(.45, 'rgba(58,143,212,' + (.38 + k * .22) + ')'); g.addColorStop(1, 'rgba(110,196,240,0)');
         ax.fillStyle = g; ax.fillRect(b * SPR, 0, SPR, SPR);
       }
-      var bx = SPR * 6 + 50, g2 = ax.createRadialGradient(bx, 50, 0, bx, 50, 50);
-      g2.addColorStop(0, 'rgba(38,115,181,0.35)'); g2.addColorStop(.5, 'rgba(58,143,212,0.2)'); g2.addColorStop(1, 'rgba(96,165,250,0)');
-      ax.fillStyle = g2; ax.fillRect(SPR * 6, 0, 100, 100);
-      ['#2673B5', '#5a9fd4'].forEach(function (col, i) { ax.fillStyle = col; ax.beginPath(); ax.arc(DOT + i * D + D / 2, D / 2, D / 2, 0, Math.PI * 2); ax.fill(); });
+      [['38,115,181', '58,143,212', '110,196,240'], ['14,59,102', '38,115,181', '90,180,234']].forEach(function (c, i) {
+        var bx = SPR * 6 + 50 + i * 100, g2 = ax.createRadialGradient(bx, 50, 0, bx, 50, 50);
+        g2.addColorStop(0, 'rgba(' + c[0] + ',0.45)'); g2.addColorStop(.5, 'rgba(' + c[1] + ',0.24)'); g2.addColorStop(1, 'rgba(' + c[2] + ',0)');
+        ax.fillStyle = g2; ax.fillRect(SPR * 6 + i * 100, 0, 100, 100);
+      });
+      ['#0E3B66', '#2673B5', '#5AB4EA'].forEach(function (col, i) { ax.fillStyle = col; ax.beginPath(); ax.arc(DOT + i * D + D / 2, D / 2, D / 2, 0, Math.PI * 2); ax.fill(); });
     })();
     var src = atlas;
     if (window.createImageBitmap) createImageBitmap(atlas).then(function (bm) { src = bm; if (reduce) still(); }, function () {});
@@ -99,6 +101,9 @@
       if (oldW && w === oldW && Math.abs(h - oldH) < 150 && particles.length === n) return;
       W = canvas.width = w; H = canvas.height = h;
       ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+      // the lines shade across the screen: navy top left, brand blue in the middle, sky blue bottom right
+      lineGrad = ctx.createLinearGradient(0, 0, W, H);
+      lineGrad.addColorStop(0, '#0E3B66'); lineGrad.addColorStop(.5, '#2673B5'); lineGrad.addColorStop(1, '#4FB0E6');
       if (particles.length !== n || oldW === 0) {
         particles = [];
         for (var i = 0; i < n; i++) particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .5, vy: (Math.random() - .5) * .5, radius: Math.random() * 2 + 1, connections: 0 });
@@ -144,19 +149,22 @@
       }
       // one path and one stroke per alpha bucket
       ctx.lineWidth = mob ? .8 : 1;
+      ctx.strokeStyle = lineGrad;
       for (q = 0; q < NB; q++) {
         var L = buckets[q]; if (!L.length) continue;
-        ctx.strokeStyle = 'rgba(38,115,181,' + ((q + .5) / NB * .25).toFixed(3) + ')';
+        ctx.globalAlpha = (q + .5) / NB * .34;
         ctx.beginPath();
         for (var e = 0; e < L.length; e += 4) { ctx.moveTo(L[e], L[e + 1]); ctx.lineTo(L[e + 2], L[e + 3]); }
         ctx.stroke();
       }
+      ctx.globalAlpha = 1;
       for (i = 0; i < n; i++) { p = particles[i]; var R = p.radius * 3; ctx.drawImage(src, Math.min(5, p.connections) * SPR, 0, SPR, SPR, p.x - R, p.y - R, R * 2, R * 2); }
-      for (i = 0; i < n; i++) { p = particles[i]; var r = p.radius; ctx.drawImage(src, DOT + (p.connections > 3 ? 0 : D), 0, D, D, p.x - r, p.y - r, r * 2, r * 2); }
+      // dot colour follows the same diagonal as the lines; well-connected dots go a shade deeper
+      for (i = 0; i < n; i++) { p = particles[i]; var r = p.radius, tone = Math.min(2, ((p.x / W + p.y / H) * 1.5) | 0); if (p.connections > 3 && tone) tone--; ctx.drawImage(src, DOT + tone * D, 0, D, D, p.x - r, p.y - r, r * 2, r * 2); }
       var cc = mob ? 2 : 3, cs = mob ? 35 : 50, t = reduce ? 0 : Date.now() * .001;
       for (var kk = 0; kk < cc; kk++) {
         var x = (Math.sin(t + kk * 2) * .5 + .5) * W, y = (Math.cos(t * .7 + kk * 2) * .5 + .5) * H;
-        ctx.drawImage(src, SPR * 6, 0, 100, 100, x - cs, y - cs, cs * 2, cs * 2);
+        ctx.drawImage(src, SPR * 6 + (kk % 2) * 100, 0, 100, 100, x - cs, y - cs, cs * 2, cs * 2);
       }
     }
     // reduced motion: no loop; paint the settled still (the trail fade needs a few passes to reach it)
@@ -193,7 +201,7 @@
 
   /* ---------- small particle network (the page background's style) for light side panels: start/stop while shown ---------- */
   function makeNet(cv) {
-      var cx = cv && cv.getContext && cv.getContext('2d'), P = [], W = 0, H = 0, raf = 0, sr = 0, on = false, last = 0;
+      var cx = cv && cv.getContext && cv.getContext('2d'), P = [], W = 0, H = 0, raf = 0, sr = 0, on = false, last = 0, lg = null;
       if (!cx) return { start: function () {}, stop: function () {} };
       // seeded once; later sizes keep the particles and rescale their positions
       function size() {
@@ -206,7 +214,9 @@
           var n = Math.round(Math.min(70, w * h / 7000));
           for (i = 0; i < n; i++) P.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35, r: 1.2 + Math.random() * 2.2 });
         } else if (W && H && (w !== W || h !== H)) for (i = 0; i < P.length; i++) { P[i].x *= w / W; P[i].y *= h / H; }
-        W = w; H = h; return true;
+        W = w; H = h;
+        lg = cx.createLinearGradient(0, 0, w, h); lg.addColorStop(0, '#0E3B66'); lg.addColorStop(.5, '#2673B5'); lg.addColorStop(1, '#4FB0E6');
+        return true;
       }
       function draw(dt) {
         cx.clearRect(0, 0, W, H);
@@ -214,9 +224,10 @@
         for (i = 0; i < P.length; i++) { a = P[i]; a.x += a.vx * dt; a.y += a.vy * dt; if (a.x < 0 || a.x > W) a.vx *= -1; if (a.y < 0 || a.y > H) a.vy *= -1; }
         for (i = 0; i < P.length; i++) for (j = i + 1; j < P.length; j++) {
           a = P[i]; b = P[j]; dx = a.x - b.x; dy = a.y - b.y; d2 = dx * dx + dy * dy;
-          if (d2 < L) { cx.strokeStyle = 'rgba(38,115,181,' + (.28 * (1 - d2 / L)).toFixed(3) + ')'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); }
+          if (d2 < L) { cx.strokeStyle = lg; cx.globalAlpha = .34 * (1 - d2 / L); cx.lineWidth = 1; cx.beginPath(); cx.moveTo(a.x, a.y); cx.lineTo(b.x, b.y); cx.stroke(); }
         }
-        for (i = 0; i < P.length; i++) { a = P[i]; cx.fillStyle = i % 5 ? 'rgba(38,115,181,.55)' : 'rgba(14,59,102,.7)'; cx.beginPath(); cx.arc(a.x, a.y, a.r, 0, Math.PI * 2); cx.fill(); }
+        cx.globalAlpha = 1;
+        for (i = 0; i < P.length; i++) { a = P[i]; cx.fillStyle = i % 5 ? ((a.x / W + a.y / H) > 1.1 ? 'rgba(79,176,230,.7)' : 'rgba(38,115,181,.6)') : 'rgba(14,59,102,.75)'; cx.beginPath(); cx.arc(a.x, a.y, a.r, 0, Math.PI * 2); cx.fill(); }
       }
       function loop(now) { raf = requestAnimationFrame(loop); var dt = last ? Math.min(3, (now - last) / 16.7) : 1; last = now; draw(dt); }
       // resizing clears the canvas: repaint at once so a running net never shows a blank frame
@@ -367,12 +378,19 @@
     gsap.from(parts, { yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05, scrollTrigger: el.closest('[data-reveal-now]') ? null : { trigger: el, start: 'top 85%' } });
   });
 
-  /* ---------- email links: every mailto link opens a Gmail compose window addressed to it, in a new tab ---------- */
-  (function mailToGmail() {
-    document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
-      var to = a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0];
-      a.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to);
-      a.target = '_blank'; a.rel = 'noopener';
+  /* ---------- email links: open the visitor's own mail app, and copy the address too, so a click still
+     works on a machine with no mail app set up (the old Gmail-compose rewrite failed for anyone not signed in to Gmail) ---------- */
+  (function mailLinks() {
+    var note = null, noteT = 0;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="mailto:"]'); if (!a) return;
+      var to = decodeURIComponent(a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0]);
+      if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+      navigator.clipboard.writeText(to).then(function () {
+        if (!note) { note = document.createElement('div'); note.className = 'mail-note'; note.setAttribute('role', 'status'); document.body.appendChild(note); }
+        note.textContent = to + ' copied'; note.classList.add('on');
+        clearTimeout(noteT); noteT = setTimeout(function () { note.classList.remove('on'); }, 2400);
+      }, function () {});
     });
   })();
 
@@ -443,17 +461,82 @@
     // focus must not escape the dialog (e.g. clicking the page behind is impossible, but programmatic focus can)
     document.addEventListener('focusin', function (e) { if (!dm.hidden && dm.classList.contains('is-open') && !dm.contains(e.target)) { var f = focusables(); (f[0] || dlg).focus(); } });
 
+    // the domain list in the site's own style: a select-only combobox over the native select, which keeps the value
+    function fancySelect(sel) {
+      if (!sel) return;
+      var lab = document.querySelector('label[for="' + sel.id + '"]');
+      var wrap = document.createElement('div'), btn = document.createElement('button'), list = document.createElement('ul');
+      var opts = [].filter.call(sel.options, function (o) { return o.value; }), ph = sel.options[0] && !sel.options[0].value ? sel.options[0].text : '';
+      var at = -1;
+      wrap.className = 'dm-sel';
+      btn.type = 'button'; btn.className = 'dm-sel-btn'; btn.id = sel.id + 'Btn';
+      btn.setAttribute('role', 'combobox'); btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-controls', sel.id + 'List');
+      if (sel.getAttribute('aria-describedby')) btn.setAttribute('aria-describedby', sel.getAttribute('aria-describedby'));
+      btn.innerHTML = '<span></span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg>';
+      list.id = sel.id + 'List'; list.className = 'dm-sel-list'; list.setAttribute('role', 'listbox'); list.hidden = true;
+      if (lab) { lab.htmlFor = btn.id; if (!lab.id) lab.id = sel.id + 'Lab'; list.setAttribute('aria-labelledby', lab.id); }
+      opts.forEach(function (o, i) {
+        var li = document.createElement('li'); li.id = sel.id + 'Opt' + i; li.setAttribute('role', 'option'); li.textContent = o.text;
+        li.addEventListener('click', function () { pick(i); });
+        li.addEventListener('mousemove', function () { if (at !== i) mark(i); });
+        list.appendChild(li);
+      });
+      sel.classList.add('dm-native'); sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
+      sel.parentNode.insertBefore(wrap, sel.nextSibling); wrap.appendChild(btn); wrap.appendChild(list);
+      function cur() { for (var i = 0; i < opts.length; i++) if (opts[i].value === sel.value) return i; return -1; }
+      function sync() {
+        var c = cur(); btn.firstChild.textContent = c < 0 ? ph : opts[c].text; btn.classList.toggle('ph', c < 0);
+        [].forEach.call(list.children, function (li, i) { li.setAttribute('aria-selected', i === c ? 'true' : 'false'); });
+      }
+      function mark(i) {
+        at = Math.max(0, Math.min(opts.length - 1, i));
+        [].forEach.call(list.children, function (li, j) { li.classList.toggle('at', j === at); });
+        var li = list.children[at]; btn.setAttribute('aria-activedescendant', li.id);
+        if (li.offsetTop < list.scrollTop) list.scrollTop = li.offsetTop;
+        else if (li.offsetTop + li.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = li.offsetTop + li.offsetHeight - list.clientHeight;
+      }
+      function show() { if (!list.hidden) return; list.hidden = false; wrap.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); mark(Math.max(0, cur())); }
+      function hide() { if (list.hidden) return; list.hidden = true; wrap.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); btn.removeAttribute('aria-activedescendant'); }
+      function pick(i) { sel.value = opts[i].value; sel.dispatchEvent(new Event('change', { bubbles: true })); sync(); hide(); btn.focus(); }
+      btn.addEventListener('click', function () { if (list.hidden) show(); else hide(); });
+      list.addEventListener('mousedown', function (e) { e.preventDefault(); }); // keep focus on the button
+      btn.addEventListener('blur', hide);
+      btn.addEventListener('keydown', function (e) {
+        var k = e.key, open = !list.hidden;
+        if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); if (!open) show(); else mark(at + (k === 'ArrowDown' ? 1 : -1)); }
+        else if (k === 'Home' || k === 'End') { if (open) { e.preventDefault(); mark(k === 'Home' ? 0 : opts.length - 1); } }
+        else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (open) pick(at); else show(); }
+        else if (k === 'Escape') { if (open) { e.preventDefault(); e.stopPropagation(); hide(); } }
+        else if (k === 'Tab') { if (open) hide(); }
+        else if (k.length === 1 && /\S/.test(k)) { // jump to the next option starting with the letter
+          for (var n = 1; n <= opts.length; n++) {
+            var j = ((open ? at : cur()) + n + opts.length) % opts.length;
+            if (opts[j].text.charAt(0).toLowerCase() === k.toLowerCase()) { if (open) mark(j); else { sel.value = opts[j].value; sync(); } break; }
+          }
+        }
+      });
+      if (sel.form) sel.form.addEventListener('reset', function () { setTimeout(sync); });
+      sync();
+    }
+    fancySelect(document.getElementById('dmDomain'));
+
     function v(id) { return document.getElementById(id).value.trim(); }
-    function setErr(id, msg) { var el = document.getElementById(id), f = el.closest('.dm-f'); f.classList.toggle('bad', !!msg); f.querySelector('.err').textContent = msg || ''; el.setAttribute('aria-invalid', msg ? 'true' : 'false'); return !msg; }
+    function setErr(id, msg) {
+      var el = document.getElementById(id), f = el.closest('.dm-f'), c = document.getElementById(id + 'Btn');
+      f.classList.toggle('bad', !!msg); f.querySelector('.err').textContent = msg || '';
+      el.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (c) c.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      return !msg;
+    }
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var good = [
         setErr('dmName', v('dmName') ? '' : 'Please add your name.'),
         setErr('dmPhone', /^\+?[\d\s()-]{10,20}$/.test(v('dmPhone')) && v('dmPhone').replace(/\D/g, '').length >= 10 ? '' : 'Please add a mobile number, like +91 98765 43210.'),
-        setErr('dmEmail', /^[A-Za-z0-9._%+'-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/.test(v('dmEmail')) /* same rule as app/api/leads */ ? '' : 'Please enter a work email, like name@company.com.'),
+        setErr('dmEmail', /^[A-Za-z0-9._%+'-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/.test(v('dmEmail')) /* same rule as app/api/leads */ ? '' : 'Please enter an email, like name@company.com.'),
         setErr('dmDomain', v('dmDomain') ? '' : 'Pick the closest domain.')
       ].every(Boolean);
-      if (!good) { var bad = form.querySelector('[aria-invalid="true"]'); if (bad) bad.focus(); return; }
+      if (!good) { var bad = form.querySelector(':not(.dm-native)[aria-invalid="true"]'); if (bad) bad.focus(); return; }
       var picks = [].map.call(form.querySelectorAll('input[name="interest"]:checked'), function (i) { return i.value; });
       var lead = { name: v('dmName'), org: v('dmOrg'), email: v('dmEmail'), phone: v('dmPhone'), domain: v('dmDomain'), products: picks, message: v('dmMsg') };
       var sendErr = document.getElementById('dmSendErr'), btn = form.querySelector('[type="submit"]');
@@ -464,7 +547,7 @@
         form.hidden = true; ok.hidden = false; dlg.scrollTop = 0; ok.focus();
         form.reset();
       }
-      // the lead is emailed to info@infrax.ai by /api/leads (SMTP) on any real host. The claude.ai review preview has no
+      // the lead is sent to BOOK_DEMO_TO by /api/leads (Microsoft Graph) on any real host. The claude.ai review preview has no
       // backend, so there the form only shows the confirmation
       var onSite = /^https?:$/.test(location.protocol) && !/(^|\.)claude\.ai$|claudeusercontent\.com$/.test(location.hostname);
       if (!onSite || !window.fetch) { done(); return; }

@@ -155,13 +155,14 @@
   .dp-up{grid-template-columns:minmax(0,1fr)}
 }
 
-/* camera brand marquee: two rows in opposite directions, pause on hover/focus, static list for reduced motion */
+/* camera brand marquee: two rows in opposite directions, pause on keyboard focus only (pausing under the mouse read as
+   stop-start movement), static list for reduced motion */
 .dp-mq{margin-top:clamp(calc(36*var(--s)),5vw,calc(56*var(--s)))}
 .dp-mq-h{font:500 max(12px,calc(12.5*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 calc(14*var(--s))}
 .dp-mq-row{display:flex;overflow:hidden;gap:calc(10*var(--s));padding-block:calc(5*var(--s));-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .dp-mq-track{list-style:none;margin:0;padding:0;display:flex;gap:calc(10*var(--s));flex:none;animation:dp-mq 38s linear infinite}
 .dp-mq-row.r2 .dp-mq-track{animation-direction:reverse;animation-duration:32s}
-.dp-mq-row:hover .dp-mq-track,.dp-mq:focus-within .dp-mq-track{animation-play-state:paused}
+.dp-mq:focus-within .dp-mq-track{animation-play-state:paused}
 .dp-mq-track li{flex:none;display:inline-flex;align-items:center;min-height:max(44px,calc(44*var(--s)));padding:0 calc(18*var(--s));border:1px solid var(--line);border-radius:calc(10*var(--s));background:#fff;font:650 calc(15.5*var(--s))/1 var(--f-display);letter-spacing:-.01em;color:var(--ink);white-space:nowrap}
 /* brand logos sit in the same white tiles, at one height; white artwork is shown dark */
 .dp-mq-track li.lg{justify-content:center;width:calc(168*var(--s));padding:0 calc(16*var(--s));height:calc(60*var(--s))}
@@ -317,7 +318,7 @@
         <h1 class="h-hero" id="dp-h" data-reveal>Runs on your<br>own servers.</h1>
       </div>
       <div><p class="lead">Standard CPU servers are enough. Add a GPU for more cameras and faster analytics.</p>
-        <p class="dp-roadmap">Four ways to deploy, mixed per site. InfraX Ops is already hosted at ops.infrax.ai; hosted Cygnus is on our roadmap.</p></div>
+        <p class="dp-roadmap">Four ways to deploy, mixed per site. InfraX AI Ops is already hosted at ops.infrax.ai; hosted Cygnus is on our roadmap.</p></div>
     </div>
 
     <div role="tablist" aria-label="Deployment model" class="dp-tabs" id="dpTabs">
@@ -403,12 +404,12 @@
       <ul class="dp-notes" id="dpNotes">
         <li data-n="0"><b>1</b><p><strong>The AI runs in the box on the gantry,</strong> next to the cameras and radar.</p></li>
         <li data-n="1"><b>2</b><p><strong>If the link drops, it keeps reading.</strong> Reads sync once the link is back.</p></li>
-        <li data-n="2"><b>3</b><p><strong>Results go to Central Plexus (ATMS)</strong> with images attached, ready for e-challan.</p></li>
+        <li data-n="2"><b>3</b><p><strong>Results go to Central Plexus (ATMS / ICCC)</strong> with images attached, ready for e-challan.</p></li>
         <li data-n="3"><b>4</b><p><strong>It plugs into the gantry network you already have.</strong></p></li>
       </ul>
       <div class="dp-up">
         <figure><figcaption><b>Raw video</b> · stays at the gantry</figcaption></figure>
-        <figure><figcaption><b>Plates, classes &amp; cases</b> · go to Central Plexus (ATMS)</figcaption></figure>
+        <figure><figcaption><b>Plates, classes &amp; cases</b> · go to Central Plexus (ATMS / ICCC)</figcaption></figure>
       </div>
       <div class="dp-chips"><a class="dp-chip" href="products.html#d-highways">Highways &amp; expressways</a><a class="dp-chip" href="products.html#vides">Speed enforcement gantries</a><a class="dp-chip" href="products.html#central-plexus">Control rooms</a></div>
     </div>
@@ -444,7 +445,7 @@
   /* ---------- data ---------- */
   var NODES = {
     cam1: ['ic-bullet', 'Bullet', 'ONVIF'], cam2: ['ic-dome', 'Dome', 'RTSP'], cam3: ['ic-anpr', 'ANPR camera', 'IR · plates'],
-    radar: ['ic-radar', 'Gantry radar', 'speed'], aibox: ['ic-edge', 'Box on the gantry', 'InfraX VIDES · offline-ready'],
+    radar: ['ic-radar', 'Gantry radar', 'speed'], aibox: ['ic-edge', 'Box on the gantry', 'InfraX AI VIDES · offline-ready'],
     ecb: ['ic-callbox', 'Call box', 'AstraAlert'], vms: ['ic-vms', 'LED message sign', 'from the control room'],
     fw: ['ic-fw', 'Your network', 'fibre · site LAN'], srv: ['ic-rack', 'Your servers', 'Cygnus · AstraAlert'],
     srv2: ['ic-rack', 'Site node', 'Site A · Cygnus'], srv3: ['ic-rack', 'Site node', 'Site B · its own VMS'], console1: ['ic-console', 'Control room', 'operators act here'],

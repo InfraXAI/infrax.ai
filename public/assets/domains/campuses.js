@@ -801,9 +801,10 @@
         if (!o.on) { if (o.el.style.opacity !== '0') o.el.style.opacity = '0'; continue; }
         v3.copy(o.pos).project(camera);
         if (v3.z > 1 || v3.z < -1) { o.el.style.opacity = '0'; continue; }
-        var x = (v3.x * .5 + .5) * W, y = (-v3.y * .5 + .5) * H, ew = o.el.offsetWidth || 120, eh = o.el.offsetHeight || 28;
+        if (o._t !== o.el.textContent) { o._t = o.el.textContent; o._w = o.el.offsetWidth || 120; o._h = o.el.offsetHeight || 28; } // measured only when the text changes
+        var x = (v3.x * .5 + .5) * W, y = (-v3.y * .5 + .5) * H, ew = o._w, eh = o._h;
         x = Math.max(ew / 2 + 8, Math.min(W - ew / 2 - 8, x)); y = Math.max(eh + 12, Math.min(H - 8, y));
-        o.el.style.transform = 'translate(' + (x - ew / 2).toFixed(1) + 'px,' + (y - eh - 8).toFixed(1) + 'px)';
+        o.el.style.transform = 'translate(' + Math.round(x - ew / 2) + 'px,' + Math.round(y - eh - 8) + 'px)'; // whole pixels: no blurred text
         o.el.style.opacity = '1';
       }
     }
@@ -886,12 +887,12 @@
     { id: 'gate', product: 'Access and parking', productSlug: 'access-parking', short: 'Gate',
       title: 'Every vehicle in and out, read and logged',
       body: 'Plate reads at the main gate, in and out. Each read lands in the visitor and vehicle log with the time, the lane and a snapshot, so the front desk knows who is on campus.',
-      rows: [['Plate', 'XX 00 AB 1234'], ['Lane', 'Main gate · entry'], ['Class', 'Car'], ['Log', 'Visitor · Block A']],
+      rows: [['Plate', 'XX 00 AB 1234'], ['Lane', 'Main gate · entry'], ['Class', 'Car'], ['Sent to', 'Cygnus · event log', 'ok']],
       live: ['ANPR', 'Vehicle classification', 'Visitor and vehicle log'],
       photo: 'img/campus-sm.webp', photoCaption: 'Illustrative' },
     { id: 'parking', product: 'Access and parking', productSlug: 'access-parking', short: 'Parking',
       title: 'Free spaces by level, as they change',
-      body: 'Every entry and exit updates the count for each level of the parking deck. Cameras at the basement ramp watch the cars going down to P2.',
+      body: 'Every entry and exit updates the count for each level of the parking deck and goes to Cygnus as an event. Cameras at the basement ramp watch the cars going down to P2.',
       rows: [['Level 1', '12 free'], ['Level 2', '27 free'], ['Level 3', '41 free'], ['Ramp', 'P2 · 2 cameras']],
       live: ['Parking occupancy', 'ANPR', 'Live video'],
       photo: 'img/campus-parking-sm.webp', photoCaption: 'Illustrative' },
@@ -909,8 +910,8 @@
       photo: 'img/campus-ramp-sm.webp', photoCaption: 'Illustrative' },
     { id: 'people', product: 'Cygnus', productSlug: 'cygnus', short: 'People count',
       title: 'People in and out at every entrance',
-      body: 'A camera over the Block A entrance counts people crossing the line in each direction, so facilities see footfall by entrance and by hour.',
-      rows: [['Entrance', 'Block A · main doors'], ['In today', '1,284'], ['Out today', '1,102'], ['Busiest', '09:00–10:00']],
+      body: 'A camera over the Block A entrance counts people crossing the line in each direction. Every count goes to Cygnus as an event, like any other incident, so facilities see footfall by entrance and by hour.',
+      rows: [['Entrance', 'Block A · main doors'], ['In today', '1,284'], ['Out today', '1,102'], ['Sent to', 'Cygnus · event log', 'ok']],
       live: ['People counting', 'Live video'],
       photo: 'img/campus-entrance-sm.webp', photoCaption: 'Illustrative' }
   ];
@@ -1720,18 +1721,19 @@
 
     /* ---------- tags ---------- */
     var tPlate = K.tag('<b>XX 00 AB 1234</b> · Car · entry', '', new T.Vector3(2.3, 2.6, 47));
-    var tLog = K.tag('Logged · visitor · Block A · 09:41', 'light', new T.Vector3(9.5, 4, 44.5));
+    var tLog = K.tag('→ Cygnus · visitor event · Block A · 09:41', 'light', new T.Vector3(9.5, 4, 44.5));
     var tExit = K.tag('<b>XX 00 CD 5678</b> · exit · 09:42', 'light', new T.Vector3(-2.3, 2.6, 36));
     var tDeck = K.tag('<b>Parking deck</b> · 80 free now', '', new T.Vector3(30, 13.4, 36));
-    var tDeckIn = K.tag('Entry read · Level 2 · count updated', 'light', new T.Vector3(16, 2.6, DRV_Z));
+    var tDeckIn = K.tag('Entry read · Level 2 · → Cygnus', 'light', new T.Vector3(16, 2.6, DRV_Z));
     var tRamp = K.tag('Ramp cameras · P2', 'light', new T.Vector3(14.5, 4.4, 10));
     var tWall = K.tag('Cygnus wall · gates · blocks · parking', '', new T.Vector3(-19.6, 5.3, 26));
     var tMap = K.tag('Campus map · cameras by building', 'light', new T.Vector3(-17.2, 3.9, 32.6));
     var tPlay = K.tag('Playback · 24×7 recording', 'light', new T.Vector3(-19.2, 1.1, 23.4));
     var tLost = K.tag('<b>Ramp · cam 04</b> · stream lost', 'alert', new T.Vector3(11.6, 3.6, 19));
-    var tTicket = K.tag('Ticket raised · maintenance', 'light', new T.Vector3(14.5, 2.6, 4));
+    var tTicket = K.tag('→ Cygnus · incident · maintenance ticket', 'light', new T.Vector3(14.5, 2.6, 4));
     var tCount = K.tag('<b>Block A</b> · in 1,284 · out 1,102', '', new T.Vector3(-17, 3.6, 2.4));
     var tLine = K.tag('Counting line · both directions', 'light', new T.Vector3(-16.6, .4, -.6));
+    var tEvt = K.tag('→ Cygnus · footfall event', 'light', new T.Vector3(-17, 5.2, 2.4)); // each count is an event in Cygnus, like any incident
 
     /* ---------- journey keys ---------- */
     var V = function (x, y, z) { return new T.Vector3(x, y, z); };
@@ -1852,6 +1854,7 @@
       tLost.on = lost; tTicket.on = i === 3 && lt > .55;
       tCount.on = i === 4; tCount.set('<b>Block A</b> · in ' + countIn.toLocaleString('en-IN') + ' · out ' + countOut.toLocaleString('en-IN'));
       tLine.on = i === 4 && lt > .3;
+      tEvt.on = i === 4 && lt > .45; tEvt.set('→ Cygnus · footfall event #' + (countIn + countOut).toLocaleString('en-IN'));
       K.render();
     }
     return { update: update, warm: function (done) { (window.INFRAX_WARM || function (r, s, c, d) { d(); })(K.renderer, K.scene, K.camera, done); }, resize: K.resize, setDpr: K.setDpr, dispose: K.dispose };

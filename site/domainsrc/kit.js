@@ -798,9 +798,10 @@
         if (!o.on) { if (o.el.style.opacity !== '0') o.el.style.opacity = '0'; continue; }
         v3.copy(o.pos).project(camera);
         if (v3.z > 1 || v3.z < -1) { o.el.style.opacity = '0'; continue; }
-        var x = (v3.x * .5 + .5) * W, y = (-v3.y * .5 + .5) * H, ew = o.el.offsetWidth || 120, eh = o.el.offsetHeight || 28;
+        if (o._t !== o.el.textContent) { o._t = o.el.textContent; o._w = o.el.offsetWidth || 120; o._h = o.el.offsetHeight || 28; } // measured only when the text changes
+        var x = (v3.x * .5 + .5) * W, y = (-v3.y * .5 + .5) * H, ew = o._w, eh = o._h;
         x = Math.max(ew / 2 + 8, Math.min(W - ew / 2 - 8, x)); y = Math.max(eh + 12, Math.min(H - 8, y));
-        o.el.style.transform = 'translate(' + (x - ew / 2).toFixed(1) + 'px,' + (y - eh - 8).toFixed(1) + 'px)';
+        o.el.style.transform = 'translate(' + Math.round(x - ew / 2) + 'px,' + Math.round(y - eh - 8) + 'px)'; // whole pixels: no blurred text
         o.el.style.opacity = '1';
       }
     }

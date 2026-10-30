@@ -8,7 +8,7 @@
 .hw-pin{position:relative;overflow-x:clip}
 /* desktop: the stack holds still while 220svh of scroll drives it - CSS sticky, not a ScrollTrigger pin (a pin moves the section
    into a spacer and back, which jumped the layout) */
-@media (min-width:1024.02px){.hw-pin .wrap{position:sticky;top:var(--nav-h)}.hw-pin::after{content:"";display:block;height:220svh}}
+@media (min-width:1024.02px){.hw-pin .wrap{position:sticky;top:var(--nav-h)}.hw-pin::after{content:"";display:block;height:110svh}}
 /* the pin starts under the nav (see JS), so the stage is one screen minus the nav, content top-aligned: the subheading sits one
    section gap below the hero line instead of floating in a centred 100vh band */
 .hw-pin .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),4vw,calc(64*var(--s)));align-items:start;min-height:calc(100svh - var(--nav-h));padding-block:clamp(48px,6svh,64px) 24px}
@@ -135,7 +135,7 @@
       <li class="hw-step" data-step="2">
         <span class="ix" aria-hidden="true"><span class="ix" data-ix="wall" data-size="20"></span></span>
         <div><h3>Act</h3>
-          <p>The event reaches Central Plexus (ATMS) with its clip; your operator dispatches patrol, updates signs or sends it for e-challan.</p></div>
+          <p>The event reaches Central Plexus (ATMS / ICCC) with its clip; your operator dispatches patrol, updates signs or sends it for e-challan.</p></div>
       </li>
     </ol>
   </div>
@@ -387,10 +387,10 @@ function rnd(seed){ return function(){ seed=(seed*16807)%2147483647; return (see
    SCENE 2 · federation ring
    ===================================================================== */
 var FED=[
-  {id:'highways',name:'Highway stretch · north',sub:'Gantries with cameras and radar',mods:'InfraX VIDES on the gantry · Central Plexus (ATMS)',
+  {id:'highways',name:'Highway stretch · north',sub:'Gantries with cameras and radar',mods:'InfraX AI VIDES on the gantry · Central Plexus (ATMS / ICCC)',
     keep:['IP cameras on every gantry','Gantry radar','The AI box on the gantry, which keeps reading when the link drops'],
     share:[['Plate read and vehicle class for every vehicle','live'],['Watchlist alerts with images','live'],['Radar speed and overspeed cases for e-challan review','live'],['Wrong-way and stopped-vehicle alerts','live']]},
-  {id:'signs',name:'Highway stretch · south',sub:'Cameras and LED message signs',mods:'Central Plexus (ATMS) · Cygnus',
+  {id:'signs',name:'Highway stretch · south',sub:'Cameras and LED message signs',mods:'Central Plexus (ATMS / ICCC) · Cygnus',
     keep:['IP cameras along the carriageway','LED message signs on gantries','Recording at the site'],
     share:[['Incidents opened with video attached',''],['Messages sent to the road signs from the control room',''],['Camera tamper: blinded, moved or stream dropped','live']]},
   {id:'callboxes',name:'Emergency call boxes',sub:'One button on the roadside',mods:'AstraAlert',

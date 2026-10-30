@@ -22,10 +22,10 @@
       body: 'Cygnus warns the moment a camera is blinded, moved or drops its stream, so a blank feed never sits unnoticed on the wall.',
       rows: [['Camera', 'J-05 · south-west corner'], ['State', 'Blinded · 09:44', 'bad'], ['Next', 'Field team informed']],
       live: ['Camera tamper & health'], photo: 'img/real/tiles/t6-city.jpg', photoCaption: 'Illustrative' },
-    { id: 'approve', short: 'Central Plexus',  product: 'Central Plexus (ATMS)', productSlug: 'central-plexus', title: 'Central Plexus acts on it.',
+    { id: 'approve', short: 'Central Plexus',  product: 'Central Plexus (ATMS / ICCC)', productSlug: 'central-plexus', title: 'Central Plexus acts on it.',
       body: 'The alert arrives with its clip and frames; the incident is opened and the patrol informed, all on record.',
       rows: [['Incident', '#2219 · watchlist', 'ok'], ['Evidence', 'Clip + frames · on record'], ['Patrol', 'Informed · 09:47', 'ok']], live: ['Watchlist alerts', 'Plate search & journeys'],
-      photo: 'img/city-ops-sm.jpg', photoCaption: 'Illustrative' }
+      photo: '@atms', photoCaption: 'Illustrative' }
   ];
 
   function create(host, ctx) {
@@ -1447,10 +1447,11 @@
     var PQ = { x: 0, y: 0, ok: false }; // reused: callers read it at once
     function project(p) { pv.copy(p).project(cam); PQ.x = (pv.x * .5 + .5) * W; PQ.y = (-pv.y * .5 + .5) * H; PQ.ok = pv.z > -1 && pv.z < 1; return PQ; }
     var limitX = function () { return MOB ? W - 30 : W * .62; };
+    var _sz = function (el) { if (el._st !== el.textContent) { el._st = el.textContent; el._sw = el.offsetWidth; el._sh = el.offsetHeight; } return el; };
     function tagAt(el, p, op) {
       if (op <= .01) { el.style.opacity = 0; return; }
       var q = project(p); if (!q.ok || q.x < 90 || q.x > limitX() || q.y < 70 || q.y > H - 90) { el.style.opacity = 0; return; }
-      el.style.transform = 'translate(' + q.x.toFixed(1) + 'px,' + q.y.toFixed(1) + 'px) translate(-50%,-100%)'; el.style.opacity = op;
+      _sz(el); el.style.transform = 'translate(' + Math.round(Math.max(6, Math.min(q.x - el._sw / 2, (MOB ? W : W * .62 + 90) - el._sw - 6))) + 'px,' + Math.round(q.y - el._sh) + 'px)'; el.style.opacity = op; // whole pixels: no blurred text
     }
     function boxAt(V, op) {
       if (!V || op <= .01) { box.style.opacity = 0; return; }
@@ -1462,7 +1463,7 @@
       }
       if (maxX > limitX() || minX < 10) { box.style.opacity = 0; return; }
       box.style.width = (maxX - minX).toFixed(1) + 'px'; box.style.height = (maxY - minY).toFixed(1) + 'px';
-      box.style.transform = 'translate(' + minX.toFixed(1) + 'px,' + minY.toFixed(1) + 'px)'; box.style.opacity = op;
+      box.style.transform = 'translate(' + Math.round(minX) + 'px,' + Math.round(minY) + 'px)'; box.style.opacity = op;
     }
 
     /* ---------- simulation ---------- */

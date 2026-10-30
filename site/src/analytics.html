@@ -7,6 +7,7 @@
 .an-bar{position:sticky;top:calc(var(--nav-h) + env(safe-area-inset-top,0px));z-index:5;background:rgba(255,255,255,.97);border-block:1px solid var(--line)}
 .an-filter{display:flex;gap:calc(6*var(--s));overflow-x:auto;padding-block:calc(12*var(--s));scrollbar-width:none}
 .an-filter::-webkit-scrollbar{display:none}
+@media (max-width:768px){.an-filter{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}}
 .an-filter button{all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:max(44px,calc(44*var(--s)));padding:0 calc(16*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line-2);font:500 max(12px,calc(14*var(--s)))/calc(44*var(--s)) var(--f-body);color:var(--ink-2);background:#fff;transition:background .2s,color .2s,border-color .2s}
 .an-filter button:hover{border-color:var(--blue);color:var(--ink)}
 .an-filter button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
@@ -103,7 +104,7 @@
     <article class="an-card" data-sim="watch" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Watchlist vehicle alerts</h3><span class="st st-live">Live</span></div><p>An alarm the moment a flagged vehicle is read on any camera or gantry.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="journey" data-d="hwy city ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Plate search &amp; journeys</h3><span class="st st-live">Live</span></div><p>Search a plate and see every camera that read it, in order, on the map, with the clips.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="health" data-d="hwy city campus ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Camera tamper &amp; health</h3><span class="st st-live">Live</span></div><p>A warning the moment a camera is blinded, moved or drops its stream.</p><div class="an-doms"></div></div></article>
-    <article class="an-card" data-sim="count" data-d="hwy city" data-p="VIDES · Central Plexus (ATMS)"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Traffic counts by lane and hour</h3><span class="st st-live">Live</span></div><p>Every vehicle counted by lane and hour, for traffic reports.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="count" data-d="hwy city" data-p="VIDES · Central Plexus (ATMS / ICCC)"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Traffic counts by lane and hour</h3><span class="st st-live">Live</span></div><p>Every vehicle counted by lane and hour, for traffic reports.</p><div class="an-doms"></div></div></article>
   </div>
   <p class="an-empty" id="anEmpty" hidden>No live analytics for this domain yet. Ask us about it.</p>
 
@@ -111,7 +112,7 @@
   <div class="an-grid an-grid2">
     <article class="an-card" data-sim="wrongway" data-d="hwy" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Wrong-way driving</h3><span class="st st-live">Live</span></div><p>A vehicle moving against the traffic raises an alert with the clip and the lane.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="stopped" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Stopped or stalled vehicle</h3><span class="st st-live">Live</span></div><p>A vehicle stopped on the carriageway or shoulder is flagged with its location.</p><div class="an-doms"></div></div></article>
-    <article class="an-card" data-sim="speed" data-d="hwy" data-p="InfraX VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Radar speed fusion</h3><span class="st st-live">Live</span></div><p>Camera and radar on the gantry give every vehicle a speed in km/h, with images for overspeed cases.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="speed" data-d="hwy" data-p="InfraX AI VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Radar speed fusion</h3><span class="st st-live">Live</span></div><p>Camera and radar on the gantry give every vehicle a speed in km/h, with images for overspeed cases.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="track" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Camera-to-camera tracking</h3><span class="st st-live">Live</span></div><p>Follows one vehicle across cameras by its plate and its look.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="people" data-d="campus ports wh" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>People counting</h3><span class="st st-live">Live</span></div><p>In and out counts at gates, lobbies and walkways, by hour.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="zone" data-d="campus ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Zone intrusion · line crossing</h3><span class="st st-live">Live</span></div><p>An alert when someone enters a marked zone or crosses a line.</p><div class="an-doms"></div></div></article>
@@ -123,45 +124,50 @@
   <h2 class="h-2" id="anDnH" data-reveal>Reads plates day and night, even on infrared.</h2>
   <div class="an-dn-grid">
     <figure class="an-dn-card">
-      <div class="an-dn-shot"><img decoding="async" src="img/real/tiles/t1-corridor.jpg" alt="Daytime highway camera view (masked corridor feed)" loading="lazy" width="640" height="400">
+      <div class="an-dn-shot"><img decoding="async" src="img/day-highway-sm.jpg" srcset="img/day-highway-sm.jpg 768w, img/day-highway.jpg 1536w" sizes="(min-width:1024.02px) 540px, (min-width:768.02px) 50vw, 100vw" alt="Daytime highway camera view with cars, a van and a truck (illustrative)" loading="lazy" width="768" height="432">
         <span class="an-dn-scan" aria-hidden="true"></span>
-        <span class="an-dn-box below rt" style="left:57.6%;top:6.2%;width:4.2%;height:6.7%" aria-hidden="true"><i>Van · 0.96 · 64 km/h</i></span>
-        <span class="an-dn-box sub" style="left:53.8%;top:7.1%;width:2.4%;height:4%" aria-hidden="true"></span>
-        <span class="an-dn-plate" style="right:38.2%;top:24%" aria-hidden="true">XX 00 AB 1234</span>
+        <span class="an-dn-box big" style="left:16.90%;top:65.20%;width:10.20%;height:14.00%;animation-delay:0.00s" aria-hidden="true"><i>Car · 0.97</i></span>
+        <span class="an-dn-box" style="left:34.60%;top:52.50%;width:5.50%;height:8.20%;animation-delay:0.12s" aria-hidden="true"><i>Car · 0.95</i></span>
+        <span class="an-dn-box" style="left:24.80%;top:32.40%;width:6.80%;height:10.00%;animation-delay:0.24s" aria-hidden="true"><i>Truck · 0.93</i></span>
+        <span class="an-dn-box rt" style="left:81.70%;top:50.40%;width:10.60%;height:13.60%;animation-delay:0.36s" aria-hidden="true"><i>Van · 0.96 · 64 km/h</i></span>
+        <span class="an-dn-box rt" style="left:70.80%;top:74.00%;width:13.00%;height:17.40%;animation-delay:0.48s" aria-hidden="true"><i>SUV · 0.94</i></span>
+        <span class="an-dn-box" style="left:58.40%;top:48.50%;width:5.00%;height:6.60%;animation-delay:0.60s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:32.20%;top:37.60%;width:2.60%;height:4.00%;animation-delay:0.72s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:42.40%;top:35.00%;width:1.60%;height:3.50%;animation-delay:0.00s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:35.80%;top:34.00%;width:1.80%;height:3.40%;animation-delay:0.12s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:38.30%;top:35.00%;width:1.80%;height:3.20%;animation-delay:0.24s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:67.50%;top:40.50%;width:3.80%;height:4.20%;animation-delay:0.36s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:61.80%;top:34.80%;width:2.80%;height:3.90%;animation-delay:0.48s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:51.50%;top:34.60%;width:2.10%;height:3.20%;animation-delay:0.60s" aria-hidden="true"></span>
+        <span class="an-dn-plate" style="left:16.90%;top:80.80%" aria-hidden="true">XX 00 AB 1234</span>
         <span class="an-dn-tag" aria-hidden="true"><b></b>Day · live</span></div>
       <figcaption><b>Day</b><span>Plate, class and speed from the gantry and roadside cameras.</span></figcaption>
     </figure>
     <figure class="an-dn-card">
       <div class="an-dn-shot an-dn-night"><img decoding="async" src="img/night-highway-sm.jpg" srcset="img/night-highway-sm.jpg 768w, img/night-highway.jpg 1536w" sizes="(min-width:1024.02px) 540px, (min-width:768.02px) 50vw, 100vw" alt="Night highway camera view with headlights and streetlights (illustrative)" loading="lazy" width="768" height="432">
         <span class="an-dn-scan" aria-hidden="true"></span>
-        <span class="an-dn-box big" style="left:16.80%;top:64.58%;width:11.33%;height:15.51%;animation-delay:0.00s" aria-hidden="true"><i>Car · 0.97</i></span>
-        <span class="an-dn-box" style="left:41.41%;top:52.55%;width:7.16%;height:12.04%;animation-delay:0.12s" aria-hidden="true"><i>Car · 0.95</i></span>
-        <span class="an-dn-box below" style="left:26.04%;top:31.83%;width:10.81%;height:21.64%;animation-delay:0.24s" aria-hidden="true"><i>Truck · 0.93</i></span>
-        <span class="an-dn-box" style="left:40.23%;top:37.96%;width:4.69%;height:6.94%;animation-delay:0.36s" aria-hidden="true"></span>
-        <span class="an-dn-box" style="left:46.48%;top:39.35%;width:4.56%;height:7.18%;animation-delay:0.48s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:39.26%;top:26.97%;width:2.34%;height:3.24%;animation-delay:0.60s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:38.09%;top:23.15%;width:1.76%;height:2.43%;animation-delay:0.72s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:40.76%;top:21.76%;width:1.56%;height:2.20%;animation-delay:0.00s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:46.88%;top:22.57%;width:1.43%;height:2.20%;animation-delay:0.12s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:42.84%;top:20.60%;width:1.56%;height:2.20%;animation-delay:0.24s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:44.66%;top:20.14%;width:1.30%;height:1.97%;animation-delay:0.36s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:27.86%;top:26.50%;width:1.95%;height:2.20%;animation-delay:0.48s" aria-hidden="true"></span>
-        <span class="an-dn-box" style="left:80.47%;top:32.64%;width:11.85%;height:15.51%;animation-delay:0.60s" aria-hidden="true"><i>Bus · 0.94</i></span>
-        <span class="an-dn-box below" style="left:67.19%;top:42.82%;width:5.86%;height:8.56%;animation-delay:0.72s" aria-hidden="true"><i>Car · 0.92</i></span>
-        <span class="an-dn-box" style="left:71.61%;top:38.54%;width:5.08%;height:6.37%;animation-delay:0.00s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:62.89%;top:22.69%;width:3.78%;height:6.94%;animation-delay:0.12s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:60.55%;top:30.67%;width:3.12%;height:4.28%;animation-delay:0.24s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:55.86%;top:25.23%;width:1.95%;height:2.78%;animation-delay:0.36s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:60.55%;top:24.31%;width:2.08%;height:2.55%;animation-delay:0.48s" aria-hidden="true"></span>
-        <span class="an-dn-box s" style="left:53.52%;top:21.06%;width:1.56%;height:1.85%;animation-delay:0.60s" aria-hidden="true"></span>
-        <span class="an-dn-plate" style="left:16.80%;top:81.02%" aria-hidden="true">XX 07 KD 4410</span>
-        <span class="an-dn-count" aria-hidden="true">20 vehicles</span>
+        <span class="an-dn-box big" style="left:21.90%;top:66.00%;width:11.70%;height:16.90%;animation-delay:0.00s" aria-hidden="true"><i>Car · 0.97</i></span>
+        <span class="an-dn-box" style="left:35.30%;top:42.80%;width:4.40%;height:6.50%;animation-delay:0.12s" aria-hidden="true"></span>
+        <span class="an-dn-box" style="left:30.20%;top:29.60%;width:4.40%;height:10.60%;animation-delay:0.24s" aria-hidden="true"><i>Truck · 0.93</i></span>
+        <span class="an-dn-box s" style="left:36.20%;top:35.40%;width:2.60%;height:3.90%;animation-delay:0.36s" aria-hidden="true"></span>
+        <span class="an-dn-box" style="left:54.20%;top:49.10%;width:5.10%;height:9.00%;animation-delay:0.48s" aria-hidden="true"><i>Car · 0.95</i></span>
+        <span class="an-dn-box below" style="left:58.60%;top:54.60%;width:7.20%;height:13.20%;animation-delay:0.60s" aria-hidden="true"><i>Car · 0.96</i></span>
+        <span class="an-dn-box" style="left:66.70%;top:30.10%;width:5.30%;height:12.00%;animation-delay:0.72s" aria-hidden="true"><i>Truck · 0.94</i></span>
+        <span class="an-dn-box s" style="left:57.40%;top:34.30%;width:2.70%;height:5.10%;animation-delay:0.00s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:52.60%;top:31.90%;width:2.60%;height:4.20%;animation-delay:0.12s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:61.50%;top:35.20%;width:2.60%;height:4.20%;animation-delay:0.24s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:71.60%;top:33.60%;width:2.30%;height:4.20%;animation-delay:0.36s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:36.80%;top:27.30%;width:2.20%;height:2.80%;animation-delay:0.48s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:44.90%;top:28.90%;width:2.00%;height:3.00%;animation-delay:0.60s" aria-hidden="true"></span>
+        <span class="an-dn-box s" style="left:54.20%;top:27.80%;width:1.80%;height:2.80%;animation-delay:0.72s" aria-hidden="true"></span>
+        <span class="an-dn-plate" style="left:21.90%;top:84.50%" aria-hidden="true">XX 07 KD 4410</span>
+        <span class="an-dn-count" aria-hidden="true">14 vehicles</span>
         <span class="an-dn-ir"><img decoding="async" src="img/night-ir-sm.jpg" alt="Infrared night view of the same lane (illustrative)" loading="lazy" width="768" height="432"><span class="an-dn-irbox car" style="left:33.9%;top:23.1%;width:22.1%;height:39.8%"></span><span class="an-dn-irbox car" style="left:37.5%;top:0%;width:10.9%;height:3.4%"></span><span class="an-dn-irbox" style="left:41.9%;top:51.4%;width:6.8%;height:3.7%"></span><em>IR · plate</em></span>
         <span class="an-dn-tag" aria-hidden="true"><b></b>Night · IR · live</span></div>
       <figcaption><b>Night</b><span>Infrared cameras keep the plate readable when the road goes dark.</span></figcaption>
     </figure>
   </div>
-  <p class="an-dn-note mono">Day view: masked corridor feed · night views illustrative · dummy plates</p>
+  <p class="an-dn-note mono">Day and night views illustrative · dummy plates</p>
 </div></section>
 <div class="wrap"><a class="next-band" href="deployment.html"><div><p class="eyebrow">Next</p><p class="h-1">Runs on your own servers</p></div><span class="arrow" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a></div>
 <!--PAGE-SCRIPTS-->
@@ -221,15 +227,18 @@
       font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('shoulder · threshold 30 s · sample', 14, H - 6);
     },
     speed: function (c, W, H, t) {
-      lanes(c, W, H, 3, H * .3, H * .92, t, true);
-      var gx = W * .5;
-      for (var a = 0; a < 3; a++) { var r = ((t * 70 + a * 40) % 120); c.beginPath(); c.arc(gx, H * .12, r, .35 * Math.PI, .65 * Math.PI); c.strokeStyle = 'rgba(' + B + ',' + Math.max(0, .6 - r / 200) + ')'; c.lineWidth = 2; c.stroke(); }
-      c.fillStyle = 'rgba(' + D + ',1)'; c.fillRect(gx - 14, H * .08, 28, 10);
+      // radar on the gantry ahead of the traffic, aimed back down the lanes (a speed radar sits in front of or behind
+      // the vehicles, never beside them); its waves run against the traffic and speeds show in the measuring zone
+      var top = H * .12, bot = H * .86, rx = W - 14, ry = (top + bot) / 2;
+      lanes(c, W, H, 3, top, bot, t, true);
+      for (var a = 0; a < 3; a++) { var r = ((t * 90 + a * 55) % 165); c.beginPath(); c.arc(rx, ry, r, .87 * Math.PI, 1.13 * Math.PI); c.strokeStyle = 'rgba(' + B + ',' + Math.max(0, .6 - r / 280) + ')'; c.lineWidth = 2; c.stroke(); }
+      c.fillStyle = 'rgba(' + D + ',1)'; c.fillRect(rx - 5, ry - 15, 10, 30);
+      font(c, 11); c.fillStyle = 'rgba(' + D + ',1)'; c.fillText('radar', rx - 38, top - 4);
       var SP = [88, 112, 74, 96, 104];
       for (var i = 0; i < 5; i++) {
-        var ln = i % 3, slot = Math.floor(i / 3), x = ((t * (.1 + ln * .03) + slot / 2 * 1.25) % 1.25 - .12) * W, y = H * .3 + (ln + .5) * (H * .62 / 3), over = SP[i] > 100;
+        var ln = i % 3, slot = Math.floor(i / 3), x = ((t * (.1 + ln * .03) + slot / 2 * 1.25) % 1.25 - .12) * W, y = top + (ln + .5) * ((bot - top) / 3), over = SP[i] > 100;
         car(c, x, y - 7, W * .085, 14, over ? 'rgba(' + A + ',.9)' : 'rgba(' + B + ',.8)');
-        if (x > gx - W * .2 && x < gx + W * .25) pill(c, x, y - 10, SP[i] + ' km/h', over ? A : B);
+        if (x > W * .38 && x < W * .78) pill(c, x, y - 10, SP[i] + ' km/h', over ? A : B);
       }
       font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('limit 100 · camera + radar · sample', 14, H - 6);
     },
