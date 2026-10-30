@@ -75,9 +75,8 @@ Example for `products` (replace names accordingly):
    (`hidden`, `required`, `muted`, `playsInline`, `autoPlay` — **not** `hidden=""`, React drops empty strings).
    Bare `data-reveal` becomes `data-reveal=""`. Use plain `<img>` (keep `srcSet`/`sizes`/`loading`/`decoding`), not next/image.
    Paths: absolute (`/img/...`, `/assets/...`); internal links: `/`, `/products#x`, `/#demo` (opens the dialog).
-   A converter that does most of this exists at
-   `C:\Users\Dell\AppData\Local\Temp\claude\C--Users-Dell-OneDrive-Desktop-infrax-ai\a5bf4cbf-af4a-4c81-8523-d3fedee0a513\scratchpad\h2jsx.py`
-   (`python h2jsx.py body.html > body.jsx`; check booleans and `.jpg`->`.webp` afterwards).
+   `tools/h2jsx.py` does most of this (`python tools/h2jsx.py body.html > body.jsx`); afterwards fix boolean
+   attributes (it emits `hidden=""`), `.jpg`->`.webp`, and relative `src`s.
 3. **Script** — `lib/pages/products.js`:
    ```js
    export function init() {
