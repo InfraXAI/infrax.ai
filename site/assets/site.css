@@ -526,9 +526,14 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .dm-f input:focus,.dm-f select:focus,.dm-f textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(38,115,181,.14)}
 /* footer social row */
 .foot-social{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
-.foot-grid .foot-social a{width:30px;height:30px;min-height:30px;justify-content:center;border:1px solid var(--line);border-radius:10px;color:var(--ink-2);background:#fff;transition-property:color,border-color,background-color;transition-duration:.15s}
-.foot-grid .foot-social a:hover{color:var(--blue);border-color:rgba(37,99,235,.35);background:rgba(37,99,235,.05)}
-.foot-social svg{width:14px;height:14px;fill:currentColor}
+/* social: the real brand marks in their own colours (the SVGs are the official shapes), no box around them */
+.foot-grid .foot-social a{width:30px;height:30px;min-height:30px;justify-content:center;border-radius:6px;transition:transform .2s var(--ease),opacity .2s}
+.foot-grid .foot-social a:hover{transform:translateY(-2px);opacity:.85}
+.foot-grid .foot-social a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.foot-social svg{width:22px;height:22px;fill:currentColor}
+.foot-grid .foot-social a[href*="linkedin.com"]{color:#0A66C2}
+.foot-grid .foot-social a[href*="youtube.com"]{color:#FF0000}
+.foot-grid .foot-social a[href*="github.com"]{color:#181717}
 @media (pointer:coarse){.foot-grid .foot-social a{width:42px;height:42px;min-height:42px}}
 /* "address copied" note after an email link is clicked */
 
