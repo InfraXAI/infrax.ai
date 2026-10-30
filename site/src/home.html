@@ -1,4 +1,4 @@
-<!--META title="InfraX AI" desc="The agentic OS for infrastructure. AI agents run the routine work across every camera, asset and site; your people approve what matters. On your own servers or hosted." page="home" libs="gsap,three"-->
+<!--META title="InfraX AI | The Agentic OS for Infrastructure" desc="InfraX AI is the agentic operating system for smart infrastructure: one platform for highways, cities and buildings, with AI Beings that monitor, analyze and act, while your people approve what matters. On your own servers or hosted." page="home" libs="gsap,three"-->
 <style>
 /* Home: particle wave hero (domains), product grid (real photos), product exchange, digital twin (GIS map that dives into a 3D street twin),
    domains, live corridor wall, company, demo. Motion: fast reveals, pulses on connectors, animated line icons. */
@@ -16,9 +16,12 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hx{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(min(100svh - var(--nav-h),1000px) - 2 * var(--hx-pad))}
 .hx-vis{position:relative;width:min(100%,calc(var(--hx-vh) * 1.5));aspect-ratio:1.5/1;flex:none;container-type:inline-size}
 .hx-copy{position:relative;z-index:2;margin-top:clamp(18px,2.6svh,36px);display:flex;flex-direction:column;align-items:center}
-.hm-h1{font-size:var(--hx-fs);line-height:1.06;letter-spacing:-.035em;max-width:17em;text-wrap:balance}
-.hx-brand{color:var(--blue)}
-.hx-sub{margin:clamp(10px,1.4svh,18px) 0 0;max-width:min(100%,56em);font-size:var(--fs-lead);line-height:1.5;color:var(--ink-2);text-wrap:balance}
+.hm-hero{--hx-subl:3}
+.hm-h1{font-size:var(--hx-fs);font-weight:800;line-height:1.06;letter-spacing:-.04em;max-width:17em;text-wrap:balance}
+/* two-line headline: dark first line, brand-blue gradient second line */
+.hx-l1,.hx-l2{display:block}
+.hx-l2{background:linear-gradient(90deg,var(--blue) 0%,var(--blue-soft) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.hx-sub{margin:clamp(12px,1.6svh,22px) 0 0;max-width:min(100%,44em);font-size:var(--fs-lead);line-height:1.6;color:var(--muted);text-wrap:balance}
 .hx-copy .btn-row{justify-content:center;margin-top:clamp(18px,2.4svh,32px)}
 .hx-copy>*{transition:opacity .8s ease,transform 1s cubic-bezier(.16,.84,.3,1)}
 .hx-copy .hx-sub{transition-delay:.09s}
@@ -372,6 +375,42 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 @media (max-width:768px),(pointer:coarse){.ov-box,.ov-scan,.ov-pin::after,.ov-ring,.ov-cyc,.ov-rec::before,.hm-ag-dot::before,.hm-mcp-line i{animation:none}.ov-box{opacity:1}}
 
 /* responsive */
+/* the OS in four layers as an exploded stack of tilted plates: edge (partner hardware) at the base, AI Beings on top; a pulse travels up the spine */
+.hm-os{margin:var(--gap-g) 0 0;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:calc(40*var(--s));align-items:center}
+.hm-os-stage{position:relative;height:460px;perspective:1600px;cursor:pointer}
+.hm-os-iso{position:absolute;left:50%;top:68%;width:300px;height:300px;margin:-150px 0 0 -150px;transform-style:preserve-3d;transform:rotateX(58deg) rotateZ(-40deg)}
+.hm-os-pl{position:absolute;inset:0;border-radius:22px;transform-style:preserve-3d;display:grid;place-items:center;transition:transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
+.hm-os-pl::before{content:"";position:absolute;inset:14px;border-radius:14px;background-image:radial-gradient(currentColor 1px,transparent 1.5px);background-size:18px 18px;opacity:.18;color:var(--blue-deep)}
+.hm-os-pl b{position:relative;font:700 26px/1 var(--f-display);letter-spacing:-.02em;transform:rotateZ(40deg)}
+.hm-os-pl.p4{transform:translateZ(0);background:rgba(255,255,255,.75);border:2px dashed var(--line-2)}
+.hm-os-pl.p4 b{color:var(--muted)}
+.hm-os-pl.p3{transform:translateZ(70px);background:linear-gradient(135deg,var(--wash),#fff);border:1px solid var(--line-2);box-shadow:0 30px 50px -30px rgba(14,59,102,.35)}
+.hm-os-pl.p3 b{color:var(--blue-deep)}
+.hm-os-pl.p2{transform:translateZ(140px);background:linear-gradient(135deg,var(--blue-soft),var(--blue));box-shadow:0 30px 50px -28px rgba(14,59,102,.5)}
+.hm-os-pl.p1{transform:translateZ(210px);background:linear-gradient(135deg,var(--blue),var(--blue-deep));box-shadow:0 30px 60px -26px rgba(14,59,102,.65)}
+.hm-os-pl.p1 b,.hm-os-pl.p2 b{color:#fff}
+.hm-os-pl.p1::before,.hm-os-pl.p2::before{color:#fff;opacity:.22}
+.hm-os-spine{position:absolute;left:50%;top:50%;width:3px;height:210px;margin-left:-1.5px;transform-origin:0 0;transform:rotateX(90deg);background:linear-gradient(rgba(38,115,181,.15),var(--blue))}
+.hm-os-spine i{position:absolute;left:-3.5px;width:10px;height:10px;border-radius:50%;background:var(--blue-soft);box-shadow:0 0 12px var(--blue-soft);animation:hmOsUp 2.4s linear infinite}
+@keyframes hmOsUp{from{top:0}to{top:100%}}
+.hm-os-stage:hover .p1,.hm-os-stage.lift .p1{transform:translateZ(250px)}
+.hm-os-stage:hover .p2,.hm-os-stage.lift .p2{transform:translateZ(165px)}
+.hm-os-stage:hover .p3,.hm-os-stage.lift .p3{transform:translateZ(80px)}
+.hm-os-pl.hi{box-shadow:0 0 0 3px var(--blue-soft),0 30px 60px -26px rgba(14,59,102,.65)}
+.hm-os-lg{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.hm-os-lg a{display:grid;grid-template-columns:14px minmax(0,1fr);gap:14px;padding:14px 16px;border-radius:14px;border:1px solid transparent;color:var(--ink);text-decoration:none;transition:border-color var(--dur-3),background var(--dur-3)}
+.hm-os-lg a:hover,.hm-os-lg a:focus-visible{border-color:var(--line);background:#fff}
+.hm-os-lg a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hm-os-sw{width:14px;height:14px;border-radius:4px;margin-top:6px}
+.hm-os-lg h3{margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font:650 var(--fs-h3)/1.25 var(--f-display);letter-spacing:-.01em}
+.hm-os-lg h3 small{font:500 max(12px,calc(13*var(--s)))/1 var(--f-body);color:var(--muted)}
+.hm-os-lg p{margin:4px 0 8px;font-size:var(--fs-card,16px);line-height:1.5;color:var(--ink-2)}
+.hm-os-c{display:flex;flex-wrap:wrap;gap:6px}
+.hm-os-c b{padding:5px 10px;border-radius:999px;font:600 max(12px,calc(12.5*var(--s)))/1.2 var(--f-body);white-space:nowrap;background:#fff;color:var(--blue-deep);border:1px solid var(--line)}
+.hm-os-c b.o{border-style:dashed}
+@media (max-width:900px){.hm-os{grid-template-columns:minmax(0,1fr)}.hm-os-stage{height:400px}.hm-os-iso{top:72%;transform:rotateX(58deg) rotateZ(-40deg) scale(.82)}}
+@media (max-width:520px){.hm-os-stage{height:330px}.hm-os-iso{top:74%;transform:rotateX(58deg) rotateZ(-40deg) scale(.66)}}
+@media (prefers-reduced-motion:reduce){.hm-os-spine i{animation:none}.hm-os-pl{transition:none}}
 /* AI agents: four cards, each with a short example exchange that types in when the section is on screen */
 .hm-ag{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g)}
 .hm-agc{display:flex;flex-direction:column;padding:calc(22*var(--s));border:1px solid var(--line);border-radius:var(--r-lg,calc(16*var(--s)));background:rgba(255,255,255,.9)}
@@ -516,8 +555,8 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       <div class="hx-lbs" id="hxLbs" aria-hidden="true"></div>
     </div>
     <div class="hx-copy">
-      <h1 class="h-hero hm-h1" id="hmTitle"><span class="hx-brand">InfraX AI</span> — where infrastructure runs itself.</h1>
-      <p class="hx-sub"><strong>The agentic OS for infrastructure.</strong> AI agents run the routine work across every camera, asset and site; your people approve what matters.</p>
+      <h1 class="h-hero hm-h1" id="hmTitle"><span class="hx-l1">Your infrastructure,</span> <span class="hx-l2">running itself.</span></h1>
+      <p class="hx-sub">InfraX AI is the agentic operating system for smart infrastructure. One platform for highways, cities, and buildings — with AI Beings that monitor, analyze, and act autonomously.</p>
       <div class="btn-row">
         <a class="btn btn-primary" href="home.html#demo" data-magnetic>Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         <a class="btn btn-ghost" href="products.html">See the products <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -526,12 +565,12 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   </div>
 </section>
 
-<!-- ============ AI AGENTS ============ -->
+<!-- ============ AI BEINGS ============ -->
 <section class="scene" id="agents" aria-labelledby="hmAgT">
   <div class="wrap">
     <div class="hm-head hm-c">
-      <div><h2 class="h-1" id="hmAgT" data-reveal>AI agents that work across every product.</h2></div>
-      <p class="body">Each product has an agent for the routine work, and a person approves what matters. Your own agents can plug in too.</p>
+      <div><h2 class="h-1" id="hmAgT" data-reveal>AI Beings that work across every product.</h2></div>
+      <p class="body">Each product has an AI Being for the routine work, and a person approves what matters. Your own AI can plug in too.</p>
     </div>
     <div class="hm-ag" id="hmAg">
       <article class="hm-agc">
@@ -561,21 +600,39 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     </div>
     <article class="hm-mcp">
       <div class="hm-mcp-t">
-        <p class="hm-ag-k"><span class="hm-ag-dot" aria-hidden="true"></span>For your own agents</p>
+        <p class="hm-ag-k"><span class="hm-ag-dot" aria-hidden="true"></span>For your own AI</p>
         <h3>MCP</h3>
-        <p class="d">Connect your own AI agents to InfraX AI Ops through MCP (Model Context Protocol). Agents call Ops features as tools, using only the access you grant them.</p>
+        <p class="d">Connect your own AI to InfraX AI Ops through MCP (Model Context Protocol). It calls Ops features as tools, using only the access you grant it.</p>
       </div>
       <div class="hm-mcp-flow" aria-hidden="true">
-        <span class="hm-mcp-node">Your agent</span>
+        <span class="hm-mcp-node">Your AI</span>
         <span class="hm-mcp-line"><i></i></span>
         <span class="hm-mcp-node hub">MCP<small>scoped token</small></span>
         <span class="hm-mcp-line"><i></i></span>
         <span class="hm-mcp-node">InfraX AI Ops</span>
-        <span class="hm-mcp-back">↩ Result goes back to your agent</span>
+        <span class="hm-mcp-back">↩ Result goes back to your AI</span>
       </div>
-      <div class="hm-ag-chat" aria-hidden="true"><span class="q">agent → get today's ops digest</span><span class="a">Daily digest returned from Ops</span></div>
+      <div class="hm-ag-chat" aria-hidden="true"><span class="q">your AI → get today's ops digest</span><span class="a">Daily digest returned from Ops</span></div>
     </article>
     <p class="hm-ag-note">Example exchanges, illustrative data.</p>
+        <figure class="hm-os" aria-labelledby="hmOsCap">
+      <figcaption class="sr-only" id="hmOsCap">The InfraX AI OS in four layers: AI Beings on top, the digital twin, the product modules, and the edge of partner hardware underneath.</figcaption>
+      <div class="hm-os-stage" id="hmOsStage" aria-hidden="true">
+        <div class="hm-os-iso">
+          <div class="hm-os-pl p4" data-l="4"><b>EDGE</b></div>
+          <div class="hm-os-pl p3" data-l="3"><b>MODULES</b></div>
+          <div class="hm-os-pl p2" data-l="2"><b>TWIN</b></div>
+          <div class="hm-os-pl p1" data-l="1"><b>BEINGS</b></div>
+          <div class="hm-os-spine"><i></i></div>
+        </div>
+      </div>
+      <ul class="hm-os-lg">
+        <li><a href="#hmAg" data-l="1"><span class="hm-os-sw" style="background:linear-gradient(135deg,var(--blue),var(--blue-deep))"></span><span><h3>AI Beings</h3><p>Do the routine work in every product; a person approves what matters.</p><span class="hm-os-c"><b>VAYU</b><b>KRITYA</b><b>NOAH</b><b>ASTRA</b><b class="o">Your AI via MCP</b></span></span></a></li>
+        <li><a href="#twin" data-l="2"><span class="hm-os-sw" style="background:linear-gradient(135deg,var(--blue-soft),var(--blue))"></span><span><h3>Twin</h3><p>A live 3D copy of your network, fed by every camera.</p><span class="hm-os-c"><b>GIS map</b><b>3D street twin</b><b>Live cameras</b></span></span></a></li>
+        <li><a href="#products" data-l="3"><span class="hm-os-sw" style="background:var(--wash);border:1px solid var(--line-2)"></span><span><h3>Modules</h3><p>The products, each with its own job, sharing one data layer.</p><span class="hm-os-c"><b>Cygnus</b><b>VIDES</b><b>AstraAlert</b><b>TollCloud</b><b>MLFF</b><b>Central Plexus</b><b>InfraX AI Ops</b></span></span></a></li>
+        <li><a href="deployment.html" data-l="4"><span class="hm-os-sw" style="border:2px dashed var(--line-2)"></span><span><h3>Edge <small>partner hardware</small></h3><p>Cameras and devices you already own, from our partners.</p><span class="hm-os-c"><b>Cameras</b><b>Gantries</b><b>Call boxes</b><b>Sensors</b><b>Servers</b></span></span></a></li>
+      </ul>
+    </figure>
   </div>
 </section>
 
@@ -651,7 +708,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
           <p class="hm-pc-k"><span class="ix" data-ix="callbox" data-size="16" aria-hidden="true"></span>Emergency call boxes</p>
           <h3>AstraAlert</h3>
           <p class="d">Every call box press reaches the control room, located on the map and recorded.</p>
-          <div class="hm-chips"><span class="st st-live">Call located</span><span class="st st-live">Box health</span><span class="st st-live">AI voice agent</span></div>
+          <div class="hm-chips"><span class="st st-live">Call located</span><span class="st st-live">Box health</span><span class="st st-live">AI voice Being</span></div>
           <a class="link-arrow" href="products.html#astraalert" aria-label="Explore AstraAlert">Explore</a>
         </div>
       </article>
@@ -689,7 +746,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 
     <a class="hm-ops" href="products.html#ops">
       <img decoding="async" src="img/atms-cabinet-sm.jpg" alt="" loading="lazy" width="220" height="124">
-      <div><h3>InfraX AI Ops <span class="st st-live">Live</span></h3><p>Field operations, workforce and assets, run by AI agents. Hosted at ops.infrax.ai.</p></div>
+      <div><h3>InfraX AI Ops <span class="st st-live">Live</span></h3><p>Field operations, workforce and assets, run by AI Beings. Hosted at ops.infrax.ai.</p></div>
       <span class="link-arrow">Explore</span>
     </a>
 
@@ -737,10 +794,10 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   <div class="wrap hm-co">
     <div>
       <h2 class="h-1" id="hmCoT" data-reveal>Field-tested before it ships.</h2>
-      <p class="lead">A product company in Gurugram, built in India. Every feature is used in the field first.</p>
+      <p class="lead">A product company from Gurugram, building for infrastructure everywhere. Every feature is used in the field first.</p>
     </div>
     <dl class="hm-facts">
-      <div><dt>Who we are</dt><dd>InfraX AI, by NaturNest AI Private Limited. Built in India.<br><a href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City, Gurugram, Haryana 122002</a></dd></div>
+      <div><dt>Who we are</dt><dd>InfraX AI, by NaturNest AI Private Limited. Built in India, for infrastructure everywhere.<br><a href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City, Gurugram, Haryana 122002</a></dd></div>
       <div><dt>Services</dt><dd>Integration and delivery for operators and system integrators. <a class="link-arrow" href="services.html" style="min-height:44px">See services</a></dd></div>
       <div><dt>Contact</dt><dd><a href="mailto:info@infrax.ai">info@infrax.ai</a></dd></div>
     </dl>
@@ -788,7 +845,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   var DOMAINS = [
     { s: 'highways', n: 'Highways', img: 'img/highway-sm.jpg', alt: 'Expressway under a camera gantry', d: 'Gantries, call boxes, toll lanes and incidents on one screen.', runs: 'VIDES · AstraAlert · TollCloud · Cygnus',
       boxes: [[37.1, 60.2, 15.4, 20.4, 'Car', '97%'], [78.1, 43.1, 19.5, 30.1, 'Truck', '95%', 'r']] },
-    { s: 'cities', n: 'Cities', img: 'img/city-junction-sm.jpg', alt: 'Busy city junction seen from above, with pole cameras', d: 'Every junction camera on one map and one wall.', runs: 'Cygnus',
+    { s: 'cities', n: 'Cities', img: 'img/city-junction-sm.jpg', alt: 'Busy city junction seen from above, with pole cameras', d: 'Junction cameras, plate search and incidents on one map, for the city command centre.', runs: 'Cygnus · Central Plexus',
       boxes: [[51, 42.8, 10.8, 15, 'Bus', '96%'], [16.9, 70.6, 9.6, 9.5, 'Car · plate read', '94%', 'b']] },
     { s: 'campuses', n: 'Campuses', img: 'img/campus-sm.jpg', alt: 'Campus entrance at dusk with a parking barrier', d: 'Gate logs and one video wall for many buildings.', runs: 'Cygnus · Access and parking',
       boxes: [[40.9, 67.6, 5.7, 7, 'Car', '94%'], [68, 74.8, 25.3, 3.4, 'Gate · barrier down', '', 'r b']] },
@@ -1971,5 +2028,19 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     G.from('#hwFig', { y: 18, opacity: 0, duration: .45, ease: 'power3.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#hwFig', start: 'top 85%' } });
   }
 
+})();
+</script>
+<script>
+/* OS stack: hovering a layer lights its plate and spreads the stack; tapping the stack spreads it on touch */
+(function () {
+  var st = document.getElementById('hmOsStage'); if (!st) return;
+  document.querySelectorAll('.hm-os-lg a').forEach(function (a) {
+    var pl = st.querySelector('.hm-os-pl[data-l="' + a.dataset.l + '"]');
+    function on() { pl.classList.add('hi'); st.classList.add('lift'); }
+    function off() { pl.classList.remove('hi'); st.classList.remove('lift'); }
+    a.addEventListener('mouseenter', on); a.addEventListener('mouseleave', off);
+    a.addEventListener('focus', on); a.addEventListener('blur', off);
+  });
+  st.addEventListener('click', function () { st.classList.toggle('lift'); });
 })();
 </script>

@@ -378,15 +378,7 @@
     gsap.from(parts, { yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05, scrollTrigger: el.closest('[data-reveal-now]') ? null : { trigger: el, start: 'top 85%' } });
   });
 
-  /* ---------- email links: open a Gmail compose window addressed to us in a new tab, instead of the
-     visitor's default mail app (Outlook on most Windows machines). Visitors not signed in to Gmail sign in first. ---------- */
-  (function mailLinks() {
-    document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
-      var to = decodeURIComponent(a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0]);
-      a.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to);
-      a.target = '_blank'; a.rel = 'noopener';
-    });
-  })();
+  /* email links stay mailto: so they open the visitor's own mail app (NIC mail, Outlook, Gmail alike) */
 
   /* ---------- Book a demo: centred modal for every a[href$="#demo"] (markup from build.py) ---------- */
   (function demoModal() {

@@ -1,4 +1,4 @@
-<!--META title="Products" desc="Seven InfraX AI products for highways, cities, campuses, ports and warehouses: VIDES, AstraAlert, TollCloud, Cygnus, Central Plexus, Ops, Access." page="products" libs="gsap,three"-->
+<!--META title="Products" desc="Eight InfraX AI products for highways, cities, campuses, ports and warehouses: VIDES, AstraAlert, TollCloud, MLFF, Cygnus, Central Plexus, Ops, Access." page="products" libs="gsap,three"-->
 <style>
 /* Products page: a short intro, one pinned 3D tunnel with 6 product stations (roadside → toll plaza →
    control room → field), then a compact product index. Prefix: cy- */
@@ -534,8 +534,8 @@
       counts: true, ban: 'VIDES classification', rows: [['Car', '0'], ['Truck', '0'], ['Bus', '0'], ['Three-wheeler', '0'], ['Banned · 2W', '0 flagged', 'bad'], ['Link', 'Online', 'ok', 'link']] },
     { slug: 'astraalert', grp: 'Roadside', name: 'AstraAlert', short: 'AstraAlert', tag: 'Roadside · emergency call boxes',
       title: 'Every emergency call answered and located on the map.',
-      desc: 'One button press reaches the control room, and the AI voice agent hands the operator a summary.',
-      chips: [['live', 'Box on the map'], ['live', 'Call recording'], ['live', 'Box health'], ['live', 'AI voice agent · Hindi']],
+      desc: 'One button press reaches the control room, and the AI voice Being hands the operator a summary.',
+      chips: [['live', 'Box on the map'], ['live', 'Call recording'], ['live', 'Box health'], ['live', 'AI voice Being · Hindi']],
       rows: [['Box', 'ECB-07 · km 41.2'], ['Battery', '92% · solar charging', 'ok'], ['Door', 'Closed', 'ok']] },
     { slug: 'tollcloud', grp: 'Toll plaza', name: 'TollCloud', short: 'TollCloud', tag: 'Toll plaza · toll, parking and access',
       title: 'Toll lanes that keep running, online or not.',
@@ -611,14 +611,16 @@
     ['mlff', 'MLFF', 'Free-flow tolling on a gantry: no barriers, no stopping.', '#mlff'],
     ['cygnus', 'Cygnus', 'Video management with AI: walls, 24×7 recording, plate search, camera health.', '#cygnus'],
     ['central-plexus', 'Central Plexus (ATMS / ICCC)', 'One live map, incidents to closure, e-challan evidence and sign messages.', '#central-plexus'],
-    ['ops', 'InfraX AI Ops', 'Field operations, workforce and assets, run by AI agents.', '#ops'],
+    ['ops', 'InfraX AI Ops', 'Field operations, workforce and assets, run by AI Beings.', '#ops'],
     ['access-parking', 'Access and parking', 'Entry and exit, plate reads.', '#d-campuses']
   ];
-  var PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2.6v6.8L9.6 6z"/></svg>';
   document.getElementById('cyIdx').innerHTML = IDX7.map(function (P) {
     var IX = { 'central-plexus': 'map', cygnus: 'wall', vides: 'gantry', astraalert: 'callbox', tollcloud: 'toll', mlff: 'gantry', 'access-parking': 'gate', ops: 'operator' };
-    // the whole card opens the product (stretched title link); the YouTube button sits above it and opens the channel
-    return '<div class="cy-item" id="idx-' + P[0] + '"><span class="ix" data-ix="' + IX[P[0]] + '" aria-hidden="true"></span><a class="cy-go" href="' + P[3] + '"><b>' + P[1] + '</b></a><span>' + P[2] + '</span><span class="cy-meta"><span class="cy-live">Live</span><a class="cy-yt" href="https://www.youtube.com/@infraxai" target="_blank" rel="noopener" aria-label="' + P[1] + ' demo video on YouTube, coming soon"><span class="cy-play">' + PLAY + '</span><span class="cy-yt-t">Demo video<small>Coming soon</small></span></a></span><i aria-hidden="true">→</i></div>';
+    // the whole card opens the product (stretched title link). "Live" only where a production site backs it (Treta, 31-Oct):
+    // Central Plexus (NH-152D control room), Cygnus (production May 2026), InfraX AI Ops (ops.infrax.ai). Add others once confirmed.
+    // Demo-video links come back when the videos exist; a "coming soon" link reads as unfinished.
+    var LIVE = { 'central-plexus': 1, cygnus: 1, ops: 1 };
+    return '<div class="cy-item" id="idx-' + P[0] + '"><span class="ix" data-ix="' + IX[P[0]] + '" aria-hidden="true"></span><a class="cy-go" href="' + P[3] + '"><b>' + P[1] + '</b></a><span>' + P[2] + '</span><span class="cy-meta">' + (LIVE[P[0]] ? '<span class="cy-live">Live</span>' : '') + '</span><i aria-hidden="true">→</i></div>';
   }).join('');
 
   /* rail (rebuilt per domain) */
@@ -781,7 +783,7 @@
             ['svg', innerSVG] (viewBox 0 0 100 56) · ['bar'] (playback scrubber). Coordinates in % of the frame. */
   var RW = {
     vides: ['highway', [['box', 37, 60, 15.5, 20, 'XX 00 AB 1234 · 62 km/h', 'b'], ['box', 65, 59.5, 17, 19, 'XX 00 EF 2468 · car', 'b below'], ['box', 78.5, 44, 18.5, 28, 'Truck', 'below'], ['box', 2, 58, 13.5, 29, '3W', 'below'], ['chip', 2, 4, 'Box on gantry · reads offline', 'd'], ['chip', 2, 16, 'Plate · speed · class', 'opt']]],
-    astraalert: ['ecb', [['box', 20, 22, 12, 62, 'ECB-07 · call', 'b'], ['chip', 38, 26, 'Call connected · recording', 'd'], ['chip', 38, 38, 'AI voice agent · Hindi'], ['chip', 38, 50, 'Battery 92% · solar OK · door closed', 'ok'], ['chip', 38, 64, 'Summary → Patrol 3 dispatched', 'opt']]],
+    astraalert: ['ecb', [['box', 20, 22, 12, 62, 'ECB-07 · call', 'b'], ['chip', 38, 26, 'Call connected · recording', 'd'], ['chip', 38, 38, 'AI voice Being · Hindi'], ['chip', 38, 50, 'Battery 92% · solar OK · door closed', 'ok'], ['chip', 38, 64, 'Summary → Patrol 3 dispatched', 'opt']]],
     tollcloud: ['toll-lane', [['box', 52, 52, 22, 22, 'XX 00 GH 3579', 'b'], ['chip', 2, 4, 'Lane 3 · FASTag · barrier up', 'ok'], ['chip', 2, 16, 'ANPR · UPI · RFID on every lane', 'd'], ['chip', 2, 28, 'Offline-ready · syncs later', 'opt']]],
     mlff: ['aerial-corridor', [['chip', 2, 4, 'Open-road gantry', 'd'], ['chip', 2, 16, 'FASTag + plate read', 'ok'], ['chip', 2, 28, 'Class checked for the toll', 'opt']]],
     cygnus: ['real/wall-corridor-sm', [['chip', 2, 4, '● REC · 24×7', 'r'], ['box', 36.5, 37, 25, 25, 'XX 00 CD 5678 · watchlist', 'r'], ['chip', 2, 16, '3×3 wall · PTZ', 'd opt']], 'center', false, 'Corridor feeds · masked'],
@@ -876,8 +878,8 @@
     'central-plexus': ['Control room · ATMS', 'Central Plexus (ATMS / ICCC)', 'One control room for highway incidents, enforcement and traffic data.',
       'Central Plexus is our Advanced Traffic Management System. It brings every roadside system into one highway control room: cameras, AI gantries, message signs and call boxes. Operators see incidents as they happen, act on them and close each one with evidence. It runs a live highway control room 24x7.',
       ['One live map of cameras, gantries, signs and call boxes, with incidents tracked from detection to closure', 'E-challan and violation processing, with photo and video evidence', 'Watchlist (hotlist) alarms when a flagged vehicle passes a camera', 'Traffic counts and vehicle class by lane and time, LED message-sign control, reports, and an audit trail of every video download']],
-    ops: ['Field operations · workforce and assets', 'InfraX AI Ops', 'Field operations, workforce and assets, run by AI agents.',
-      'InfraX AI Ops is our multi-tenant platform for field operations, workforce and assets, hosted at ops.infrax.ai. O&M teams run the work in the field there: who is on shift, what needs fixing and what was done. It handles attendance and shifts, work orders with automatic preventive-maintenance scheduling, and the register of equipment your team looks after. Kritya, its AI agent, drafts routine work, and a person approves it.',
+    ops: ['Field operations · workforce and assets', 'InfraX AI Ops', 'Field operations, workforce and assets, run by AI Beings.',
+      'InfraX AI Ops is our multi-tenant platform for field operations, workforce and assets, hosted at ops.infrax.ai. O&M teams run the work in the field there: who is on shift, what needs fixing and what was done. It handles attendance and shifts, work orders with automatic preventive-maintenance scheduling, and the register of equipment your team looks after. Kritya, its AI Being, drafts routine work, and a person approves it.',
       ['Attendance, shifts and rosters for field teams', 'Work orders, with preventive maintenance scheduled automatically', 'An asset register for the equipment your team maintains', 'Daily digests of what was done and what is pending']],
     mlff: ['Toll plaza · free-flow tolling', 'MLFF', 'Free-flow tolling: no barriers, no stopping.',
       'MLFF (multi-lane free flow) puts tolling on a gantry over the open road. Vehicles keep their speed while the gantry reads the FASTag and the number plate of every passage and checks the vehicle class for the right toll. A missed payment becomes a violation with its evidence.',
@@ -952,7 +954,7 @@
   }
   var CALL = [
     ['sys', '', 'ECB-07 · km 41.2 · call connected · recording'],
-    ['ai', 'AI voice agent', 'नमस्ते। आप ठीक हैं? क्या हुआ है?'],
+    ['ai', 'AI voice Being', 'नमस्ते। आप ठीक हैं? क्या हुआ है?'],
     ['caller', 'Caller · Hindi', 'मेरी गाड़ी लेन एक में खराब हो गई है। कोई घायल नहीं है।'],
     ['sys', '', 'Summary · breakdown · lane 1 · no injuries · ECB-07'],
     ['op', 'Operator', 'Patrol 3 to ECB-07']
