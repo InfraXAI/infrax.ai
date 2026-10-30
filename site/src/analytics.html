@@ -1,4 +1,4 @@
-<!--META title="AI Video Analytics and Plate Recognition | InfraX AI" desc="Number plates, vehicle classes, watchlist alerts, plate search and camera health on your cameras, running on standard CPU servers." page="analytics" libs="gsap"-->
+<!--META title="AI analytics" desc="Number plates, vehicle classes, watchlist alerts, plate search and camera health on your cameras, running on standard CPU servers." page="analytics" libs="gsap"-->
 <style>
 /* Layout: hero + sticky domain filter, then a grid of live analytic cards (each runs a small simulation),
    a second group of live cards, and the day / night plate reads. */
@@ -242,32 +242,106 @@
       }
       font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('limit 100 · camera + radar · sample', 14, H - 6);
     },
+    // one vehicle handed from camera to camera, each a different kind: an ANPR camera reads the plate, a PTZ camera
+    // zooms in and follows it, a wide junction camera picks it out of traffic. Times and match score are dummies.
     track: function (c, W, H, t) {
-      var n = 3, gw = (W - 24 - 16) / n, gh = H * .55, cyc = 4.5, k = (t % cyc) / cyc;
+      var n = 3, gw = (W - 24 - 16) / n, gh = H * .55, cyc = 6, k = (t % cyc) / cyc, y = 14;
+      var KIND = ['ANPR', 'PTZ', 'JUNCTION'], ID = ['CAM-03', 'CAM-07', 'CAM-11'], TS = ['08:42:10', '08:43:02', '08:44:37'];
       for (var i = 0; i < n; i++) {
-        var x = 12 + i * (gw + 8), y = 14, on = k * 3.4 > i + .3;
-        rr(c, x, y, gw, gh, 6); c.fillStyle = 'rgba(' + D + ',.9)'; c.fill();
-        c.strokeStyle = 'rgba(255,255,255,.18)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + gw * .5, y + 6); c.lineTo(x + gw * .2, y + gh - 4); c.moveTo(x + gw * .5, y + 6); c.lineTo(x + gw * .8, y + gh - 4); c.stroke();
-        font(c, 12); c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('CAM-0' + (3 + i * 4), x + 6, y + 16);
-        if (on) { var cx = x + gw * (.42 + .06 * Math.sin(t + i)), cy = y + gh * .62; car(c, cx - 10, cy - 7, 22, 14, 'rgba(255,255,255,.95)'); c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.strokeRect(cx - 14, cy - 11, 30, 22); }
+        var x = 12 + i * (gw + 8), on = k * 3.4 > i + .3, live = on && k * 3.4 < i + 1.3;
+        c.save(); rr(c, x, y, gw, gh, 6); c.clip();
+        if (i === 0) {
+          // ANPR: infrared close-up of the rear of the car, the plate boxed and read
+          c.fillStyle = '#1B232C'; c.fillRect(x, y, gw, gh);
+          c.fillStyle = 'rgba(255,255,255,.05)'; c.fillRect(x, y + gh * .78, gw, gh * .22);
+          if (on) {
+            var bw = gw * .7, bx = x + (gw - bw) / 2, by = y + gh * .3;
+            rr(c, bx, by, bw, gh * .5, 10); c.fillStyle = '#C9D1D9'; c.fill();
+            rr(c, bx + bw * .14, by + 6, bw * .72, gh * .16, 5); c.fillStyle = '#3A4652'; c.fill();
+            c.fillStyle = '#E8564C'; c.fillRect(bx + 4, by + gh * .25, 10, 5); c.fillRect(bx + bw - 14, by + gh * .25, 10, 5);
+            var pw = bw * .5, px = x + (gw - pw) / 2, py = by + gh * .32;
+            c.fillStyle = '#fff'; c.fillRect(px, py, pw, 13);
+            c.font = '600 9px "Geist Mono",monospace'; c.fillStyle = '#111'; c.textAlign = 'center'; c.fillText('XX26AB1234', px + pw / 2, py + 10); c.textAlign = 'left';
+            c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.strokeRect(px - 4, py - 4, pw + 8, 21);
+          }
+        } else if (i === 1) {
+          // PTZ: the view zooms in on the car and the frame follows it
+          var z = on ? 1 + Math.max(0, Math.min(1, (k * 3.4 - 1.3) / .8)) * .9 : 1;
+          c.fillStyle = 'rgba(' + D + ',.95)'; c.fillRect(x, y, gw, gh);
+          var cx0 = x + gw / 2, cy0 = y + gh * .58;
+          c.strokeStyle = 'rgba(255,255,255,.2)'; c.lineWidth = 1; c.beginPath();
+          c.moveTo(cx0 - gw * .12 * z, y); c.lineTo(cx0 - gw * .6 * z, y + gh); c.moveTo(cx0 + gw * .12 * z, y); c.lineTo(cx0 + gw * .6 * z, y + gh); c.stroke();
+          if (on) {
+            var vx = cx0 + Math.sin(t * 1.3) * 6, vw = 22 * z, vh = 14 * z;
+            car(c, vx - vw / 2, cy0 - vh / 2, vw, vh, 'rgba(255,255,255,.95)');
+            var fw = vw + 16, fh = vh + 14, fx = vx - fw / 2, fy = cy0 - fh / 2, L = 7;
+            c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.beginPath();
+            [[fx, fy, 1, 1], [fx + fw, fy, -1, 1], [fx, fy + fh, 1, -1], [fx + fw, fy + fh, -1, -1]].forEach(function (q) { c.moveTo(q[0] + q[2] * L, q[1]); c.lineTo(q[0], q[1]); c.lineTo(q[0], q[1] + q[3] * L); });
+            c.stroke();
+          }
+          c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 1; c.beginPath(); c.moveTo(cx0 - 5, y + gh * .2); c.lineTo(cx0 + 5, y + gh * .2); c.moveTo(cx0, y + gh * .2 - 5); c.lineTo(cx0, y + gh * .2 + 5); c.stroke();
+          font(c, 11); c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('ZOOM ' + (z * 4).toFixed(0) + '×', x + 6, y + gh - 8);
+        } else {
+          // junction overview: a crossroads from high up, the same car picked out of the traffic
+          c.fillStyle = 'rgba(' + D + ',.95)'; c.fillRect(x, y, gw, gh);
+          c.fillStyle = 'rgba(255,255,255,.08)'; c.fillRect(x, y + gh * .4, gw, gh * .26); c.fillRect(x + gw * .4, y, gw * .22, gh);
+          for (var j = 0; j < 5; j++) {
+            var hz = j % 2 === 0, q = ((t * .12 + j * .23) % 1);
+            var ox = hz ? x + q * gw : x + gw * (.44 + (j % 3) * .05), oy = hz ? y + gh * (.45 + (j % 4) * .05) : y + q * gh;
+            car(c, ox - 5, oy - 3, hz ? 10 : 6, hz ? 6 : 10, 'rgba(255,255,255,.45)');
+          }
+          if (on) {
+            var tq = Math.max(0, Math.min(1, (k * 3.4 - 2.3) / 1.1)), tx = x + gw * (.1 + .75 * tq), ty = y + gh * .5;
+            car(c, tx - 6, ty - 4, 12, 8, 'rgba(255,255,255,.95)');
+            c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.strokeRect(tx - 10, ty - 8, 20, 16);
+          }
+        }
+        c.restore();
+        rr(c, x, y, gw, gh, 6); c.strokeStyle = live ? 'rgba(' + S + ',1)' : 'rgba(255,255,255,0)'; c.lineWidth = 2; c.stroke();
+        font(c, 11, 600); c.fillStyle = 'rgba(255,255,255,.85)'; c.fillText(KIND[i], x + 6, y + 15);
+        font(c, 11); c.fillStyle = 'rgba(255,255,255,.6)'; c.textAlign = 'right'; c.fillText(ID[i], x + gw - 6, y + gh - 8, gw); c.textAlign = 'left';
+        if (on) { font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText(TS[i], x + 2, y + gh + 15); }
       }
       var m = Math.min(3, Math.floor(k * 3.4 - .3) + 1);
-      font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('XX 26 AB 1234 · white hatchback', 14, H * .55 + 38);
-      c.fillStyle = 'rgba(' + B + ',1)'; c.fillText(Math.max(0, m) + ' of 3 cameras · match 0.94 · sample', 14, H * .55 + 58);
+      font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('XX 26 AB 1234 · white hatchback', 14, H * .55 + 52);
+      c.fillStyle = 'rgba(' + B + ',1)'; c.fillText(Math.max(0, m) + ' of 3 cameras · match 0.94 · sample', 14, H * .55 + 72);
     },
+    // a camera over a gate: each person is boxed and tracked; crossing the counting line adds to IN (walking in, down
+    // the frame) or OUT (walking up). Counts, the hourly bars and the camera are dummies.
     people: function (c, W, H, t) {
-      var line = W * .5, inN = 0, outN = 0;
-      c.fillStyle = 'rgba(' + B + ',.06)'; c.fillRect(0, H * .2, W, H * .6);
-      for (var i = 0; i < 14; i++) {
-        var dir = i % 3 ? 1 : -1, sp = .08 + (i % 4) * .015, p = (t * sp + i * .13) % 1.1 - .05;
-        var x = (dir > 0 ? p : 1 - p) * W, y = H * .26 + ((i * 37) % 100) / 100 * H * .48;
-        if (dir > 0 && x > line) inN++; if (dir < 0 && x < line) outN++;
-        c.beginPath(); c.arc(x, y, 4.5, 0, 7); c.fillStyle = (dir > 0 ? (x > line ? 'rgba(' + B + ',1)' : 'rgba(' + S + ',.6)') : (x < line ? 'rgba(' + D + ',1)' : 'rgba(' + S + ',.6)')); c.fill();
+      var fx = 12, fy = 12, fw = W * .62, fh = H - 40, lineY = fy + fh * .55, P = 7, inN = 0, outN = 0;
+      c.save(); rr(c, fx, fy, fw, fh, 6); c.clip();
+      c.fillStyle = 'rgba(' + D + ',.95)'; c.fillRect(fx, fy, fw, fh);
+      // floor in perspective, gate posts at the far end
+      var top = fy + fh * .14, nl = fx + fw * .32, nr = fx + fw * .68;
+      c.fillStyle = 'rgba(255,255,255,.06)'; c.beginPath(); c.moveTo(nl, top); c.lineTo(nr, top); c.lineTo(fx + fw, fy + fh); c.lineTo(fx, fy + fh); c.closePath(); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.22)'; c.fillRect(nl - 6, fy, 6, top - fy + 4); c.fillRect(nr, fy, 6, top - fy + 4); c.fillRect(nl - 6, fy, nr - nl + 12, 5);
+      function across(yy) { var u = (yy - top) / (fy + fh - top); return [nl + (fx - nl) * u, nr + (fx + fw - nr) * u]; }
+      var Lx = across(lineY);
+      c.setLineDash([7, 5]); c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(Lx[0], lineY); c.lineTo(Lx[1], lineY); c.stroke(); c.setLineDash([]);
+      for (var i = 0; i < P; i++) {
+        var into = i % 3 !== 2, per = 5 + (i % 4) * .9, ph = (t / per + i * .37), cyc = Math.floor(ph), q = ph - cyc;
+        var yn = into ? q : 1 - q, py = top + 8 + yn * (fy + fh - top + 10), lane = ((i * 0.29) % 1) * .7 + .15;
+        var ac = across(Math.min(py, fy + fh)), px = ac[0] + (ac[1] - ac[0]) * lane, sc = 9 + yn * 15;
+        var crossed = cyc + (q >= .55 ? 1 : 0); if (into) inN += crossed; else outN += crossed;
+        if (py < top || py > fy + fh + 12) continue;
+        var just = Math.abs(py - lineY) < 14;
+        c.beginPath(); c.arc(px, py - sc * 1.55, sc * .28, 0, 7); c.fillStyle = 'rgba(255,255,255,.9)'; c.fill();
+        rr(c, px - sc * .32, py - sc * 1.25, sc * .64, sc * 1.25, sc * .2); c.fill();
+        c.strokeStyle = just ? 'rgba(' + S + ',1)' : 'rgba(255,255,255,.35)'; c.lineWidth = just ? 2 : 1; c.strokeRect(px - sc * .55, py - sc * 1.95, sc * 1.1, sc * 2);
+        c.font = '500 10px "Geist Mono",monospace'; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('#' + (11 + i), px - sc * .55, py - sc * 1.95 - 3);
+        if (just) { font(c, 11, 600); c.fillStyle = 'rgba(' + S + ',1)'; c.fillText(into ? '+1 IN' : '+1 OUT', px + sc * .7, py - sc); }
       }
-      vline(c, line, H * .16, H * .84, 'rgba(' + D + ',.8)', 2);
-      var base = 300 + Math.floor(t * 2);
-      font(c, 12, 600); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('IN ' + (base + inN), 14, 22); c.fillText('OUT ' + (base - 40 + outN), W - 84, 22);
-      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Gate 2 walkway · by hour · sample', 14, H - 8);
+      c.restore();
+      font(c, 11, 600); c.fillStyle = 'rgba(255,255,255,.85)'; c.fillText('CAM-21', fx + 6, fy + fh - 8);
+      font(c, 11); c.fillStyle = 'rgba(' + S + ',1)'; c.textAlign = 'right'; c.fillText('IN ↓', fx + fw - 6, lineY - 6, fw); c.fillText('OUT ↑', fx + fw - 6, lineY + 16, fw); c.textAlign = 'left';
+      // counters and the hourly bars
+      var rx = fx + fw + 16, IN = 318 + inN, OUT = 277 + outN;
+      font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('IN', rx, fy + 12); c.fillText('OUT', rx, fy + 50); c.fillText('INSIDE', rx, fy + 88);
+      font(c, 20, 600); c.fillStyle = 'rgba(' + D + ',1)'; c.fillText(IN, rx, fy + 34); c.fillText(OUT, rx, fy + 72); c.fillStyle = 'rgba(' + B + ',1)'; c.fillText(IN - OUT, rx, fy + 110);
+      var HB = [12, 30, 46, 38, 24, 28, 41, 19], bw = Math.max(4, (W - rx - 16) / HB.length - 3), bb = fy + fh;
+      HB.forEach(function (v, j) { var h = v / 46 * (fh * .3); c.fillStyle = j === HB.length - 1 ? 'rgba(' + B + ',1)' : 'rgba(' + S + ',.5)'; c.fillRect(rx + j * (bw + 3), bb - h, bw, h); });
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Gate 2 entrance · counting line · by hour · sample', 14, H - 8);
     },
     zone: function (c, W, H, t) {
       var Z = [[.52, .22], [.9, .3], [.86, .78], [.5, .7]], inside = false;

@@ -153,7 +153,7 @@ p,li,dd{text-wrap:pretty}
 }
 
 /* footer: compact, no giant wordmark */
-.site-foot{border-top:1px solid var(--line);background:rgba(255,255,255,.9);padding-block:calc(32*var(--s)) calc(18*var(--s));margin-top:calc(24*var(--s))}
+.site-foot{border-top:1px solid var(--line);background:rgba(255,255,255,.9);padding-block:calc(24*var(--s)) calc(14*var(--s));margin-top:calc(24*var(--s))}
 /* brand on the left; the link groups stack on the right, each a blue heading with its links in one row */
 .foot-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,2.15fr);grid-template-rows:auto auto auto 1fr;column-gap:calc(36*var(--s));row-gap:calc(14*var(--s))}
 /* brand: the logo on the left; the blurb beside it, then the address and Contact side by side */
@@ -166,12 +166,14 @@ p,li,dd{text-wrap:pretty}
 .foot-grid a:hover{color:var(--blue)}
 .foot-brand img{height:calc(26*var(--s));width:auto}
 .foot-brand p{font-size:max(12px,calc(13*var(--s)));color:var(--muted);max-width:34em;margin:0;line-height:1.5}
-.foot-brand address{font-style:normal;font-size:max(12px,calc(13*var(--s)));color:var(--ink-2);margin-top:calc(12*var(--s));line-height:1.5;display:flex;flex-direction:column;align-items:flex-start;gap:calc(10*var(--s))}
+/* address on its own line; Contact and Social side by side under it */
+.foot-brand address{font-style:normal;font-size:max(12px,calc(13*var(--s)));color:var(--ink-2);margin-top:calc(10*var(--s));line-height:1.5;display:grid;grid-template-columns:auto auto;justify-content:start;align-items:start;gap:calc(10*var(--s)) calc(40*var(--s))}
+.foot-brand .foot-addr{grid-column:1/-1}
 .foot-brand address a{min-height:0}
 .foot-contact{display:block}
 .foot-contact .foot-h{display:block;margin-bottom:2px}
 .foot-contact a{color:var(--blue-mid)}
-.foot-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:calc(12*var(--s));margin-top:calc(20*var(--s));padding-top:calc(14*var(--s));border-top:1px solid var(--line);font:400 max(12px,calc(12*var(--s)))/1.5 var(--f-mono);color:var(--muted)}
+.foot-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:calc(12*var(--s));margin-top:calc(16*var(--s));padding-top:calc(12*var(--s));border-top:1px solid var(--line);font:400 max(12px,calc(12*var(--s)))/1.5 var(--f-mono);color:var(--muted)}
 .foot-base .copy{user-select:none}
 @media (pointer:coarse){.foot-grid a{min-height:40px}}
 @media (max-width:768px){.foot-grid{grid-template-columns:minmax(0,1fr)}.foot-brand{grid-row:auto;grid-template-columns:minmax(0,1fr)}.foot-brand>img{grid-row:auto;margin-bottom:calc(8*var(--s))}.foot-grid>div:not(.foot-brand){grid-template-columns:minmax(0,1fr);gap:2px}}
@@ -523,15 +525,12 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .dm-f input,.dm-f select,.dm-f textarea{border-color:rgba(14,59,102,.16);box-shadow:inset 0 1px 2px rgba(10,26,43,.04)}
 .dm-f input:focus,.dm-f select:focus,.dm-f textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(38,115,181,.14)}
 /* footer social row */
-.foot-social{grid-column:2;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:calc(14*var(--s))}
-.foot-grid .foot-social a{width:36px;height:36px;min-height:36px;justify-content:center;border:1px solid var(--line);border-radius:10px;color:var(--ink-2);background:#fff;transition-property:color,border-color,background-color;transition-duration:.15s}
+.foot-social{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.foot-grid .foot-social a{width:30px;height:30px;min-height:30px;justify-content:center;border:1px solid var(--line);border-radius:10px;color:var(--ink-2);background:#fff;transition-property:color,border-color,background-color;transition-duration:.15s}
 .foot-grid .foot-social a:hover{color:var(--blue);border-color:rgba(37,99,235,.35);background:rgba(37,99,235,.05)}
-.foot-social svg{width:16px;height:16px;fill:currentColor}
+.foot-social svg{width:14px;height:14px;fill:currentColor}
 @media (pointer:coarse){.foot-grid .foot-social a{width:42px;height:42px;min-height:42px}}
-@media (max-width:768px){.foot-social{grid-column:auto}}
 /* "address copied" note after an email link is clicked */
-.mail-note{position:fixed;left:50%;bottom:24px;z-index:120;transform:translate(-50%,12px);padding:10px 16px;border-radius:10px;background:var(--ink);color:#fff;font:500 14px/1.3 var(--f-body);box-shadow:0 12px 32px -12px rgba(10,26,43,.5);opacity:0;pointer-events:none;transition-property:opacity,transform;transition-duration:.2s}
-.mail-note.on{opacity:1;transform:translate(-50%,0)}
 
 /* domain list in the demo form: themed dropdown over the native select */
 .dm-native{display:none}

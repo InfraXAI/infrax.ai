@@ -1,4 +1,4 @@
-<!--META title="InfraX AI | The Agentic OS for Infrastructure" desc="The agentic OS for infrastructure. AI agents run the routine work across every camera, asset and site; your people approve what matters. On your own servers or hosted." page="home" libs="gsap,three"-->
+<!--META title="InfraX AI" desc="The agentic OS for infrastructure. AI agents run the routine work across every camera, asset and site; your people approve what matters. On your own servers or hosted." page="home" libs="gsap,three"-->
 <style>
 /* Home: particle wave hero (domains), product grid (real photos), product exchange, digital twin (GIS map that dives into a 3D street twin),
    domains, live corridor wall, company, demo. Motion: fast reveals, pulses on connectors, animated line icons. */
@@ -372,42 +372,6 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 @media (max-width:768px),(pointer:coarse){.ov-box,.ov-scan,.ov-pin::after,.ov-ring,.ov-cyc,.ov-rec::before,.hm-ag-dot::before,.hm-mcp-line i{animation:none}.ov-box{opacity:1}}
 
 /* responsive */
-/* the OS in four layers as an exploded stack of tilted plates: edge (partner hardware) at the base, agents on top; a pulse travels up the spine */
-.hm-os{margin:var(--gap-g) 0 0;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:calc(40*var(--s));align-items:center}
-.hm-os-stage{position:relative;height:460px;perspective:1600px;cursor:pointer}
-.hm-os-iso{position:absolute;left:50%;top:68%;width:300px;height:300px;margin:-150px 0 0 -150px;transform-style:preserve-3d;transform:rotateX(58deg) rotateZ(-40deg)}
-.hm-os-pl{position:absolute;inset:0;border-radius:22px;transform-style:preserve-3d;display:grid;place-items:center;transition:transform .6s var(--ease-out),box-shadow .6s var(--ease-out)}
-.hm-os-pl::before{content:"";position:absolute;inset:14px;border-radius:14px;background-image:radial-gradient(currentColor 1px,transparent 1.5px);background-size:18px 18px;opacity:.18;color:var(--blue-deep)}
-.hm-os-pl b{position:relative;font:700 26px/1 var(--f-display);letter-spacing:-.02em;transform:rotateZ(40deg)}
-.hm-os-pl.p4{transform:translateZ(0);background:rgba(255,255,255,.75);border:2px dashed var(--line-2)}
-.hm-os-pl.p4 b{color:var(--muted)}
-.hm-os-pl.p3{transform:translateZ(70px);background:linear-gradient(135deg,var(--wash),#fff);border:1px solid var(--line-2);box-shadow:0 30px 50px -30px rgba(14,59,102,.35)}
-.hm-os-pl.p3 b{color:var(--blue-deep)}
-.hm-os-pl.p2{transform:translateZ(140px);background:linear-gradient(135deg,var(--blue-soft),var(--blue));box-shadow:0 30px 50px -28px rgba(14,59,102,.5)}
-.hm-os-pl.p1{transform:translateZ(210px);background:linear-gradient(135deg,var(--blue),var(--blue-deep));box-shadow:0 30px 60px -26px rgba(14,59,102,.65)}
-.hm-os-pl.p1 b,.hm-os-pl.p2 b{color:#fff}
-.hm-os-pl.p1::before,.hm-os-pl.p2::before{color:#fff;opacity:.22}
-.hm-os-spine{position:absolute;left:50%;top:50%;width:3px;height:210px;margin-left:-1.5px;transform-origin:0 0;transform:rotateX(90deg);background:linear-gradient(rgba(38,115,181,.15),var(--blue))}
-.hm-os-spine i{position:absolute;left:-3.5px;width:10px;height:10px;border-radius:50%;background:var(--blue-soft);box-shadow:0 0 12px var(--blue-soft);animation:hmOsUp 2.4s linear infinite}
-@keyframes hmOsUp{from{top:0}to{top:100%}}
-.hm-os-stage:hover .p1,.hm-os-stage.lift .p1{transform:translateZ(250px)}
-.hm-os-stage:hover .p2,.hm-os-stage.lift .p2{transform:translateZ(165px)}
-.hm-os-stage:hover .p3,.hm-os-stage.lift .p3{transform:translateZ(80px)}
-.hm-os-pl.hi{box-shadow:0 0 0 3px var(--blue-soft),0 30px 60px -26px rgba(14,59,102,.65)}
-.hm-os-lg{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.hm-os-lg a{display:grid;grid-template-columns:14px minmax(0,1fr);gap:14px;padding:14px 16px;border-radius:14px;border:1px solid transparent;color:var(--ink);text-decoration:none;transition:border-color var(--dur-3),background var(--dur-3)}
-.hm-os-lg a:hover,.hm-os-lg a:focus-visible{border-color:var(--line);background:#fff}
-.hm-os-lg a:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-.hm-os-sw{width:14px;height:14px;border-radius:4px;margin-top:6px}
-.hm-os-lg h3{margin:0;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;font:650 var(--fs-h3)/1.25 var(--f-display);letter-spacing:-.01em}
-.hm-os-lg h3 small{font:500 max(12px,calc(13*var(--s)))/1 var(--f-body);color:var(--muted)}
-.hm-os-lg p{margin:4px 0 8px;font-size:var(--fs-card,16px);line-height:1.5;color:var(--ink-2)}
-.hm-os-c{display:flex;flex-wrap:wrap;gap:6px}
-.hm-os-c b{padding:5px 10px;border-radius:999px;font:600 max(12px,calc(12.5*var(--s)))/1.2 var(--f-body);white-space:nowrap;background:#fff;color:var(--blue-deep);border:1px solid var(--line)}
-.hm-os-c b.o{border-style:dashed}
-@media (max-width:900px){.hm-os{grid-template-columns:minmax(0,1fr)}.hm-os-stage{height:400px}.hm-os-iso{top:72%;transform:rotateX(58deg) rotateZ(-40deg) scale(.82)}}
-@media (max-width:520px){.hm-os-stage{height:330px}.hm-os-iso{top:74%;transform:rotateX(58deg) rotateZ(-40deg) scale(.66)}}
-@media (prefers-reduced-motion:reduce){.hm-os-spine i{animation:none}.hm-os-pl{transition:none}}
 /* AI agents: four cards, each with a short example exchange that types in when the section is on screen */
 .hm-ag{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g)}
 .hm-agc{display:flex;flex-direction:column;padding:calc(22*var(--s));border:1px solid var(--line);border-radius:var(--r-lg,calc(16*var(--s)));background:rgba(255,255,255,.9)}
@@ -440,10 +404,11 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hm-mcp-line{position:relative;flex:1 1 18px;min-width:18px;height:2px;background:var(--line-2);overflow:hidden}
 .hm-mcp-line i{position:absolute;inset:0;width:40%;background:var(--blue);animation:hmMcp 2.2s linear infinite}
 @keyframes hmMcp{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
-.hm-mcp-prods{flex:none;display:grid;gap:5px}
-.hm-mcp-prods b{padding:5px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font:600 max(12px,calc(12.5*var(--s)))/1.2 var(--f-body);color:var(--blue-deep,var(--blue));white-space:nowrap}
+.hm-mcp-node.hub small{display:block;margin-top:3px;font:500 max(11px,calc(11*var(--s)))/1 var(--f-mono);letter-spacing:.04em;opacity:.85}
+.hm-mcp-flow{flex-wrap:wrap;row-gap:8px}
+.hm-mcp-back{flex-basis:100%;text-align:right;font:500 max(12px,calc(12.5*var(--s)))/1.3 var(--f-body);color:var(--muted)}
 @media (max-width:1024px){.hm-mcp{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hm-mcp-t{grid-column:1/-1}}
-@media (max-width:640px){.hm-mcp{grid-template-columns:minmax(0,1fr);padding:calc(20*var(--s))}.hm-mcp-prods{display:flex;flex-wrap:wrap;flex:1 1 100%;min-width:0}.hm-mcp-flow{flex-wrap:wrap}.hm-mcp-line{flex-basis:24px}}
+@media (max-width:640px){.hm-mcp{grid-template-columns:minmax(0,1fr);padding:calc(20*var(--s))}.hm-mcp-flow{flex-direction:column;align-items:center;row-gap:0;gap:0}.hm-mcp-line{flex:none;width:2px;height:16px;min-width:0}.hm-mcp-line i{animation:none;width:100%}.hm-mcp-back{text-align:center;margin-top:8px}}
 @media (prefers-reduced-motion:reduce){.hm-mcp-line i{animation:none}}
 .hm-ag-note{margin:calc(14*var(--s)) 0 0;text-align:center;font:500 max(12px,calc(13*var(--s)))/1.4 var(--f-body);color:var(--muted)}
 @media (max-width:1024px){.hm-ag{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -598,36 +563,19 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       <div class="hm-mcp-t">
         <p class="hm-ag-k"><span class="hm-ag-dot" aria-hidden="true"></span>For your own agents</p>
         <h3>MCP</h3>
-        <p class="d">Outside AI agents connect through MCP (Model Context Protocol) and use every InfraX AI product as a tool, with the same permissions and audit trail as an operator.</p>
+        <p class="d">Connect your own AI agents to InfraX AI Ops through MCP (Model Context Protocol). Agents call Ops features as tools, using only the access you grant them.</p>
       </div>
       <div class="hm-mcp-flow" aria-hidden="true">
         <span class="hm-mcp-node">Your agent</span>
         <span class="hm-mcp-line"><i></i></span>
-        <span class="hm-mcp-node hub">MCP</span>
+        <span class="hm-mcp-node hub">MCP<small>scoped token</small></span>
         <span class="hm-mcp-line"><i></i></span>
-        <span class="hm-mcp-prods"><b>Cygnus</b><b>VIDES</b><b>AstraAlert</b><b>Central Plexus</b><b>Ops</b></span>
+        <span class="hm-mcp-node">InfraX AI Ops</span>
+        <span class="hm-mcp-back">↩ Result goes back to your agent</span>
       </div>
-      <div class="hm-ag-chat" aria-hidden="true"><span class="q">agent → search plate XX 00 AB 1234</span><span class="a">3 sightings returned from Cygnus</span></div>
+      <div class="hm-ag-chat" aria-hidden="true"><span class="q">agent → get today's ops digest</span><span class="a">Daily digest returned from Ops</span></div>
     </article>
     <p class="hm-ag-note">Example exchanges, illustrative data.</p>
-    <figure class="hm-os" aria-labelledby="hmOsCap">
-      <figcaption class="sr-only" id="hmOsCap">The InfraX AI OS in four layers: AI agents on top, the digital twin, the product modules, and the edge of partner hardware underneath.</figcaption>
-      <div class="hm-os-stage" id="hmOsStage" aria-hidden="true">
-        <div class="hm-os-iso">
-          <div class="hm-os-pl p4" data-l="4"><b>EDGE</b></div>
-          <div class="hm-os-pl p3" data-l="3"><b>MODULES</b></div>
-          <div class="hm-os-pl p2" data-l="2"><b>TWIN</b></div>
-          <div class="hm-os-pl p1" data-l="1"><b>AGENTS</b></div>
-          <div class="hm-os-spine"><i></i></div>
-        </div>
-      </div>
-      <ul class="hm-os-lg">
-        <li><a href="#hmAg" data-l="1"><span class="hm-os-sw" style="background:linear-gradient(135deg,var(--blue),var(--blue-deep))"></span><span><h3>Agents</h3><p>Do the routine work in every product; a person approves what matters.</p><span class="hm-os-c"><b>VAYU</b><b>KRITYA</b><b>NOAH</b><b>ASTRA</b><b class="o">Your agents via MCP</b></span></span></a></li>
-        <li><a href="#twin" data-l="2"><span class="hm-os-sw" style="background:linear-gradient(135deg,var(--blue-soft),var(--blue))"></span><span><h3>Twin</h3><p>A live 3D copy of your network, fed by every camera.</p><span class="hm-os-c"><b>GIS map</b><b>3D street twin</b><b>Live cameras</b></span></span></a></li>
-        <li><a href="#products" data-l="3"><span class="hm-os-sw" style="background:var(--wash);border:1px solid var(--line-2)"></span><span><h3>Modules</h3><p>The products, each with its own job, sharing one data layer.</p><span class="hm-os-c"><b>Cygnus</b><b>VIDES</b><b>AstraAlert</b><b>TollCloud</b><b>MLFF</b><b>Central Plexus</b><b>InfraX AI Ops</b></span></span></a></li>
-        <li><a href="deployment.html" data-l="4"><span class="hm-os-sw" style="border:2px dashed var(--line-2)"></span><span><h3>Edge <small>partner hardware</small></h3><p>Cameras and devices you already own, from our partners.</p><span class="hm-os-c"><b>Cameras</b><b>Gantries</b><b>Call boxes</b><b>Sensors</b><b>Servers</b></span></span></a></li>
-      </ul>
-    </figure>
   </div>
 </section>
 
@@ -2023,19 +1971,5 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     G.from('#hwFig', { y: 18, opacity: 0, duration: .45, ease: 'power3.out', clearProps: 'transform,opacity', scrollTrigger: { trigger: '#hwFig', start: 'top 85%' } });
   }
 
-})();
-</script>
-<script>
-/* OS stack: hovering a layer lights its plate and spreads the stack; tapping the stack spreads it on touch */
-(function () {
-  var st = document.getElementById('hmOsStage'); if (!st) return;
-  document.querySelectorAll('.hm-os-lg a').forEach(function (a) {
-    var pl = st.querySelector('.hm-os-pl[data-l="' + a.dataset.l + '"]');
-    function on() { pl.classList.add('hi'); st.classList.add('lift'); }
-    function off() { pl.classList.remove('hi'); st.classList.remove('lift'); }
-    a.addEventListener('mouseenter', on); a.addEventListener('mouseleave', off);
-    a.addEventListener('focus', on); a.addEventListener('blur', off);
-  });
-  st.addEventListener('click', function () { st.classList.toggle('lift'); });
 })();
 </script>

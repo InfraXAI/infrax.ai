@@ -1,4 +1,4 @@
-<!--META title="Products: ATMS, Video Management, Plate Recognition | InfraX AI" desc="Seven InfraX AI products for highways, cities, campuses, ports and warehouses: VIDES, AstraAlert, TollCloud, Cygnus, Central Plexus, Ops, Access." page="products" libs="gsap,three"-->
+<!--META title="Products" desc="Seven InfraX AI products for highways, cities, campuses, ports and warehouses: VIDES, AstraAlert, TollCloud, Cygnus, Central Plexus, Ops, Access." page="products" libs="gsap,three"-->
 <style>
 /* Products page: a short intro, one pinned 3D tunnel with 6 product stations (roadside → toll plaza →
    control room → field), then a compact product index. Prefix: cy- */
@@ -23,7 +23,7 @@
 @keyframes cyCue{to{transform:translateY(250%)}}
 
 /* tunnel */
-.cy-tunnel{position:relative;height:var(--cy-len,775svh)}
+.cy-tunnel{position:relative;height:var(--cy-len,1450svh)}
 .cy-stage{--in:max(var(--gut),env(safe-area-inset-left,0px),calc((100% - var(--col))/2 + var(--gut)));position:sticky;top:calc(var(--nav-h) + env(safe-area-inset-top,0px));height:calc(100svh - var(--nav-h) - env(safe-area-inset-top,0px));min-height:calc(520*var(--s));overflow:hidden;background:linear-gradient(180deg,rgba(242,247,252,.55),rgba(255,255,255,0) 40%)}
 .cy-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
 .cy-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -189,7 +189,7 @@
 .cy-item .cy-req{grid-column:1;justify-self:start;margin-top:calc(6*var(--s))}
 
 @media (max-width:768px){
-  .cy-tunnel{--cy-len:651svh}
+  .cy-tunnel{--cy-len:1200svh}
   .cy-hud-l{top:calc(14*var(--s))}
   .cy-bignum{font-size:36px}
   .cy-hud-name{font-size:calc(13*var(--s))}
@@ -315,6 +315,25 @@
 
 .cy-idx6{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
 .cy-idx6 .st,.cy-idx6 .cy-req{grid-column:1;justify-self:start;margin-top:calc(8*var(--s))}
+.cy-idx6 .cy-item{position:relative}
+.cy-go{grid-column:1;color:inherit;text-decoration:none}
+.cy-go::after{content:"";position:absolute;inset:0;border-radius:inherit}
+.cy-go:focus-visible{outline:none}
+.cy-item:has(.cy-go:focus-visible){outline:2px solid var(--blue);outline-offset:3px}
+.cy-item .cy-meta{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:calc(10*var(--s));margin-top:calc(12*var(--s));padding-top:calc(11*var(--s));border-top:1px solid var(--line)}
+/* status: a quiet pulsing dot and a mono label, no filled box */
+.cy-item .cy-live{display:inline-flex;align-items:center;gap:calc(7*var(--s));font:500 max(11px,calc(11.5*var(--s)))/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep)}
+.cy-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 0 rgba(38,115,181,.45);animation:cyLive 2s ease-out infinite}
+@keyframes cyLive{0%{box-shadow:0 0 0 0 rgba(38,115,181,.45)}70%,100%{box-shadow:0 0 0 7px rgba(38,115,181,0)}}
+/* demo video: a round play button with a soft halo, label and "coming soon" stacked */
+.cy-yt{position:relative;z-index:1;display:inline-flex;align-items:center;gap:calc(9*var(--s));text-decoration:none;color:var(--ink);border-radius:999px;padding:2px 4px 2px 2px}
+.cy-item .cy-play{flex:none;display:grid;place-items:center;width:calc(28*var(--s));height:calc(28*var(--s));min-width:26px;min-height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-deep));box-shadow:0 6px 14px -6px rgba(14,59,102,.6),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.cy-play svg{width:42%;height:42%;fill:#fff;margin-left:1px}
+.cy-item .cy-yt-t{display:flex;flex-direction:column;gap:3px;font:600 max(12px,calc(12.5*var(--s)))/1 var(--f-body);color:var(--ink)}
+.cy-yt-t small{font:500 max(10px,calc(10.5*var(--s)))/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.cy-yt:hover .cy-play{transform:scale(1.08);box-shadow:0 0 0 5px rgba(38,115,181,.14),0 8px 18px -6px rgba(14,59,102,.6)}
+.cy-yt:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.cy-live::before{animation:none}.cy-play{transition:none}}
 .cy-item.plain{cursor:default}
 .cy-item.plain:hover{transform:none;box-shadow:none;border-color:var(--line)}
 @media (max-width:1024px){.cy-idx6{grid-template-columns:1fr 1fr}}
@@ -595,9 +614,11 @@
     ['ops', 'InfraX AI Ops', 'Field operations, workforce and assets, run by AI agents.', '#ops'],
     ['access-parking', 'Access and parking', 'Entry and exit, plate reads.', '#d-campuses']
   ];
+  var PLAY = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4 2.6v6.8L9.6 6z"/></svg>';
   document.getElementById('cyIdx').innerHTML = IDX7.map(function (P) {
     var IX = { 'central-plexus': 'map', cygnus: 'wall', vides: 'gantry', astraalert: 'callbox', tollcloud: 'toll', mlff: 'gantry', 'access-parking': 'gate', ops: 'operator' };
-    return '<a class="cy-item" id="idx-' + P[0] + '" href="' + P[3] + '"><span class="ix" data-ix="' + IX[P[0]] + '" aria-hidden="true"></span><b>' + P[1] + '</b><span>' + P[2] + '</span><span class="st st-live">Live</span><i aria-hidden="true">→</i></a>';
+    // the whole card opens the product (stretched title link); the YouTube button sits above it and opens the channel
+    return '<div class="cy-item" id="idx-' + P[0] + '"><span class="ix" data-ix="' + IX[P[0]] + '" aria-hidden="true"></span><a class="cy-go" href="' + P[3] + '"><b>' + P[1] + '</b></a><span>' + P[2] + '</span><span class="cy-meta"><span class="cy-live">Live</span><a class="cy-yt" href="https://www.youtube.com/@infraxai" target="_blank" rel="noopener" aria-label="' + P[1] + ' demo video on YouTube, coming soon"><span class="cy-play">' + PLAY + '</span><span class="cy-yt-t">Demo video<small>Coming soon</small></span></a></span><i aria-hidden="true">→</i></div>';
   }).join('');
 
   /* rail (rebuilt per domain) */
@@ -1001,7 +1022,7 @@
   }
   function sectionLen() {
     if (DOM === 'highways') section.style.removeProperty('--cy-len');
-    else section.style.setProperty('--cy-len', (MOB ? N * 88 + 40 : N * 100 + 60) + 'svh');
+    else section.style.setProperty('--cy-len', (MOB ? N * 176 + 40 : N * 200 + 60) + 'svh');
   }
   function applyList() {
     N = LIST.length; cur = -1; rwCur = null;
@@ -1217,10 +1238,10 @@
   if (window.ResizeObserver) new ResizeObserver(function () { measure(); }).observe(document.body);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   bootDeep();
-  /* one wheel gesture = one station: while the stage is pinned, a wheel turn or trackpad swipe moves to the next or
-     previous station instead of scrolling a whole screen. Before the first and after the last station the page scrolls on.
+  /* two wheel gestures = one station: while the stage is pinned, a wheel turn or trackpad swipe moves half a station
+     forward or back, so each product takes two scrolls. Before the first and after the last station the page scrolls on.
      A gesture is a burst of wheel events with gaps under 220 ms (trackpad inertia included); touch keeps native scrolling. */
-  var wLast = 0, wBusy = 0;
+  var wLast = 0, wBusy = 0, hTo = 0, hHold = 0;
   stage.addEventListener('wheel', function (e) {
     var now = performance.now(), gap = now - wLast; wLast = now;
     if (staticMode || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX) || !e.deltaY) return;
@@ -1229,11 +1250,15 @@
     var fs = document.fullscreenElement === stage;
     var r = section.getBoundingClientRect(), st = stage.getBoundingClientRect();
     if (!fs && (r.top > st.top + 4 || r.bottom < st.bottom - 4)) return; // not pinned yet
-    var nx = cur + (e.deltaY > 0 ? 1 : -1);
-    if (nx < 0 || nx >= N) { if (fs) e.preventDefault(); return; } // in full screen the page never scrolls away
+    var H = (N - 1) * 2, h0 = now < hHold ? hTo : Math.round(progress() * H), hx = h0 + (e.deltaY > 0 ? 1 : -1);
+    if (hx < 0 || hx > H) { if (fs) e.preventDefault(); return; } // in full screen the page never scrolls away
     e.preventDefault(); e.stopPropagation();
     if (gap < 220 || now < wBusy) return;
-    wBusy = now + 650; goStation(nx);
+    wBusy = now + 650; hTo = hx; hHold = now + 1300;
+    if (hx % 2 === 0) { goStation(hx / 2); return; }
+    // the half step stops just short of halfway, so the current product stays on screen until the second scroll
+    var y0 = stationScrollY(0), y = y0 + (stationScrollY(N - 1) - y0) * (hx - .2) / H;
+    if (X.lenis) X.lenis.scrollTo(y, { duration: 1.1 }); else scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   }, { passive: false });
   /* full screen: the stage alone, scaled to the screen; Esc or the button leaves it */
   var fsBtn = document.getElementById('cyFs');

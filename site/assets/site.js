@@ -378,19 +378,13 @@
     gsap.from(parts, { yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05, scrollTrigger: el.closest('[data-reveal-now]') ? null : { trigger: el, start: 'top 85%' } });
   });
 
-  /* ---------- email links: open the visitor's own mail app, and copy the address too, so a click still
-     works on a machine with no mail app set up (the old Gmail-compose rewrite failed for anyone not signed in to Gmail) ---------- */
+  /* ---------- email links: open a Gmail compose window addressed to us in a new tab, instead of the
+     visitor's default mail app (Outlook on most Windows machines). Visitors not signed in to Gmail sign in first. ---------- */
   (function mailLinks() {
-    var note = null, noteT = 0;
-    document.addEventListener('click', function (e) {
-      var a = e.target.closest && e.target.closest('a[href^="mailto:"]'); if (!a) return;
+    document.querySelectorAll('a[href^="mailto:"]').forEach(function (a) {
       var to = decodeURIComponent(a.getAttribute('href').replace(/^mailto:/i, '').split('?')[0]);
-      if (!navigator.clipboard || !navigator.clipboard.writeText) return;
-      navigator.clipboard.writeText(to).then(function () {
-        if (!note) { note = document.createElement('div'); note.className = 'mail-note'; note.setAttribute('role', 'status'); document.body.appendChild(note); }
-        note.textContent = to + ' copied'; note.classList.add('on');
-        clearTimeout(noteT); noteT = setTimeout(function () { note.classList.remove('on'); }, 2400);
-      }, function () {});
+      a.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to);
+      a.target = '_blank'; a.rel = 'noopener';
     });
   })();
 
