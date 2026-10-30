@@ -3,70 +3,73 @@
 /* Home: particle wave hero (domains), product grid (real photos), product exchange, digital twin (GIS map that dives into a 3D street twin),
    domains, live corridor wall, company, demo. Motion: fast reveals, pulses on connectors, animated line icons. */
 #main .scene{padding-block:var(--sec)}
-/* intro: the nav waits off screen until the headline lands (or the visitor scrolls) */
-.site-nav{transition:transform .7s cubic-bezier(.16,.84,.3,1),opacity .5s ease,background-color .3s,box-shadow .3s}
-html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:none}
-/* hero: one centred column. The visual (India inside two revolving rings) takes the screen height left after the
-   headline and CTAs, so the whole hero fits one screen below the nav (capped at 1000px); on short screens it keeps a
-   340px floor and the page scrolls a little instead. Labels and ring text size from the visual (container units). */
-.hm-hero{--hx-pad:clamp(16px,2.2vw,40px);--hx-fs:var(--fs-display);
-  --hx-copy:calc(2 * 1.06 * var(--hx-fs) + var(--hx-subl,2) * 1.5 * var(--fs-body) + max(44px,calc(48*var(--s))) + clamp(78px,7svh,104px));
-  --hx-vh:clamp(340px,calc(min(100svh - var(--nav-h),1000px) - 2 * var(--hx-pad) - var(--hx-copy)),780px);
-  position:relative;overflow-x:clip;padding-block:var(--hx-pad)}
-.hx{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(min(100svh - var(--nav-h),1000px) - 2 * var(--hx-pad))}
-.hx-vis{position:relative;width:min(100%,calc(var(--hx-vh) * 1.5));aspect-ratio:1.5/1;flex:none;container-type:inline-size}
-.hx-copy{position:relative;z-index:2;margin-top:clamp(18px,2.6svh,36px);display:flex;flex-direction:column;align-items:center}
-.hm-hero{--hx-subl:3}
-.hm-h1{font-size:var(--hx-fs);font-weight:800;line-height:1.06;letter-spacing:-.04em;max-width:17em;text-wrap:balance}
-/* two-line headline: dark first line, brand-blue gradient second line */
+/* hero: headline, sub-line and CTAs on top; under them a dotted Earth rises like a horizon and turns slowly, light
+   paths running between continents (abstract: no site is claimed). One "Being at work" card floats over the globe:
+   an event, the Being's proposal, and an Approve button the visitor can press. It shows how every Being works (it
+   proposes, a person approves) and offers the demo after the first approval. Canvas 2D only, drawn while on screen. */
+.hm-hero{position:relative;overflow-x:clip;overflow-y:visible;padding-top:clamp(24px,5svh,64px)}
+.hx2-in{display:flex;flex-direction:column;align-items:center;text-align:center}
+.hx-copy{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center}
+.hm-h1{font-size:var(--fs-display);font-weight:800;line-height:1.04;letter-spacing:-.04em;max-width:17em;text-wrap:balance;margin:0}
 .hx-l1,.hx-l2{display:block}
 .hx-l2{background:linear-gradient(90deg,var(--blue) 0%,var(--blue-soft) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
-.hx-sub{margin:clamp(12px,1.6svh,22px) 0 0;max-width:min(100%,44em);font-size:var(--fs-lead);line-height:1.6;color:var(--muted);text-wrap:balance}
-.hx-copy .btn-row{justify-content:center;margin-top:clamp(18px,2.4svh,32px)}
-.hx-copy>*{transition:opacity .8s ease,transform 1s cubic-bezier(.16,.84,.3,1)}
-.hx-copy .hx-sub{transition-delay:.09s}
-.hx-copy .btn-row{transition-delay:.18s}
-.hm-hero.hx-intro .hx-copy>*{opacity:0;transform:translateY(22px)}
-.hm-hero.hx-intro.hx-done .hx-copy>*{opacity:1;transform:none}
-/* fail-safe: if the hero script never runs, the headline still appears */
-.hm-hero.hx-intro .hx-copy>*{animation:hxSafeIn .6s 3s forwards}
-.hm-hero.hx-intro.hx-done .hx-copy>*{animation:none}
-@keyframes hxSafeIn{from{opacity:0}to{opacity:1;transform:none}}
-/* intro particles: one 2D canvas over the whole hero; brand-blue particles form the logo, then zoom out into the globe */
-.hx-pt{position:absolute;left:0;top:0;width:100%;height:100%;z-index:5;display:none;pointer-events:none}
-.hx-intro .hx-pt{display:block}
-.hx-rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:1;pointer-events:none;opacity:0;transition:opacity 1s ease}
-.hx-rings.on{opacity:1}
-/* the ring words: drawn on a canvas (moving SVG text-path re-laid out and repainted the whole hero on every step) */
-.hx-rc{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1s ease}
-.hx-rc.on{opacity:1}
-.hx-rings text{font:500 clamp(10px,1.45cqi,13px)/1 var(--f-mono);letter-spacing:.3em;text-transform:uppercase;fill:var(--blue)}
-/* a small visual (zoomed or short desktop windows) keeps the rings but drops their words, so they never run through the labels */
-@media (min-width:480.02px){@container (max-width:520px){.hx-rings text{display:none}}}
-.hx-map,.hx-lbs{position:absolute;inset:0}
-.hx-map{z-index:0}
-.hx-map canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hx-lbs{pointer-events:none;z-index:2}
-.hx-lb,.hx-ev{position:absolute;left:0;top:0;display:flex;align-items:center;white-space:nowrap;font:500 clamp(12px,1.6cqi,14px)/1 var(--f-mono);border-radius:.5em;opacity:0;transition:opacity .4s ease,color .2s,border-color .2s;pointer-events:none;will-change:transform}
-.hx-lb{height:2.05em;padding:0 .7em;background:rgba(255,255,255,.92);border:1px solid var(--line);color:var(--ink-2);box-shadow:0 calc(4*var(--s)) calc(12*var(--s)) calc(-6*var(--s)) rgba(14,59,102,.25)}
-.hx-lb.cc{background:var(--blue-deep);border-color:var(--blue-deep);color:#fff;height:2.35em;padding:0 .85em}
-.hx-ev{gap:.6em;height:2.2em;padding:0 .75em;background:#fff;border:1px solid rgba(229,72,77,.55);color:#B42A30;box-shadow:0 calc(8*var(--s)) calc(18*var(--s)) calc(-8*var(--s)) rgba(14,59,102,.35);z-index:3}
-.hx-ev i{flex:none;width:.58em;height:.58em;border-radius:50%;background:#E5484D}
-.hx-lb.on,.hx-ev.on{opacity:1}
-.hx-ev.ack{color:var(--ok);border-color:rgba(31,138,91,.45)}
-.hx-ev.ack i{background:var(--ok)}
-
-@media (max-width:768px){
-  .hm-hero{--hx-fs:var(--fs-display)}
-  .hx{min-height:0}
-  .hx-vis{aspect-ratio:1/1}
+.hx-sub{margin:clamp(14px,2svh,24px) 0 0;max-width:min(100%,44em);font-size:var(--fs-lead);line-height:1.6;color:var(--muted);text-wrap:balance}
+.hx-copy .btn-row{justify-content:center;margin-top:clamp(20px,2.8svh,34px)}
+.hx2-stage{position:relative;width:100%;height:clamp(500px,64svh,620px);margin-top:clamp(0px,1svh,12px)}
+.hx2-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* the card */
+.hx2-card{--tx:0px;position:absolute;z-index:2;right:max(24px,calc(50% - 640px));top:clamp(56px,14%,120px);transform:translateX(var(--tx));width:min(calc(100% - 32px),440px);text-align:left;
+  background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:18px;
+  box-shadow:0 28px 70px -28px rgba(14,59,102,.42),0 2px 6px rgba(14,59,102,.06);padding:16px 18px 14px}
+.hc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.hc-who{display:flex;align-items:center;gap:8px;font:500 max(12px,calc(13*var(--s)))/1.2 var(--f-body);color:var(--muted);min-width:0}
+.hc-who b{font:700 max(12px,calc(12.5*var(--s)))/1 var(--f-mono);letter-spacing:.08em;color:var(--blue-deep)}
+.hc-dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(38,115,181,.15);flex:none;animation:hcBreath 2.4s ease-in-out infinite}
+@keyframes hcBreath{50%{box-shadow:0 0 0 7px rgba(38,115,181,.06)}}
+.hc-tag{font:500 max(11px,calc(11.5*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:var(--mist);border:1px solid var(--wash);border-radius:999px;padding:5px 9px;white-space:nowrap}
+.hc-ev{display:grid;gap:3px;padding:10px 12px;border-radius:12px;background:#FFF5F5;border:1px solid #F8D7D8;transition:background .4s,border-color .4s}
+.hc-ev.ok{background:#F1F8F3;border-color:#CFE8D6}
+.hc-ev.hold{background:#FFF8EC;border-color:#F3DFB8}
+.hc-where{font:500 max(11px,calc(11.5*var(--s)))/1.3 var(--f-mono);color:#B4373B;letter-spacing:.02em}
+.hc-ev.ok .hc-where{color:#2F7A45}.hc-ev.hold .hc-where{color:#9A6A12}
+.hc-what{font:650 max(15px,calc(16*var(--s)))/1.35 var(--f-display);color:var(--ink);letter-spacing:-.01em}
+.hc-plan{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:7px}
+.hc-plan li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:9px;align-items:start;font-size:max(14px,calc(14.5*var(--s)));line-height:1.45;color:var(--ink-2);
+  opacity:0;transform:translateY(6px);transition:opacity .45s ease,transform .45s cubic-bezier(.16,.84,.3,1)}
+.hc-plan li.on{opacity:1;transform:none}
+.hc-plan li i{width:18px;height:18px;margin-top:1px;border-radius:50%;border:1.5px solid var(--line-2);display:grid;place-items:center;transition:background .3s,border-color .3s}
+.hc-plan li.done i{background:#2F9E55;border-color:#2F9E55}
+.hc-plan li.done i::after{content:"";width:8px;height:4px;border:solid #fff;border-width:0 0 2px 2px;transform:translateY(-1px) rotate(-45deg)}
+.hc-plan small{display:block;font:500 max(11px,calc(11.5*var(--s)))/1.3 var(--f-mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.hc-act{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap}
+.hc-ok{padding:10px 18px;min-height:42px}
+.hc-ok[disabled]{opacity:.45;cursor:default;box-shadow:none}
+.hc-ok.ask{animation:hcAsk 1.8s ease-in-out infinite}
+@keyframes hcAsk{0%,100%{box-shadow:0 0 0 0 rgba(38,115,181,.45)}50%{box-shadow:0 0 0 9px rgba(38,115,181,0)}}
+.hc-state{font-size:max(13px,calc(13.5*var(--s)));line-height:1.35;color:var(--muted);flex:1;min-width:10em}
+.hc-next{margin-left:auto;background:none;border:0;padding:6px 0;font:500 max(12px,calc(12.5*var(--s)))/1 var(--f-body);color:var(--blue);cursor:pointer}
+.hc-next:hover{text-decoration:underline}
+.hc-foot{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:max(13px,calc(13.5*var(--s)));line-height:1.45;color:var(--ink-2)}
+.hc-foot a{font-weight:600;color:var(--blue);white-space:nowrap}
+.hc-ill{position:absolute;right:14px;bottom:-22px;font:500 max(10px,calc(10.5*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+/* entrance */
+.hx-copy>*,.hx2-card{animation:hxIn .8s cubic-bezier(.16,.84,.3,1) both}
+.hx-copy .hx-sub{animation-delay:.08s}.hx-copy .btn-row{animation-delay:.16s}.hx2-card{animation-name:hxCardIn;animation-delay:.45s}
+@keyframes hxIn{from{opacity:0;transform:translateY(18px)}}
+@keyframes hxCardIn{from{opacity:0;transform:translate(var(--tx),20px)}}
+@media (max-width:900px){
   .hm-h1{max-width:12em}
+  /* phones and tablets: the globe on top, the card below it, overlapping its lower edge */
+  .hx2-stage{height:auto;padding:calc(var(--hx2-g,300px) - 70px) 16px 40px}
+  .hx2-stage canvas{bottom:auto;height:var(--hx2-g,300px)}
+  .hx2-card{position:relative;right:auto;top:auto;margin:0 auto;width:min(100%,460px);padding:14px 14px 12px}
+  .hc-ill{position:static;display:block;text-align:right;margin-top:8px}
 }
 @media (max-width:480px){
   .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,320px)}
   .hx-copy .btn{justify-content:center}
 }
-@media (prefers-reduced-motion:reduce){.hx-copy>*,.hx-rings,.hx-rc{transition:none!important}}
+@media (prefers-reduced-motion:reduce){.hx-copy>*,.hx2-card,.hc-dot,.hc-ok.ask{animation:none!important}.hc-plan li{transition:none}}
 
 /* section head (one pattern on every Home section): heading, then its one-line description directly under it */
 .hm-head{display:block;max-width:calc(760*var(--s));margin-bottom:var(--gap-c)}
@@ -540,20 +543,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 
 <!-- ============ HERO ============ -->
 <section class="hm-hero" aria-labelledby="hmTitle">
-  <script>/* the intro plays on the first visit in a tab and on a reload; coming back to Home (link, back button) shows the finished hero */
-  try{var nv=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0],seen=false;try{seen=sessionStorage.getItem('hx-seen')==='1';sessionStorage.setItem('hx-seen','1')}catch(e){}
-    window.INFRAX_HX_SKIP=seen&&!(nv&&nv.type==='reload')}catch(e){}
-  try{if(!window.INFRAX_HX_SKIP&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.currentScript.parentNode.classList.add('hx-intro');
-    var de=document.documentElement,show=function(){de.classList.remove('nav-wait');removeEventListener('scroll',onS)},onS=function(){if(scrollY>8)show()};
-    de.classList.add('nav-wait');addEventListener('scroll',onS,{passive:true});setTimeout(show,9000);window.INFRAX_NAV_IN=show}}catch(e){}</script>
-  <canvas class="hx-pt" id="hxPt" aria-hidden="true"></canvas>
-  <div class="wrap hx">
-    <div class="hx-vis" id="hxStage">
-      <div class="hx-map" role="img" aria-label="Animated map: a globe turns to India, whose dots settle into a map of live sites on a highway, a port, a campus, a city, a warehouse and a construction site, all linked to one command centre near Gurugram, inside two revolving rings"><canvas id="hxGl" aria-hidden="true"></canvas></div>
-      <svg class="hx-rings" id="hxRings" aria-hidden="true" focusable="false"></svg>
-      <canvas class="hx-rc" id="hxRc" aria-hidden="true"></canvas>
-      <div class="hx-lbs" id="hxLbs" aria-hidden="true"></div>
-    </div>
+  <div class="wrap hx2-in">
     <div class="hx-copy">
       <h1 class="h-hero hm-h1" id="hmTitle"><span class="hx-l1">Your infrastructure,</span> <span class="hx-l2">running itself.</span></h1>
       <p class="hx-sub">InfraX AI is the agentic operating system for smart infrastructure. One platform for highways, cities, and buildings — with AI Beings that monitor, analyze, and act autonomously.</p>
@@ -561,6 +551,17 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
         <a class="btn btn-primary" href="home.html#demo" data-magnetic>Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         <a class="btn btn-ghost" href="products.html">See the products <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
       </div>
+    </div>
+  </div>
+  <div class="hx2-stage" id="hx2Stage">
+    <canvas id="hx2Globe" aria-hidden="true"></canvas>
+    <div class="hx2-card" id="hx2Card" role="group" aria-label="Example: an InfraX AI Being at work (illustrative)">
+      <div class="hc-top"><span class="hc-who"><i class="hc-dot" aria-hidden="true"></i><b id="hcBeing">NOAH</b><span id="hcIn">in Central Plexus</span></span><span class="hc-tag" id="hcDom">Highway</span></div>
+      <div class="hc-ev" id="hcEv"><span class="hc-where" id="hcWhere">CAM-07 · km 42.6 · just now</span><span class="hc-what" id="hcWhat">Stopped vehicle on the shoulder</span></div>
+      <ol class="hc-plan" id="hcPlan"></ol>
+      <div class="hc-act"><button class="btn btn-primary hc-ok" id="hcOk" type="button" disabled>Approve</button><span class="hc-state" id="hcState" aria-live="polite">NOAH is looking at it…</span><button class="hc-next" id="hcNext" type="button">Next example</button></div>
+      <p class="hc-foot" id="hcFoot" hidden>Every InfraX AI Being works this way: it proposes, you decide. <a href="home.html#demo">See it on your site →</a></p>
+      <span class="hc-ill" aria-hidden="true">Illustrative example</span>
     </div>
   </div>
 </section>
@@ -857,557 +858,209 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       boxes: [[8.6, 5.8, 8.1, 24.3, 'Site camera · OK', '', 'b'], [89.6, 71.8, 10.4, 12, 'Mixer truck', '92%', 'r']] }
   ];
 
-  /* ================= HERO: logo -> globe -> India inside two rings -> headline =================
-     Intro (~6.5 s): brand-blue particles fly in from close to the viewer and form the logo (0-1.8 s), a shimmer crosses it,
-     then the particle wordmark zooms out into the distance onto a revolving dotted globe that grows there (2.2-3.4 s); the globe
-     eases its spin until India faces the camera (to 4.4 s) and zooms in (from 4.2 s), India's dots flatten
-     onto the map plane while the rest of the globe fades, and the map settles with a gentle tilt. Two tilted SVG rings draw
-     in around it, "INFRAX.AI" running along each path in opposite directions; then the headline and CTAs rise in.
-     Live loop: the six domain sites pulse, packets run along arcs to the command centre, and every 5 s one site flashes red
-     and is acknowledged. One three.js renderer (DPR <= 1.25), drawn only while the hero is on screen. Scrolling during the
-     intro jumps to its end state. Reduced motion: the final state, drawn once. No WebGL: a 2D canvas map with the rings. */
+  /* ================= HERO: a dotted Earth rising like a horizon + one "Being at work" card =================
+     Globe: land dots on a Fibonacci sphere (bit i of LAND = point i is land; world-atlas land-110m, Antarctica dropped),
+     orthographic, tilted so the planet is seen from a little above, turning west to east. Light paths hop between land
+     points on the visible face; they are abstract, not sites. The card runs one example at a time: an event, the
+     Being's proposal, an Approve button. The event lights a point on the globe (red), approval turns it green and sends
+     two paths out from it; with no answer in 9 s the example is held, because nothing moves without a person.
+     After the first approval the card offers the demo. Canvas 2D, DPR <= 2 (1.5 on phones), drawn only while the hero is
+     on screen and the tab is visible; phones draw every other land dot. Reduced motion: one still frame, no auto-advance. */
   (function () {
-    var hero = document.querySelector('.hm-hero'), stage = document.getElementById('hxStage'), cv = document.getElementById('hxGl'), lbs = document.getElementById('hxLbs');
-    var svg = document.getElementById('hxRings'), rc = document.getElementById('hxRc'), rcx = rc && rc.getContext('2d'), RCD = 1, GS = 2.6;
-    if (!hero || !stage || !cv || !lbs || !svg) return;
-    var skipIntro = !!window.INFRAX_HX_SKIP;
-    if (reduce || skipIntro) hero.classList.remove('hx-intro'); else hero.classList.add('hx-intro');
-    var TH = window.THREE, D2R = Math.PI / 180, TAU = Math.PI * 2;
-    // simplified outline of India (lon, lat), clockwise from the north
-    var IND = [[74.0, 37.0], [75.3, 37.1], [77.0, 35.9], [78.0, 35.5], [79.5, 35.6], [80.3, 35.2], [80.1, 34.4], [78.9, 33.4], [78.8, 32.6], [79.4, 32.0], [78.8, 31.2], [79.9, 30.9], [81.0, 30.2],
-      [80.1, 28.8], [81.5, 28.0], [83.3, 27.4], [84.6, 27.2], [85.8, 26.6], [87.0, 26.4], [88.1, 26.6], [88.0, 27.4], [88.8, 28.0], [88.9, 27.2], [89.8, 26.8], [91.6, 26.8], [92.1, 26.9],
-      [93.9, 27.6], [95.3, 28.2], [96.2, 29.4], [97.3, 28.3], [96.6, 27.4], [95.2, 26.6], [94.6, 25.6], [94.2, 24.0], [93.3, 23.9], [93.1, 22.5], [92.6, 21.9], [92.3, 23.5], [91.8, 23.6],
-      [91.3, 23.2], [91.2, 24.0], [92.2, 24.3], [92.2, 25.1], [90.0, 25.2], [89.8, 25.9], [88.5, 26.4], [88.1, 25.6], [88.5, 25.2], [88.0, 24.4], [88.7, 24.0], [88.9, 22.6], [89.0, 21.8],
-      [87.5, 21.6], [86.9, 21.0], [86.4, 20.0], [85.0, 19.3], [84.2, 18.3], [83.0, 17.6], [82.3, 16.6], [81.3, 15.9], [80.3, 15.4], [80.2, 13.5], [80.3, 13.0], [79.9, 11.8], [79.8, 10.3],
-      [79.3, 10.3], [78.9, 9.3], [78.2, 8.9], [77.5, 8.1], [76.6, 8.9], [76.2, 10.0], [75.8, 11.3], [75.2, 12.5], [74.7, 13.5], [74.3, 14.6], [73.8, 15.7], [73.3, 17.0], [72.9, 18.6],
-      [72.8, 19.6], [72.8, 20.8], [72.6, 21.4], [72.3, 22.3], [72.2, 21.6], [71.2, 20.8], [70.0, 21.0], [69.0, 22.3], [70.3, 22.9], [69.6, 22.8], [68.4, 23.5], [68.8, 24.3], [70.0, 24.2],
-      [71.1, 24.4], [70.6, 25.6], [70.1, 26.6], [69.5, 27.0], [70.6, 28.0], [71.9, 27.9], [73.0, 29.0], [73.4, 29.9], [74.5, 31.0], [74.6, 31.9], [75.4, 32.3], [74.6, 32.8], [74.0, 33.2],
-      [73.9, 34.0], [73.5, 34.6], [72.6, 35.5], [73.0, 36.5]];
-    // live sites by domain: name, lon, lat, preferred label side, event copy
-    var SITES = [['Highway', 73.6, 25.6, 'l', 'Stopped vehicle'], ['Port', 72.9, 19.0, 'l', 'Gate alarm'], ['Campus', 77.6, 13.0, 'r', 'Camera offline'],
-      ['City', 88.4, 22.6, 'r', 'Junction blocked'], ['Warehouse', 78.5, 17.4, 'r', 'Dock door open'], ['Construction', 81.0, 26.6, 'r', 'Camera tamper']];
-    var CCLL = [77.03, 28.46], COSF = Math.cos(22 * D2R), SC = 2.26, RF = SC / D2R;
-    // timeline (s): particles 0-3.4 (zoom-out from 2.2), globe from GS = 2.6, India faces the camera at 4.5; everything from the zoom on runs on te = t - OFF
-    // (zoom 1.7-3.2, rings from 2.9, sites from 3.5, headline at 3.9, intro ends 4.8, all in te)
-    var OFF = 2.6, EV_ORDER = [0, 3, 1, 4, 2, 5], EV_START = 6.6 + OFF, EV_EVERY = 5, COPY_AT = 3.9 + OFF, END = 4.8 + OFF, STILL = 6.2 + OFF, FOV = 26;
-    function cl(v, a, b) { return v < a ? a : v > b ? b : v; }
-    function sg(t, a, b) { return cl((t - a) / (b - a), 0, 1); }
-    function io3(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-    function io2(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-    function o3(t) { return 1 - Math.pow(1 - t, 3); }
-    // flat map in world units (x east, z south), centred on the outline's bounding box; 1 degree of latitude = SC units
-    var raw = IND.map(function (p) { return [(p[0] - 68) * COSF * SC, (37.1 - p[1]) * SC]; }), bx0 = 1e9, bx1 = -1e9, bz0 = 1e9, bz1 = -1e9;
-    raw.forEach(function (p) { bx0 = Math.min(bx0, p[0]); bx1 = Math.max(bx1, p[0]); bz0 = Math.min(bz0, p[1]); bz1 = Math.max(bz1, p[1]); });
-    var MX = (bx0 + bx1) / 2, MZ = (bz0 + bz1) / 2, poly = raw.map(function (p) { return [p[0] - MX, p[1] - MZ]; });
-    function F(lon, lat) { return [(lon - 68) * COSF * SC - MX, (37.1 - lat) * SC - MZ]; }
-    function LL(x, z) { return [68 + (x + MX) / (COSF * SC), 37.1 - (z + MZ) / SC]; }
-    function inside(x, y) {
-      var c = false;
-      for (var i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-        var a = poly[i], b = poly[j];
-        if (((a[1] > y) !== (b[1] > y)) && (x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0])) c = !c;
-      }
-      return c;
+    var hero = document.querySelector('.hm-hero'), stage = document.getElementById('hx2Stage'), cv = document.getElementById('hx2Globe');
+    if (!hero || !stage || !cv || !cv.getContext) return;
+    var ctx = cv.getContext('2d');
+    var LAND = 'AAAAAAAAAAAAAAAAAIAQABIAQkBIQAgJQSEhIIWMhJAEEBJCEkLICAkoAQkgJAQEhJATEjBChkDEARg6IQNgbgBMhJABMBAADsDQABkYIwdk5IAciLEDM2NADsTMgZkwM0Nm5ghMirkLM/NkpsXMk5k1M9vm8lvc25ttca8tvuXlt7nXd9/2Xtv86ytve+3v/v21t/33d/722tv//2tvf++v/O21t/e/19bu/lt532tv5//vvN29t/e/V97u+9v5+ytv5e+vvN23t/L2V97O21tZ+29v5e2vvJ2/t7J2397K21s5u39v5e2unJW/tzJ2/97K31k5OX9n5eS8rJS/szJz/k7Ky1l5KXdnZebcnJS7s7JzZk7KyBk5KXcnZeeMnJabE7JyZk7KzBk5OTcn5OfcnJaZE/Jy5k7Kzhk5PTMn5OfMnZ6ZE3Jybk7Izrk7PTMn5OfMnJqdE3N7Zk7Mz7k5PTdn5PbcnJ6fU3Nzbk7Ozbk5PTen5PbcnJyfc3N7bk7K7bk5PT+n5ubcnJybc3N6bk7Lzbk5PTen5uTcnJqbc3N6bk7Pybk5OTfn5vTcnJqbU3NyTk7Nzbk5PSen5uScnJ6TU3N6Tk7Nzbk5NSen5vTcnJqbU3N6Tk7N7bk5PSen5vScnJqbc3NqTk7N6bk5NSfn5vScnJqTc3Nqbk7N6bg5NSfn5tTcnJqTcTNqTk7NqLg5NSfj5tTcnJrRcXJqTs7Nqbk5NSPjZvScnJpRc3NqTsbMqDk5NSPjZPScnJlRc3JiRsbJ6Dk9NaPmZOScmpFRc3JiRsXIyDk9NaPmZMSMipGRc3JiRsXIiDk1N6fmZNSMipERc3piTsXJiDk1Jyfm5MScipETM2pCTszJiTk1Jybn9IScipETM2pGTszJqTkVIydm1ISciBETc2pGTM6pCTkVIyZm1ISYiJMTcypOTMyoCTkVIybm1JyYnJMTcipGTMyoKTkRIybm1IycnJETciJGTM2oCTk5I6fk1IyYmhETcnJGTM2oCRk9I6dkxIyYmhETMnpGTM2ICTE1Jydk9IyYmlETMnpGTsnoGTE1Iybk9IyYktETImpGTMjoGTE1oydk1IyYktETYmpGTMioGTEloyZk1IyYklETYmpGT8ioGTEloybk1IyaklETYkpGT8moOTEloybElIyaklFTYkpGTcmpKTUloybElJyeklFzYkpGTckpKTUlpybElJyaklNzYkpOTYkpOTUlp6bElJySklNTakpOSYkpOTUlp6TElJyCklNSSkpOSYkpOSUlp6aUlJyCElNySkpOSYkpOQUlp+aUlJySElNySkpGSSkpOQUlpuSUlJySUlNySkpGzSkpOQUlpqSUlJySUlJySkpMxSkpOQWlpqSUlIyCUlJySkpMySkpOQWlpOSUlIiSUlJySkpNwSkpOQWlpOSUlIiCUlJwCkpNQSkpESWlpOCUlJqCUlJwCkpJQSkpGSWlpOCUlJqCU1JgSkpJQSkpFSWlpMCUlJKCU1JwSkpJQSkpFSWlpMDUlJKCUlIoakpJgSkpNSWlpMCUlJIiUlIqakpJgSkpJQWkpNCQkJICUlIqaEhJgSkpJQWkptCQlJICU1JoKkhNgSEhJQWkpFCQkJICU1JKKkhNoSEhJQWkpFAQkJoqQ0JKCkhNoSApJRWGpFQQkJoKQ0JKCkhJoSAgNRWGhNQUkJpCQ1BqKghJoaAgNQWGhNQUkJJKQ0BqCghJqSAgNQWHgNQUEJJCQUBqCghJqSggJYWHgNQUEJJCQUBqCgoBqSkgJIWEgNQUEIJSQUBKCgsBqSEgNIWAgNQUEIJSQEBoCgkBqSkgFIWAgNAUFoJSQkAoCgkBqSkgFIWAgNAUEgJSQkAoCgkBqSkgBKWAgFAUFgJSUkAoCgkBoSgkBKWEgFAUEgJSUEAISgkBISgkBKSEgFAUEgJCQFAISgEBoSgkBKSggFAUEgJCQEgISAEBoSgsBKSgghAUEgJCUkgISAEFoSgkBISEghCUAgpCUFgISEFFISgkBISEoBCQAgpCUVgICAkFISAkFISEshCQkgJCUUkICAkFISAlFISAkhAQEgpCQUkoCAlFoSAlFIWgshCQEgpCQUkoCAEFISAkFYSCklAQEgpCQUkoCgFloSAlFYSAklAQAopCQEkoCAFloSAlFISAklAQAopCQEgoCAEloSAEFISAklAQAopCQUoqCAEloSAEFISAklAQAgpCQQgqCAAloSgEFISAklAQAEpCQQkqCAEloSgAFISCklQQAEpSUQkoCAEFoSAAFISiAlQQAEpSUQEoCAQFoSAAFISiAlQQAApSQQEoCEQFqCAAFISiAlAQAApCQQAoCEUFqCAAFKSCAlAQiApAQQAoCEUFqCAAFKCCAlAQiApAQQAoCEUFoCAQFaCCAFAUigpQQQAqAEUFoCAQFaCCAFAQigpAQSAqQAUFoCAUFaCiAFQAigpAQSAqQEUBoCgUFaCiQFQACgpAQSAqQAUBqAAUFYCCQFQAigpAQSgqQAWBqAAUFICCQFSECgpAASgqQAWFqAgUFICCUFSAigpBASgoAAWFqAgUFYACUFSACgpRASgoAgWAqAAVFYACUFSECgpRASgqAgWEqAAVFIAiUlCECghRESgoAkWkqAgVFIMCUlAECghBESgqBgWkoAgVFIMCUFQECghBESoqBgWkoAgVEIICUFAECghBASooBgXkoAgUEIICcFQMCshBASogBgWkqAgUEIICUFAMCshBESogBgWkoBgUEIICUEAMCkhBESogBgWkoBgUkIICUEAMCkhBESogBAWgoBgVkIIiUEAMCkhBESogBAWggBAVkIIiUEAMCkBBESggRUWgiBAUkKIiUEAICkBBISggBQWggBgUgIIiUEAICkARISggBQWggBgUgIICUEAKCkABISggBQWggBgUgIJCUEAKCkABISgABQWggBAUgAJCUAAKCkABISgABQWggBQUgAJCUAAKikABISgABQWgCBQUgAJCUAAKCkABISgABYSgCBQUgAJCUAQKCkARKSgABYSgCBQUgQJCUAAKCkARKCgABYSgABQUgCJQUAAKCEFRKCgCBYSgABQUgCJQUACKCEERKCgCRaSgABQRgKJQUAAKCEEBKCgCRaCgABQRgKNQUASKSEEBKCoCRaGgABQRgiJQUASKSkEBKCIARaGgCBSRgiJQVASKQkEBKCIARaCoCBSVgiJQRASKQkERKCIARaCICBSFgiJQRACKQkERKCoBRaDICBSFgiJQRACKQBERKAoBRaCICBSFgiJQRACKQBERKAoBRaCIABSBIiJQVACKQBERKAoFRKCIABSBIiJQFAKKQBERKAJFRKCoABSBIiJwFIqIQBERKAJFRKAoABWBIiJwBIqIQFERKgJFRKAoBBWBIiJQBIqIQFEAKgJFRKAoFBWBIiJUBIqIQFEAKgJFRKgIFBGBoiBUBIqIQFEIKgJFQKgIFBGBoiBUBIqAQBEoIgJFQKgIFBGBoiBUBIqAUBEoIgJFQagIFAGBIlBEBIqAUBEoAgJFQagIFAGBIlBEBIqAUBEoAgJFwIgIFAGhIlAEBIqAUBEoAgJF4IgIFAGhIlAEBIqAEBEoAkJFoAgIFAGhIlAEBIqAEREoAkJFoAgIFAEhIlAEBIrAEREoAkJFoAgIFAEjIlAEBIpAERAoAkJEoAgIFAEjIlAEhIpAERAoAkJEoAgIFAEiIFAEhIhAERAoAkZEoAgIFIEiIFAEhIhAERAoAkZAoAgIEYEiIFAEjIhAERAoAkRAoAgIEYEiIFAEjIBAERAgAkRAoAAIEYEiIFAEiIBAARAiAkVAoAAYAYECIEAEiIBAARACAgVAgAAQAYECIEQEioBAATACAgVAgAAQAAECIAQACoAAASAAAgRAgAAQAAECYAQECIAAACAQAgRAAAAQAAECQAAECIAAACAQAgRAAAAQAAECQAAECIAAACAAAgSAAAAQAAEAQAAECIAAACAAAgSAAAAQAAEAQCAECAABACAQAgCAAAgQAAAAQCAECAABACAAAgCAAAAQAAIAQCAAAAABACAAAACAQAAAAAIAQAAAAAABAAAAAACAQAAAAAIAQAAAAAABAAAABACAAAgAAAIBAAAEAACBAAAABAAAAAgAAAIBAAAIAAABAAAABAIAAAgAAAIAAAAIAAABEAAABAIAABAAAAIAAAAIBAAAEAAABAAAABAIAAIAAAAIAAAAAAAABAAAABAIAAAAAAAIAAAAIBAAAAAAABAAAAAAIAAIAAAAIBAAAAAAABAAAABAIAAAAAAAIAAAAAAAABAAAABAAAAAAAAAIAAAAIAAABAAAABAAAAAAAAAIAAAAIAAAAAAAABAAAAAAAAAYAAAAIAAAAAAAABAAAAAAAEAAAAAAIAAAAAAAAAAAAAAAAEAAAAAAIAAAAAAAAAAAAAIAAEAAAAAAIAAAAAAAgAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAIAAAAAAAgAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', N = 30000;
+    var mob = !!(window.matchMedia && matchMedia('(max-width:768px)').matches);
+    var fine = !!(window.matchMedia && matchMedia('(pointer:fine)').matches);
+    var GA = Math.PI * (3 - Math.sqrt(5)), TAU = Math.PI * 2, D2R = Math.PI / 180;
+    var bits = atob(LAND), land = [], ocean = [], i, la, lo;
+    for (i = 0; i < N; i++) {
+      if (!((bits.charCodeAt(i >> 3) >> (i & 7)) & 1)) continue;
+      if (mob && (i & 1)) continue;
+      la = Math.asin(1 - 2 * (i + .5) / N); lo = (i * GA) % TAU - Math.PI;
+      land.push(Math.cos(la), Math.sin(la), lo);
     }
-    var CCF = F(CCLL[0], CCLL[1]), CF = F(82, 22);
-    // hex-packed dot field, plus a thin chain through the Siliguri corridor so the Northeast stays attached
-    function dotField(gap) {
-      var d = [], x, z, r = 0;
-      for (z = bz0 - MZ; z < bz1 - MZ; z += gap, r++) for (x = bx0 - MX; x < bx1 - MX; x += gap) { var xx = x + (r % 2 ? gap / 2 : 0); if (inside(xx, z)) d.push([xx, z]); }
-      [[26.5, 26.42], [26.85, 26.8]].forEach(function (lt) {
-        var a = F(87.6, lt[0]), b = F(89.6, lt[1]), L = Math.hypot(b[0] - a[0], b[1] - a[1]);
-        for (var s = 0; s <= L; s += gap * .62) {
-          var cx = a[0] + (b[0] - a[0]) * s / L, cz = a[1] + (b[1] - a[1]) * s / L;
-          if (!d.some(function (p) { return Math.abs(p[0] - cx) < gap * .55 && Math.abs(p[1] - cz) < gap * .55; })) d.push([cx, cz]);
+    var NO = mob ? 700 : 1500;   // a faint shell of ocean dots so the sphere reads as a sphere
+    for (i = 0; i < NO; i++) { la = Math.asin(1 - 2 * (i + .5) / NO); lo = (i * GA) % TAU - Math.PI; ocean.push(Math.cos(la), Math.sin(la), lo); }
+    var W = 0, H = 0, DPR = 1, R = 0, CX = 0, CY = 0, TILT = 22 * D2R, LON0 = 20 * D2R, SPEED = 2.6 * D2R;
+    var par = { x: 0, y: 0, tx: 0, ty: 0 }, rot = LON0, tilt = TILT, ct = Math.cos(tilt), st = Math.sin(tilt);
+    var wide = true;
+    function size() {
+      wide = !(window.matchMedia && matchMedia('(max-width:900px)').matches);
+      var r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+      DPR = Math.min(window.devicePixelRatio || 1, mob ? 1.5 : 2);
+      cv.width = Math.max(1, Math.round(W * DPR)); cv.height = Math.max(1, Math.round(H * DPR));
+      // wide: a big globe left of centre, the card on its right flank; narrow: centred, the card below
+      if (wide) { R = Math.min(Math.max(W * .34, H * .98), 860); CX = Math.min(W * .42, W / 2 - 120); CY = H * .09 + R; }
+      else { R = Math.min(W * .58, 300); CX = W / 2; CY = H * .1 + R; }
+    }
+    // geographic (cos lat, sin lat, lon) -> screen [x, y, depth]; depth > 0 is the visible face
+    function proj(cl, sl, lon, out) {
+      var l = lon - rot, x = cl * Math.sin(l), y = sl, z = cl * Math.cos(l);
+      out[0] = CX + x * R; out[1] = CY - (y * ct - z * st) * R; out[2] = y * st + z * ct; return out;
+    }
+    var P = [0, 0, 0], Q = [0, 0, 0];
+    // light paths: great-circle arcs lifted off the surface, a bright head running along, the trail fading behind
+    var arcs = [], ev = null;
+    function pick(minZ, maxX) {   // a land point on the visible face, away from the rim
+      for (var k = 0; k < 40; k++) {
+        var j = (Math.random() * (land.length / 3) | 0) * 3; proj(land[j], land[j + 1], land[j + 2], P);
+        if (P[2] > minZ && Math.abs(P[0] - CX) < R * maxX && P[1] > H * .1 && P[1] < H * .92) return [land[j], land[j + 1], land[j + 2]];
+      }
+      return null;
+    }
+    function pickEv() {   // the example's point: well inside the face, and on wide screens left of the card
+      for (var k = 0; k < 60; k++) {
+        var j = (Math.random() * (land.length / 3) | 0) * 3; proj(land[j], land[j + 1], land[j + 2], P);
+        if (P[2] > .45 && P[1] > H * .16 && P[1] < H * .7 && (wide ? P[0] < CX + R * .25 && P[0] > CX - R * .7 : Math.abs(P[0] - CX) < R * .5)) return [land[j], land[j + 1], land[j + 2]];
+      }
+      return pick(.2, .7);
+    }
+    function vec(g) { return [g[0] * Math.cos(g[2]), g[1], g[0] * Math.sin(g[2])]; }
+    function addArc(a, b, col, life) {
+      if (!a || !b) return;
+      var A = vec(a), B = vec(b), d = Math.acos(Math.max(-1, Math.min(1, A[0] * B[0] + A[1] * B[1] + A[2] * B[2])));
+      if (d < .12) return;
+      arcs.push({ A: A, B: B, d: d, t0: now, life: life || 2.4, col: col || '38,115,181' });
+    }
+    function arcPt(a, f, out) {   // slerp + lift, then back to geographic for proj()
+      var s = Math.sin(a.d), w1 = Math.sin((1 - f) * a.d) / s, w2 = Math.sin(f * a.d) / s, h = 1 + (.05 + .16 * a.d / Math.PI) * Math.sin(Math.PI * f);
+      var x = (a.A[0] * w1 + a.B[0] * w2) * h, y = (a.A[1] * w1 + a.B[1] * w2) * h, z = (a.A[2] * w1 + a.B[2] * w2) * h;
+      var cl = Math.sqrt(x * x + z * z); return proj(cl, y, Math.atan2(z, x), out);
+    }
+    var now = 0, last = 0, nextArc = 0, running = false, onScreen = true, raf = 0, frameSkip = 0;
+    function draw() {
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.clearRect(0, 0, W, H);
+      // atmosphere: a soft halo hugging the limb
+      var g = ctx.createRadialGradient(CX, CY, R * .92, CX, CY, R * 1.12);
+      g.addColorStop(0, 'rgba(90,159,212,0)'); g.addColorStop(.45, 'rgba(90,159,212,.16)'); g.addColorStop(1, 'rgba(90,159,212,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(CX, CY, R * 1.12, 0, TAU); ctx.fill();
+      // the planet's body: an opaque, softly lit disc, so the page's background network does not show through the globe
+      var bd = ctx.createRadialGradient(CX - R * .3, CY - R * .55, R * .1, CX, CY, R);
+      bd.addColorStop(0, '#FFFFFF'); bd.addColorStop(.7, '#F6FAFE'); bd.addColorStop(1, '#E6F0F9');
+      ctx.fillStyle = bd; ctx.beginPath(); ctx.arc(CX, CY, R, 0, TAU); ctx.fill();
+      ctx.strokeStyle = 'rgba(38,115,181,.22)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = 'rgb(30,100,165)';
+      var k, z, s;
+      for (k = 0; k < ocean.length; k += 3) {
+        proj(ocean[k], ocean[k + 1], ocean[k + 2], P); z = P[2]; if (z <= .02 || P[1] > H) continue;
+        ctx.globalAlpha = .16 * z; ctx.fillRect(P[0] - .8, P[1] - .8, 1.6, 1.6);
+      }
+      var ds = mob ? 2.4 : 2.5;
+      for (k = 0; k < land.length; k += 3) {
+        proj(land[k], land[k + 1], land[k + 2], P); z = P[2]; if (z <= .01 || P[1] > H + 2) continue;
+        s = ds * (.55 + .45 * z); ctx.globalAlpha = .26 + .7 * z; ctx.fillRect(P[0] - s / 2, P[1] - s / 2, s, s);
+      }
+      ctx.globalAlpha = 1;
+      // arcs
+      for (k = arcs.length - 1; k >= 0; k--) {
+        var a = arcs[k], u = (now - a.t0) / a.life; if (u >= 1) { arcs.splice(k, 1); continue; }
+        var head = Math.min(1, u / .55), tail = Math.max(0, (u - .45) / .55), n = 28, m;
+        ctx.lineWidth = 1.4; ctx.lineCap = 'round';
+        for (m = 0; m < n; m++) {
+          var f0 = tail + (head - tail) * m / n, f1 = tail + (head - tail) * (m + 1) / n;
+          arcPt(a, f0, P); arcPt(a, f1, Q); if (P[2] < -.05 || Q[2] < -.05) continue;
+          ctx.strokeStyle = 'rgba(' + a.col + ',' + (.08 + .7 * (m + 1) / n).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(P[0], P[1]); ctx.lineTo(Q[0], Q[1]); ctx.stroke();
         }
-      });
-      return d;
-    }
-    var mob = tablet(), fine = !mob && !!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches);
-    var GAP = mob ? 1.08 : .78, DOTS = dotField(GAP);
-    var sites = SITES.map(function (s, i) { var f = F(s[1], s[2]); return { i: i, name: s[0], what: s[4], side: s[3], f: f, d: Math.hypot(f[0] - CCF[0], f[1] - CCF[1]) }; });
-    // the event label names the domain
-    function evText(s) { return s.what + ' · ' + s.name; }
-
-    // ---- labels: crisp HTML at the shared type scale, anchored to projected 3D points and kept apart every frame
-    function mk(cls, html) { var el = document.createElement('span'); el.className = cls; el.innerHTML = html; lbs.appendChild(el); return el; }
-    sites.forEach(function (s) { s.lb = { el: mk('hx-lb', s.name), pref: s.side, k: -1, on: false }; });
-    var ccLb = { el: mk('hx-lb cc', 'Command centre'), k: -1, on: false };
-    var evLb = { el: mk('hx-ev', '<i></i><span></span>'), k: -1, on: false }, evTx = evLb.el.lastChild;
-    var ALL = sites.map(function (s) { return s.lb; }).concat([ccLb, evLb]), W = 0, H = 0;
-    function measure() { ALL.forEach(function (o) { o.w = o.el.offsetWidth; o.h = o.el.offsetHeight; }); }
-    // candidate spots around an anchor: beside a site (preferred side first), or above it
-    function cands(o, ax, ay, top) {
-      var w = o.w, h = o.h, g = mob ? 9 : 12;
-      if (top) return [[ax - w / 2, ay - g - h], [ax + g, ay - h - g * .5], [ax - g - w, ay - h - g * .5], [ax + g, ay - h / 2], [ax - g - w, ay - h / 2], [ax - w / 2, ay + g]];
-      var r = [ax + g, ay - h / 2], l = [ax - g - w, ay - h / 2];
-      return (o.pref === 'l' ? [l, r] : [r, l]).concat([[ax - w / 2, ay + g * .8], [ax - w / 2, ay - g * .8 - h], [ax + g * .6, ay + g * .4], [ax - g * .6 - w, ay + g * .4], [ax + g * .6, ay - g * .4 - h], [ax - g * .6 - w, ay - g * .4 - h]]);
-    }
-    function cost(x, y, w, h, placed) {
-      var c = (x < 6 || y < 6 || x + w > W - 6 || y + h > H - 6) ? 1e6 : 0;
-      for (var i = 0; i < placed.length; i++) {
-        var b = placed[i], ox = Math.min(x + w, b[0] + b[2]) - Math.max(x, b[0]), oy = Math.min(y + h, b[1] + b[3]) - Math.max(y, b[1]);
-        if (ox > 0 && oy > 0) c += ox * oy;
+        if (head < 1) { arcPt(a, head, P); ctx.fillStyle = 'rgba(' + a.col + ',.95)'; ctx.beginPath(); ctx.arc(P[0], P[1], 2.6, 0, TAU); ctx.fill(); }
       }
-      return c;
-    }
-    // keep the last spot while it is clear (no jitter); otherwise take the clearest; a label that cannot sit clear hides
-    function place(o, cs, placed, must) {
-      var k = o.k >= 0 && o.k < cs.length ? o.k : 0, best = k, bc = cost(cs[k][0], cs[k][1], o.w, o.h, placed);
-      if (bc > 0) for (var i = 0; i < cs.length; i++) { if (i === k) continue; var c = cost(cs[i][0], cs[i][1], o.w, o.h, placed); if (c < bc) { bc = c; best = i; if (!c) break; } }
-      o.k = best;
-      var p = cs[best], ok = bc === 0 || !!must;
-      if (ok) {
-        var x = cl(p[0], 6, Math.max(6, W - o.w - 6)), y = cl(p[1], 6, Math.max(6, H - o.h - 6));
-        o.el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)'; placed.push([x - 3, y - 3, o.w + 6, o.h + 6]);
+      // the example's event point
+      if (ev && ev.g) {
+        proj(ev.g[0], ev.g[1], ev.g[2], P);
+        if (P[2] > 0) {
+          var col = ev.st === 'ok' ? '47,158,85' : ev.st === 'hold' ? '214,150,40' : '229,72,77', ph = (now * .9) % 1;
+          ctx.strokeStyle = 'rgba(' + col + ',' + (.7 * (1 - ph)).toFixed(3) + ')'; ctx.lineWidth = 1.6;
+          ctx.beginPath(); ctx.arc(P[0], P[1], 5 + 22 * ph, 0, TAU); ctx.stroke();
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(P[0], P[1], 6, 0, TAU); ctx.fill();
+          ctx.fillStyle = 'rgb(' + col + ')'; ctx.beginPath(); ctx.arc(P[0], P[1], 4, 0, TAU); ctx.fill();
+        }
       }
-      return ok;
+      // fade the globe out towards the bottom by erasing, so the page shows through (no band)
+      var fz = ctx.createLinearGradient(0, H * .62, 0, H);
+      fz.addColorStop(0, 'rgba(0,0,0,0)'); fz.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.globalCompositeOperation = 'destination-out'; ctx.fillStyle = fz; ctx.fillRect(0, H * .62, W, H * .38 + 1); ctx.globalCompositeOperation = 'source-over';
     }
-    function show(o, v) { if (o.on !== v) { o.on = v; o.el.classList.toggle('on', v); } }
-    // P(x, y, z) -> stage px; u = time into the current event (-1: none)
-    // anchors are projected into reused arrays (P writes into its 4th argument), so no per-frame allocation for them
-    var ANC = sites.map(function () { return [0, 0]; }), CCA = [0, 0];
-    function labels(P, t, u) {
-      var placed = [], anc = ANC, cc = P(CCF[0], 0, CCF[1], CCA), i;
-      for (i = 0; i < sites.length; i++) { P(sites[i].f[0], 0, sites[i].f[1], anc[i]); placed.push([anc[i][0] - 9, anc[i][1] - 9, 18, 18]); }
-      placed.push([cc[0] - 9, cc[1] - 9, 18, 18]);
-      if (ev && u >= 0 && u < 2.9) { var a = anc[ev.i]; place(evLb, cands(evLb, a[0], a[1] - 6, true), placed, true); }
-      show(ccLb, t > 4 && place(ccLb, cands(ccLb, cc[0], cc[1] - 4, true), placed, true));
-      // phones: the sites only pulse (no name labels), so the small map stays readable
-      sites.forEach(function (s, i) { var on = !mob && t > 3.9 + i * .08; show(s.lb, on && place(s.lb, cands(s.lb, anc[i][0], anc[i][1], false), placed, false)); });
+    function tick(ts) {
+      raf = 0; if (!running) return;
+      var t = ts / 1000, dt = last ? Math.min(.1, t - last) : 0; last = t; now += dt;
+      if (mob && (frameSkip ^= 1)) { raf = requestAnimationFrame(tick); return; }   // phones: ~30 fps is plenty for a slow globe
+      var e = Math.min(1, dt * 3); par.x += (par.tx - par.x) * e; par.y += (par.ty - par.y) * e;
+      rot = LON0 - now * SPEED + par.x * 8 * D2R; tilt = TILT + par.y * 4 * D2R; ct = Math.cos(tilt); st = Math.sin(tilt);
+      if (now > nextArc) { addArc(pick(.25, .8), pick(.25, .8)); nextArc = now + (mob ? 1.6 : 1.1); }
+      draw(); raf = requestAnimationFrame(tick);
     }
-    // ---- events: one every EV_EVERY s; the site flashes red with a label, a red packet runs to the centre, acknowledged, fade
-    var ev = null, evN = 0, nextEv = EV_START, evState = '';
-    function events(t) {
-      if (t >= nextEv) {
-        ev = { i: EV_ORDER[evN % EV_ORDER.length], t0: t }; evN++; nextEv += EV_EVERY; evLb.k = -1;
-        evTx.textContent = evText(sites[ev.i]); evLb.w = evLb.el.offsetWidth; evLb.h = evLb.el.offsetHeight;
-      }
-      if (!ev) return -1;
-      var u = t - ev.t0, st = u < 1.3 ? 'red' : u < 2.7 ? 'ack' : 'off';
-      if (st !== evState) {
-        evState = st;
-        evLb.el.className = 'hx-ev' + (st === 'off' ? '' : ' on') + (st === 'ack' ? ' ack' : '');
-        if (st === 'ack') { evTx.textContent = 'Acknowledged'; evLb.w = evLb.el.offsetWidth; }
-      }
-      return u;
-    }
-
-    // ---- rings: two tilted SVG ellipses; "INFRAX.AI" runs along each (text-on-a-path) just outside a hairline that carries
-    // ticks. The far half is dimmed so each ring reads as passing behind India. Opposite directions, different speeds.
-    var NS = 'http://www.w3.org/2000/svg', RG = [], RTXT = 'INFRAX.AI  ·  ';
-    // the wide ring carries the product names in sequence; the round one keeps "INFRAX.AI"
-    var PN = ['InfraX AI VIDES', 'AstraAlert', 'TollCloud', 'Cygnus', 'Central Plexus', 'InfraX AI Ops', 'Access and parking'],
-      PTXT = PN.join('  ·  ') + '  ·  ', PTXT2 = PN.join(' · ') + ' · ';
-    // a wide, flat ring crossing India like Saturn's, and a rounder one that orbits it
-    // (the round ring is the longer path on narrow screens, so it carries the product names)
-    var RINGS = [{ a: .72, b: .2, rot: -8, sp: 30, dir: 1, txt: RTXT, min: 3 }, { a: .54, b: .45, rot: -20, sp: 19, dir: -1, txt: PTXT, alt: PTXT2, min: 1 }];
-    function sv(tag, at, par) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (par) par.appendChild(e); return e; }
-    function ell(cx, cy, rx, ry) { return 'M' + (cx - rx) + ' ' + cy + 'A' + rx + ' ' + ry + ' 0 1 0 ' + (cx + rx) + ' ' + cy + 'A' + rx + ' ' + ry + ' 0 1 0 ' + (cx - rx) + ' ' + cy; }
-    function buildRings() {
-      while (svg.firstChild) svg.removeChild(svg.firstChild);
-      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); RG = [];
-      var u = Math.min(W / 1.28, H), cx = W / 2, cy = H / 2, defs = sv('defs', {}, svg), off = 14;
-      if (rcx) { RCD = Math.min(devicePixelRatio || 1, 2); rc.width = Math.round(W * RCD); rc.height = Math.round(H * RCD); }
-      RINGS.forEach(function (d, n) {
-        var rx = Math.min(d.a * u, W / 2 - off - 8), ry = d.b * u, id = 'hxR' + n, pad = 40, box = { x: cx - rx - pad, y: cy - ry - pad, width: 2 * rx + 2 * pad, height: 2 * ry + 2 * pad };
-        // masks (in the ring's own rotated space): the far half fades; the text also fades where it crosses India
-        [['l', .3]].forEach(function (k) {
-          var gr = sv('linearGradient', { id: id + k[0] + 'g', gradientUnits: 'userSpaceOnUse', x1: 0, y1: cy - ry, x2: 0, y2: cy + ry }, defs);
-          [[0, k[1]], [.4, k[1] + .04], [.62, 1]].forEach(function (s) { sv('stop', { offset: s[0], 'stop-color': '#fff', 'stop-opacity': s[1] }, gr); });
-          var m = sv('mask', { id: id + k[0], maskUnits: 'userSpaceOnUse', x: box.x, y: box.y, width: box.width, height: box.height }, defs);
-          sv('rect', { x: box.x, y: box.y, width: box.width, height: box.height, fill: 'url(#' + id + k[0] + 'g)' }, m);
-        });
-        sv('path', { id: id + 'p', d: ell(cx, cy, rx + off, ry + off) }, defs);
-        var g = sv('g', { transform: 'rotate(' + d.rot + ' ' + cx + ' ' + cy + ')', mask: 'url(#' + id + 'l)' }, svg);
-        var line = sv('path', { d: ell(cx, cy, rx, ry), fill: 'none', stroke: '#2673B5', 'stroke-opacity': .55, 'stroke-width': 1 }, g);
-        var ticks = sv('path', { d: ell(cx, cy, rx, ry), fill: 'none', stroke: '#2673B5', 'stroke-opacity': .45, 'stroke-width': 5 }, g);
-        var L = line.getTotalLength(), LT = defs.lastChild.getTotalLength(), nt = Math.max(24, Math.round(L / (mob ? 20 : 26)));
-        ticks.setAttribute('stroke-dasharray', '1 ' + (L / nt - 1).toFixed(3));
-        // two copies of the same text (offsets o - LT and o) cover the closed path seamlessly as it scrolls
-        var tg = sv('g', { transform: g.getAttribute('transform'), mask: 'url(#' + id + 't)' }, svg), probe = sv('text', { style: 'white-space:pre' }, tg); probe.textContent = d.txt;
-        // whole repeats of the phrase fill the path exactly: pick the count nearest the CSS spacing, never so many that the
-        // letters would need less than ~1px spacing, then spread the remainder evenly over the letter-spacing
-        var fs0 = parseFloat(getComputedStyle(probe).fontSize) || 12, ls = parseFloat(getComputedStyle(probe).letterSpacing) || 4, em = ls / fs0;
-        var best = null;
-        (d.alt ? [d.txt, d.alt] : [d.txt]).forEach(function (src, si) {
-          probe.textContent = src;
-          var n = src.length, lp = probe.getComputedTextLength() || n * 11, lp0 = lp - ls * n;
-          var r0 = d.alt ? 1 : Math.max(d.min, Math.round(LT / (lp * 1.12))), r1 = d.alt ? Math.max(1, Math.ceil(LT / lp0)) : r0;
-          for (var r = r0; r <= r1; r++) {
-            // the product ring may grow its type a little (12-14px) so a single sequence is not over-spaced
-            var k = d.alt ? Math.min(14 / 12, Math.max(1, LT / (r * lp))) : 1, lsp = (LT - r * lp0 * k) / (r * n);
-            if (lsp < .5 && r > 1) continue;
-            var sc = Math.abs(lsp / (fs0 * k) - em) + si * .03;
-            if (!best || sc < best.sc) best = { sc: sc, src: src, r: r, k: k, lsp: Math.max(.5, lsp) };
-          }
-        });
-        var txt = new Array(best.r + 1).join(best.src), lsp = best.lsp, fsz = (fs0 * best.k).toFixed(2);
-        var noText = getComputedStyle(probe).display === 'none', fam = getComputedStyle(probe).fontFamily;
-        tg.removeChild(probe);
-        svg.removeChild(tg);
-        // the text path as a table: 1024 points at equal arc length (local, unrotated space) with the direction of travel
-        var tpath = defs.lastChild, R1 = rx + off, R2 = ry + off, sgn = tpath.getPointAtLength(LT * .25).y > cy ? -1 : 1, NS2 = 2048, acc = [0], th;
-        for (th = 1; th <= NS2; th++) { var a0 = Math.PI + (th - 1) / NS2 * TAU, a1 = Math.PI + th / NS2 * TAU; acc.push(acc[th - 1] + Math.hypot(R1 * (Math.cos(a1) - Math.cos(a0)), R2 * (Math.sin(a1) - Math.sin(a0)))); }
-        var tl = new Float32Array(1025 * 3), kk = 0;
-        for (var q2 = 0; q2 <= 1024; q2++) { var want = acc[NS2] * q2 / 1024; while (kk < NS2 - 1 && acc[kk + 1] < want) kk++;
-          var fr = (want - acc[kk]) / ((acc[kk + 1] - acc[kk]) || 1), an = Math.PI + (kk + fr) / NS2 * TAU;
-          tl[q2 * 3] = cx + R1 * Math.cos(an); tl[q2 * 3 + 1] = cy + sgn * R2 * Math.sin(an); tl[q2 * 3 + 2] = Math.atan2(sgn * R2 * Math.cos(an), -R1 * Math.sin(an)); }
-        var tx = { txt: txt.toUpperCase(), fsz: fsz, lsp: lsp, fam: fam, off: noText, tl: tl, cw: null, cum: null, ry: ry, rot: d.rot * D2R, cx: cx, cy: cy, hx: .3 * H, hy: .42 * H };
-        RG.push({ d: d, line: line, ticks: ticks, tx: tx, L: L, LT: LT });
-      });
-      ringsLast = -1; // a rebuild cleared the canvas: the next frame redraws the rings whatever the 60 fps cap says
-      // a still frame (reduced motion) drawn before the web font arrived gets its words once the font is in
-      if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(function () { if (ringsT >= 0) { ringsLast = -1; rings(ringsT, ringsRp, true); } });
-    }
-    // rp: draw-in progress (0..1) - the hairline draws itself, then text and ticks fade in
-    // one ring's words at path offset o, as the SVG text path laid them out: each letter at its arc position, turned to the
-    // path, with the far-half fade (text mask) and the soft hole where the ring crosses India computed per letter
-    function stop3(f, a, b, c) { return f <= 0 ? a[1] : f >= c[0] ? c[1] : f < b[0] ? a[1] + (b[1] - a[1]) * f / b[0] : b[1] + (c[1] - b[1]) * (f - b[0]) / (c[0] - b[0]); }
-    function ringText(r, o, fa) {
-      var x = r.tx, c = rcx; if (!c || x.off || fa <= .004) return;
-      c.font = '500 ' + x.fsz + 'px ' + x.fam;
-      if (!x.cw) { // letter widths once the web font is in (until then the words wait, as the SVG text did for its font)
-        if (document.fonts && document.fonts.status !== 'loaded') return;
-        x.cw = []; x.cum = []; var acc = 0, wc = {};
-        for (var i = 0; i < x.txt.length; i++) { var ch = x.txt[i], w = wc[ch] != null ? wc[ch] : (wc[ch] = c.measureText(ch).width); x.cw.push(w); x.cum.push(acc); acc += w + x.lsp; }
-      }
-      c.fillStyle = '#2673B5';
-      var LT = r.LT, tl = x.tl, cr = Math.cos(x.rot), sr = Math.sin(x.rot), D = RCD, y0 = x.cy - x.ry, y2 = 2 * x.ry;
-      for (var j = 0; j < x.txt.length; j++) {
-        var chj = x.txt[j]; if (chj === ' ') continue;
-        var m = ((o + x.cum[j] + x.cw[j] / 2) % LT + LT) % LT, u = m / LT * 1024, q = u | 0, f = u - q, q1 = q + 1 > 1024 ? 1024 : q + 1;
-        var lx = tl[q * 3] + (tl[q1 * 3] - tl[q * 3]) * f, ly = tl[q * 3 + 1] + (tl[q1 * 3 + 1] - tl[q * 3 + 1]) * f, an = tl[q * 3 + 2] + x.rot;
-        var g = stop3((ly - y0) / y2, [0, .1], [.4, .14], [.62, 1]);
-        var X = x.cx + (lx - x.cx) * cr - (ly - x.cy) * sr, Y = x.cy + (lx - x.cx) * sr + (ly - x.cy) * cr;
-        var rn = Math.hypot((X - x.cx) / x.hx, (Y - x.cy) / x.hy), h = rn >= 1 ? 0 : stop3(rn, [0, .72], [.6, .66], [1, 0]);
-        var al = fa * g * (1 - h); if (al < .01) continue;
-        var ca = Math.cos(an), sa = Math.sin(an);
-        c.globalAlpha = al; c.setTransform(D * ca, D * sa, -D * sa, D * ca, X * D, Y * D); c.fillText(chj, -x.cw[j] / 2, 0);
-      }
-      c.globalAlpha = 1;
-    }
-    var ringsLast = -1, ringsT = -1, ringsRp = 0;
-    // between: called on the frames the 30 fps scene skips, with the time since its last draw, so the rings glide at up to 60 fps
-    function rings(t, rp, between) {
-      if (!between) { ringsT = t; ringsRp = rp; }
-      if (t - ringsLast < .015 && t > ringsLast) return; ringsLast = t; // text-path updates cost a text layout: at most ~60 per second
-      svg.classList.toggle('on', rp > 0); if (rc) rc.classList.toggle('on', rp > 0);
-      if (rcx) { rcx.setTransform(1, 0, 0, 1, 0, 0); rcx.clearRect(0, 0, rc.width, rc.height); }
-      RG.forEach(function (r) {
-        var o = ((r.d.dir * t * r.d.sp) % r.LT + r.LT) % r.LT, ol = o * r.L / r.LT, fa = sg(rp, .35, 1).toFixed(3);
-        ringText(r, o, +fa);
-        r.ticks.setAttribute('stroke-dashoffset', (-ol).toFixed(1));
-        if (rp < 1) r.line.setAttribute('stroke-dasharray', (r.L * o3(rp)).toFixed(1) + ' ' + r.L.toFixed(1)); else r.line.removeAttribute('stroke-dasharray');
-        r.ticks.setAttribute('opacity', fa);
-      });
-    }
-    // ---- intro particles (one 2D canvas over the whole hero): brand-blue particles start close to the viewer (large, soft)
-    // and fly together into the logo, sampled from the original logo file (assets/logo.svg, inlined at build time),
-    // shrinking and sharpening as they land (0-1.8 s); a shimmer crosses it (to 2.2 s); then the whole wordmark zooms out
-    // into the distance, onto the globe's centre, and fades as the globe grows there (2.2-3.4 s)
-    var pc = document.getElementById('hxPt'), px = pc && pc.getContext && pc.getContext('2d'), ptOn = !!px && !reduce && !skipIntro;
-    var PW = 0, PH = 0, PDPR = 1, SOX = 0, SOY = 0, PTS = null, PT_FORM = 1.8, PT_ZOOM = 2.2, PT_END = 3.4;
-    // the original logo file, inlined at build time (a data URI never taints the sampling canvas)
-    var lgImg = new Image(); lgImg.onload = function () { PTS = null; }; lgImg.src = '__LOGO_URI__';
-    if (pc && !ptOn) pc.style.display = 'none';
-    var pseed = 11; function prnd() { pseed = (pseed * 16807) % 2147483647; return pseed / 2147483647; }
-    function sprite(rgb, soft) {
-      var s = 64, c = document.createElement('canvas'); c.width = c.height = s;
-      var g = c.getContext('2d'), rg = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2), f = function (a) { return 'rgba(' + rgb + ',' + a + ')'; };
-      if (soft) { rg.addColorStop(0, f(.9)); rg.addColorStop(.4, f(.55)); rg.addColorStop(1, f(0)); } else { rg.addColorStop(0, f(1)); rg.addColorStop(.8, f(1)); rg.addColorStop(1, f(0)); }
-      g.fillStyle = rg; g.fillRect(0, 0, s, s); return c;
-    }
-    var SPR = ptOn ? [[sprite('38,115,181', 0), sprite('38,115,181', 1)], [sprite('14,59,102', 0), sprite('14,59,102', 1)]] : null;
-    function sizePt() {
-      if (!ptOn) return;
-      var hr = hero.getBoundingClientRect(), sr = stage.getBoundingClientRect();
-      PW = hr.width; PH = hr.height; SOX = sr.left - hr.left; SOY = sr.top - hr.top;
-      PDPR = Math.min(window.devicePixelRatio || 1, 2); pc.width = Math.round(PW * PDPR); pc.height = Math.round(PH * PDPR); PTS = null;
-    }
-    // target points: ink of the logo (or the text) on a jittered grid sized so about n cells are inked
-    function makeTargets() {
-      var small = PW <= 768, n = small ? 700 : 2200, ww = PW * (small ? .8 : .5), c = document.createElement('canvas'), g = c.getContext('2d'), sw = Math.round(Math.min(ww, 720)), sh, d = null;
-      if (lgImg.complete && lgImg.naturalWidth) try { sh = Math.round(sw * 120.89 / 410.67); c.width = sw; c.height = sh; g.drawImage(lgImg, 0, 0, sw, sh); d = g.getImageData(0, 0, sw, sh).data; } catch (e) { d = null; }
-      // never a stand-in wordmark: without the logo's pixels there are no particles and the real logo simply fades in
-      if (!d) { PTS = { p: [], ww: ww, none: true }; return; }
-      var ink = 0, x, y, i; for (i = 3; i < d.length; i += 4) if (d[i] > 120) ink++;
-      var st = Math.max(1.5, Math.sqrt(ink / n)), k = ww / sw, out = [];
-      pseed = 11;
-      for (y = st / 2; y < sh; y += st) for (x = st / 2; x < sw; x += st) {
-        var jx = x + (prnd() - .5) * st * .5, jy = y + (prnd() - .5) * st * .5;
-        if (d[(Math.round(jy) * sw + Math.round(jx)) * 4 + 3] <= 120) continue;
-        var a = prnd() * TAU, rr = .55 + prnd() * .75;
-        out.push({ tx: (jx - sw / 2) * k, ty: (jy - sh / 2) * k, sx: Math.cos(a) * rr * PW * .62, sy: Math.sin(a) * rr * PH * .62, r0: 7 + prnd() * 13, r1: Math.max(1, st * k * .5), bend: (prnd() - .5) * .6,
-          dl: prnd() * .32 + (jx / sw) * .12, a0: .25 + prnd() * .35, c: prnd() < .2 ? 1 : 0, ph: prnd() * TAU });
-      }
-      PTS = { p: out, ww: ww };
-    }
-    function drawPt(t, gx, gy) {
-      if (!PW) return;
-      if (!PTS) makeTargets();
-      var cx0 = SOX + W / 2, cy0 = SOY + H / 2, re = io3(sg(t, PT_ZOOM, PT_END)), s = 1 / (1 + 18 * re * re), fade = 1 - sg(re, .5, 1);
-      var cx = cx0 + (SOX + gx - cx0) * re, cy = cy0 + (SOY + gy - cy0) * re, sw = (sg(t, 1.5, 2.4) * 2 - 1.2) * PTS.ww * .75, sh = Math.sin(Math.PI * sg(t, 1.5, 2.4));
-      px.setTransform(PDPR, 0, 0, PDPR, 0, 0); px.clearRect(0, 0, PW, PH);
-      // soft glow behind the formed mark, brightest as the shimmer passes and as it zooms away
-      var gw = .1 * sh + .14 * Math.sin(Math.PI * re);
-      if (gw > .004) { var gr = PTS.ww * .55 * s + 40, rg = px.createRadialGradient(cx, cy, 0, cx, cy, gr); rg.addColorStop(0, 'rgba(38,115,181,' + gw.toFixed(3) + ')'); rg.addColorStop(1, 'rgba(38,115,181,0)'); px.fillStyle = rg; px.fillRect(cx - gr, cy - gr, gr * 2, gr * 2); }
-      // once the particles have landed they dissolve into the real logo, which is what zooms away
-      var real = lgImg.complete && lgImg.naturalWidth ? io3(PTS.none ? sg(t, .2, .8) : sg(t, 1.45, 1.95)) : 0, keep = 1 - real;
-      PTS.p.forEach(function (p) {
-        var e = sg(t, p.dl, p.dl + 1.3), m = 1 - Math.pow(1 - e, 4), bw = Math.sin(Math.PI * e) * p.bend;
-        var x = p.sx + (p.tx - p.sx) * m - (p.ty - p.sy) * bw * .35, y = p.sy + (p.ty - p.sy) * m + (p.tx - p.sx) * bw * .35;
-        var gl2 = sh * Math.exp(-Math.pow((p.tx - sw) / (PTS.ww * .08), 2)), r = (p.r0 + (p.r1 - p.r0) * m) * (1 + .5 * gl2), a = (p.a0 + (1 - p.a0) * m) * fade * sg(t, 0, .25) * keep;
-        x = cx + x * s; y = cy + y * s; r = Math.max(.6, r * (s * .85 + .15));
-        if (a < .01 || x < -r || y < -r || x > PW + r || y > PH + r) return;
-        var b = 1 - sg(m, .55, 1), sp = SPR[p.c];
-        if (b < .98) { px.globalAlpha = a * (1 - b); px.drawImage(sp[0], x - r, y - r, 2 * r, 2 * r); }
-        if (b > .02) { var r2 = r * 1.7; px.globalAlpha = a * b * .8; px.drawImage(sp[1], x - r2, y - r2, 2 * r2, 2 * r2); }
-      });
-      if (real > .01) {
-        var lw = PTS.ww * s, lh = lw * 120.89 / 410.67;
-        px.globalAlpha = real * fade; px.imageSmoothingQuality = 'high';
-        px.drawImage(lgImg, cx - lw / 2, cy - lh / 2, lw, lh);
-      }
-      px.globalAlpha = 1;
-    }
-    var copied = false, T0 = performance.now();
-    function intro(t, gx, gy) {
-      if (ptOn) { if (t >= PT_END) { ptOn = false; pc.width = pc.height = 0; pc.style.display = 'none'; /* frees the full-screen backing store */ } else drawPt(t, gx == null ? W / 2 : gx, gy == null ? H / 2 : gy); }
-      if (!copied && (t >= COPY_AT || performance.now() - T0 > COPY_AT * 1000)) { // wall clock too: a slow GPU must not hold the headline back
-        copied = true; hero.classList.add('hx-done'); if (window.INFRAX_NAV_IN) window.INFRAX_NAV_IN(); }
-    }
-
-    // ---- one loop for both renderers: runs only while the hero is on screen and the tab is visible; reduced motion draws once
-    var t = skipIntro ? END : 0, last = 0, raf = 0, vis = true, draw = null;
-    function frame(now) {
-      raf = 0;
-      if (!vis || document.hidden || covered()) return;
-      // after the intro the live loop draws at ~30 fps (skipped frames carry their time into the next draw)
-      if (t >= END && last && now - last < 31) { if (ringsRp >= 1) rings(ringsT + (now - last) / 1000, 1, true); raf = requestAnimationFrame(frame); return; }
-      var dt = last ? Math.min(.1, (now - last) / 1000) : 0; last = now; t += dt;
-      draw(t, dt); raf = requestAnimationFrame(frame);
-      if (armed && t >= END) disarm();
-    }
-    function run() {
-      if (reduce) { draw(STILL, 0); return; }
-      if (!raf && vis && !document.hidden && !covered()) { last = 0; raf = requestAnimationFrame(frame); }
-    }
-    // scrolling (or arriving scrolled) during the intro jumps straight to its end state
-    // only a real gesture after load counts: scroll events from scroll restoration, Lenis or the site's start-position reset
-    // (site.js) must not skip the intro on arrival
-    var GEST = ['wheel', 'touchmove', 'keydown'], gestOn = false, armed = false;
-    // the skip listeners only live while the intro runs
-    function disarm() { armed = false; removeEventListener('scroll', onScroll); GEST.forEach(function (n) { removeEventListener(n, onGest); }); }
-    function jump() { disarm(); if (t < END) { t = END; intro(t); } }
-    function onScroll() { if (gestOn && scrollY > 4) jump(); }
-    function onGest(e) {
-      if (e.type === 'keydown' && !/^(ArrowDown|ArrowUp|PageDown|PageUp|End|Home| |Spacebar)$/.test(e.key)) return;
-      gestOn = true; setTimeout(onScroll, 120);
-    }
-    function armSkip() {
-      if (armed || t >= END) return; armed = true;
-      GEST.forEach(function (n) { addEventListener(n, onGest, { passive: true }); });
-      addEventListener('scroll', onScroll, { passive: true });
-    }
-    function start(layoutFn0, drawFn) {
-      draw = drawFn;
-      function layoutFn() { var ok = layoutFn0(); if (ok) sizePt(); return ok; }
-      function relayout() { if (layoutFn()) { buildRings(); if (reduce || !raf) draw(reduce ? STILL : t, 0); } }
-      if (!reduce) { if (document.readyState === 'complete') armSkip(); else addEventListener('load', armSkip); }
-      if (layoutFn()) { buildRings(); run(); } else requestAnimationFrame(function () { relayout(); run(); });
-      new IntersectionObserver(function (es) { vis = es[0].isIntersecting; if (draw) run(); }).observe(stage);
-      document.addEventListener('visibilitychange', run); document.addEventListener('infrax:cover', run);
-      if (window.ResizeObserver) new ResizeObserver(relayout).observe(stage); else addEventListener('resize', relayout);
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
-    }
-
-    // ---- WebGL scene (one renderer); without WebGL a 2D map stands in
-    var R = null;
-    if (TH) try { R = new TH.WebGLRenderer({ canvas: cv, antialias: false, alpha: true, powerPreference: 'low-power' }); } catch (e) { R = null; }
-    if (!R) { flat2d(); return; }
-    R.debug.checkShaderErrors = false;
-    R.setClearColor(0xffffff, 0);
-    var V3 = TH.Vector3, BLUE = new TH.Color(0x2673B5), DEEP = new TH.Color(0x0E3B66), RED = new TH.Color(0xE5484D), tmp = new V3();
-    var scene = new TH.Scene(), cam = new TH.PerspectiveCamera(FOV, 1, 1, 3000), own = [], i, a, b;
-    function add(o) { own.push(o); return o; }
-    // particles only (no lines): India (kind 1) morphs sphere -> plane; the world (0) is a dense, twinkling particle sphere that
-    // fades with the zoom. World particles carry a random 0..1 in aD for size and twinkle
-    var fl = [], ll = [], kd = [], dd = [];
-    DOTS.forEach(function (p) { var g = LL(p[0], p[1]); fl.push(p[0], p[1]); ll.push(g[0] * D2R, g[1] * D2R); kd.push(1); dd.push(Math.hypot(p[0] - CCF[0], p[1] - CCF[1])); });
-    var NW = mob ? 2600 : 5200, GA = Math.PI * (3 - Math.sqrt(5));
-    for (i = 0; i < NW; i++) {
-      var la = Math.asin(1 - 2 * (i + .5) / NW), lo = (i * GA) % TAU - Math.PI, LO = lo / D2R, LA = la / D2R;
-      if (LO > 67 && LO < 98 && LA > 6 && LA < 38) { var q = F(LO, LA); if (inside(q[0], q[1])) continue; }
-      fl.push(0, 0); ll.push(lo + (prnd() - .5) * .02, la + (prnd() - .5) * .02); kd.push(0); dd.push(prnd());
-    }
-    var DVS = 'uniform float uLon0,uLat0,uR,uMorph,uTime,uPx,uK,uLive,uWorld,uZs,uDot,uFade; uniform vec2 uC;' +
-      'attribute vec2 aFlat; attribute vec2 aLL; attribute float aKind; attribute float aD; varying float vA,vK;' +
-      'void main(){ float lon=aLL.x-uLon0, lat=aLL.y, cl=cos(lat); vec3 p=vec3(cl*sin(lon),sin(lat),cl*cos(lon));' +
-      ' float ca=cos(uLat0), sa=sin(uLat0); vec3 q=vec3(p.x,p.y*ca-p.z*sa,p.y*sa+p.z*ca);' +
-      ' vec3 sp=vec3(uC.x+q.x*uR,(q.z-1.)*uR*.35,uC.y-q.y*uR); float front=smoothstep(-.02,.3,q.z);' +
-      ' float ind=step(.5,aKind)*step(aKind,1.5), mo=uMorph*ind;' +
-      ' float w1=sin(aD*.45-uTime*1.7), w2=sin(aFlat.x*.13+aFlat.y*.09+uTime*.55);' +
-      ' vec3 pos=mix(sp,vec3(aFlat.x,(w2*.22+w1*.1)*uLive,aFlat.y),mo); float v=mix(.62,.5+.32*w1+.18*w2,uLive);' +
-      ' float tw=.5+.5*sin(uTime*1.7+aD*37.);' +
-      ' vK=mo*(.45+.35*v); vA=(ind>.5?mix(front,1.,mo)*(.62+.38*v):front*(.2+.22*tw)*uWorld)*uFade;' +
-      ' float dia=ind>.5?mix(.3*uZs,.32+.2*v,mo)*uDot:(.16+.16*aD)*(.85+.3*tw)*uDot;' +
-      ' vec4 mv=modelViewMatrix*vec4(pos,1.); gl_PointSize=max(1.4*uPx,dia*uPx*uK/-mv.z); gl_Position=projectionMatrix*mv; }';
-    var DFS = 'uniform vec3 uCol,uCol2; varying float vA,vK; void main(){ float d=length(gl_PointCoord-.5); float a=vA*smoothstep(.5,.34,d); if(a<.004) discard; gl_FragColor=vec4(mix(uCol,uCol2,vK),a); }';
-    var CFS = 'uniform vec3 uCol; varying float vA; void main(){ float d=length(gl_PointCoord-.5); float a=vA*smoothstep(.5,.34,d); if(a<.004) discard; gl_FragColor=vec4(uCol,a); }';
-    var dg = add(new TH.BufferGeometry());
-    dg.setAttribute('position', new TH.Float32BufferAttribute(new Float32Array(kd.length * 3), 3));
-    dg.setAttribute('aFlat', new TH.Float32BufferAttribute(fl, 2)); dg.setAttribute('aLL', new TH.Float32BufferAttribute(ll, 2));
-    dg.setAttribute('aKind', new TH.Float32BufferAttribute(kd, 1)); dg.setAttribute('aD', new TH.Float32BufferAttribute(dd, 1));
-    var U = { uLon0: { value: 0 }, uLat0: { value: 0 }, uR: { value: 30 }, uMorph: { value: 0 }, uTime: { value: 0 }, uPx: { value: 1 }, uK: { value: 1 }, uLive: { value: 0 },
-      uWorld: { value: 1 }, uFade: { value: 1 }, uZs: { value: 1 }, uDot: { value: GAP / .9 }, uC: { value: new TH.Vector2() }, uCol: { value: BLUE.clone() }, uCol2: { value: DEEP.clone() } };
-    var dots = new TH.Points(dg, add(new TH.ShaderMaterial({ uniforms: U, vertexShader: DVS, fragmentShader: DFS, transparent: true, depthTest: false, depthWrite: false })));
-    dots.frustumCulled = false; scene.add(dots);
-    // a soft atmosphere glow around the particle globe, fading as the camera closes in
-    var AU = { uA: { value: 1 } };
-    var atm = new TH.Mesh(add(new TH.CircleGeometry(1.1, 96).rotateX(-Math.PI / 2)), add(new TH.ShaderMaterial({ uniforms: AU, transparent: true, depthTest: false, depthWrite: false,
-      vertexShader: 'varying float vR; void main(){ vR=length(position.xz); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-      fragmentShader: 'uniform float uA; varying float vR; void main(){ gl_FragColor=vec4(.149,.451,.71,smoothstep(.72,.98,vR)*(1.-smoothstep(.98,1.1,vR))*.09*uA); }' })));
-    atm.frustumCulled = false; atm.renderOrder = -1; scene.add(atm);
-    // sites: a disc with pulse ripples; the command centre is a larger deep-blue disc
-    var rgeo = add(new TH.RingGeometry(.62, .78, 48)), dgeo = add(new TH.CircleGeometry(.5, 32));
-    rgeo.rotateX(-Math.PI / 2); dgeo.rotateX(-Math.PI / 2);
-    function mesh(geo, mat, ro) { var m = new TH.Mesh(geo, mat); m.renderOrder = ro; return m; }
-    var white = add(new TH.MeshBasicMaterial({ color: 0xffffff })), NK = mob ? 1.35 : 1.15;
-    var nodes = sites.map(function (s) { return { f: s.f }; }).concat([{ f: CCF, cc: true }]).map(function (n) {
-      var g = new TH.Group(); g.position.set(n.f[0], 0, n.f[1]); g.scale.set(NK, 1, NK); scene.add(g);
-      n.rings = [0, 1].map(function () { var r = mesh(rgeo, add(new TH.MeshBasicMaterial({ color: n.cc ? 0x0E3B66 : 0x2673B5, transparent: true, opacity: 0, depthWrite: false, depthTest: false })), 1); r.position.y = .02; g.add(r); return r; });
-      n.d1 = mesh(dgeo, white, 3); n.d1.position.y = .03; n.d2 = mesh(dgeo, add(new TH.MeshBasicMaterial({ color: n.cc ? 0x0E3B66 : 0x2673B5 })), 4); n.d2.position.y = .04;
-      g.add(n.d1, n.d2); n.g = g; return n;
-    });
-    // low arcs over the map, packets riding them; a red packet and a green acknowledge ripple for events
-    var curves = sites.map(function (s) {
-      var p0 = new V3(s.f[0], 0, s.f[1]), p1 = new V3(CCF[0], 0, CCF[1]), m = p0.clone().add(p1).multiplyScalar(.5); m.y = p0.distanceTo(p1) * .3 + 1.5;
-      var c = new TH.QuadraticBezierCurve3(p0, m, p1), lm = add(new TH.LineBasicMaterial({ color: 0x0E3B66, transparent: true, opacity: 0, depthWrite: false }));
-      var ln = new TH.Line(add(new TH.BufferGeometry().setFromPoints(c.getPoints(64))), lm); ln.renderOrder = 1; scene.add(ln); return { c: c, lm: lm };
-    });
-    var PVS = 'uniform float uPx,uK; attribute float aA; attribute float aS; varying float vA; void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); vA=aA; gl_PointSize=aS*uPx*uK/-mv.z; gl_Position=projectionMatrix*mv; }';
-    function pset(n, col) {
-      var pos = new Float32Array(n * 3), al = new Float32Array(n), sz = new Float32Array(n), g = add(new TH.BufferGeometry());
-      g.setAttribute('position', new TH.BufferAttribute(pos, 3)); g.setAttribute('aA', new TH.BufferAttribute(al, 1)); g.setAttribute('aS', new TH.BufferAttribute(sz, 1));
-      var p = new TH.Points(g, add(new TH.ShaderMaterial({ uniforms: { uPx: U.uPx, uK: U.uK, uCol: { value: new TH.Color(col) } }, vertexShader: PVS, fragmentShader: CFS, transparent: true, depthWrite: false, depthTest: false })));
-      p.frustumCulled = false; p.renderOrder = 5; scene.add(p); return { g: g, pos: pos, al: al, sz: sz };
-    }
-    var PK = pset(sites.length * 6, 0x0E3B66), RK = pset(8, 0xE5484D);
-    var ack = [0, 1].map(function () { var r = mesh(rgeo, add(new TH.MeshBasicMaterial({ color: 0x1F8A5B, transparent: true, opacity: 0, depthWrite: false, depthTest: false })), 4); r.position.set(CCF[0], .05, CCF[1]); scene.add(r); return r; });
-
-    // ---- camera: orbit pose around the map centre; fit() finds the distance and screen offset that frame a set of points
-    function pose(el, az, d, ox, oy) {
-      var ce = Math.cos(el); cam.position.set(d * ce * Math.sin(az), d * Math.sin(el), d * ce * Math.cos(az)); cam.lookAt(0, 0, 0);
-      cam.setViewOffset(W, H, ox, oy, W, H); cam.updateMatrixWorld();
-    }
-    function P3(x, y, z, o) { tmp.set(x, y, z).project(cam); o = o || [0, 0]; o[0] = (tmp.x + 1) / 2 * W; o[1] = (1 - tmp.y) / 2 * H; return o; }
-    var FITP = poly.map(function (p) { return [p[0], 0, p[1]]; });
-    function fit(el, pts, mL, mR, mT, mB) {
-      var d = 160, x0, x1, y0, y1, it;
-      function box() { x0 = y0 = 1e9; x1 = y1 = -1e9; pts.forEach(function (p) { var q = P3(p[0], p[1], p[2]); x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }); }
-      for (it = 0; it < 5; it++) { pose(el, 0, d, 0, 0); box(); d *= Math.max((x1 - x0) / (W - mL - mR), (y1 - y0) / (H - mT - mB)); }
-      pose(el, 0, d, 0, 0); box();
-      return { d: d, ox: (x0 + x1) / 2 - (mL + (W - mL - mR) / 2), oy: (y0 + y1) / 2 - (mT + (H - mT - mB) / 2) };
-    }
-    // India sits inside the rings: a centred box about 0.76 of the visual's height; final pose is a gentle 20-degree tilt
-    var TOP, FIN, R0 = 30, EL0 = 89 * D2R, EL1 = 70 * D2R;
-    function layout() {
-      W = stage.clientWidth; H = stage.clientHeight;
-      if (!W || !H) return false;
-      var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-      R.setPixelRatio(dpr); R.setSize(W, H, false);
-      cam.aspect = W / H; cam.updateProjectionMatrix();
-      U.uPx.value = dpr; U.uK.value = (H / 2) / Math.tan(FOV * D2R / 2);
-      measure();
-      var mx = (W - Math.min(W * (mob ? .74 : .6), H * .84)) / 2, my = H * .12;
-      TOP = fit(EL0, FITP, mx, mx, my, my);
-      FIN = fit(EL1, FITP, mx, mx, my, my);
-      R0 = .36 * H * (2 * TOP.d * Math.tan(FOV * D2R / 2)) / H;
-      return true;
-    }
-    // pointer parallax (desktop): a few degrees of orbit and tilt, eased
-    var par = { x: 0, y: 0, tx: 0, ty: 0 };
+    function play() { if (running || reduce || !onScreen || document.hidden) return; running = true; last = 0; raf = requestAnimationFrame(tick); }
+    function stop() { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; }
+    size(); draw();
+    addEventListener('resize', function () { size(); if (!running) draw(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; onScreen ? play() : stop(); }).observe(stage);
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : play(); });
     if (fine && !reduce) {
-      var sRect = null; addEventListener('resize', function () { sRect = null; }); addEventListener('scroll', function () { sRect = null; }, { passive: true });
-      hero.addEventListener('pointermove', function (e) { var r = sRect || (sRect = stage.getBoundingClientRect()); par.tx = cl((e.clientX - r.left) / r.width * 2 - 1, -1, 1); par.ty = cl((e.clientY - r.top) / r.height * 2 - 1, -1, 1); });
+      hero.addEventListener('pointermove', function (e) { var r = stage.getBoundingClientRect(); par.tx = Math.max(-1, Math.min(1, (e.clientX - r.left) / r.width * 2 - 1)); par.ty = Math.max(-1, Math.min(1, (e.clientY - r.top) / r.height * 2 - 1)); });
       hero.addEventListener('pointerleave', function () { par.tx = par.ty = 0; });
     }
-    function step(t0, dt) {
-      var t = t0 - OFF;
-      var u = reduce ? -1 : events(t0), z = io3(sg(t, 1.7, 3.2)), mo = io3(sg(t, 2.2, 3.4)), sp = sg(t0, GS, OFF + 1.9), tl = io3(sg(t, 2.9, 4.4));
-      // globe: grows out of the zooming particle wordmark, revolves and eases until India faces the camera, zooms to 1:1 with the map, India flattens
-      var Rg = R0 * (.3 + .7 * o3(sg(t0, GS, GS + 1.4))), Rz = Rg * Math.pow(RF / Rg, z), cx = CF[0] * z, cz = CF[1] * z, ga = (1 - sg(z, .15, .6)) * sg(t0, GS + .1, GS + .8);
-      U.uLon0.value = (82 + 220 * Math.pow(1 - sp, 2)) * D2R; U.uLat0.value = (10 + 12 * z) * D2R; U.uR.value = Rz; U.uZs.value = cl(Rz / RF, .42, 1);
-      U.uMorph.value = mo; U.uC.value.set(cx, cz); U.uTime.value = t; U.uLive.value = sg(t, 3.3, 4.3); U.uWorld.value = 1 - sg(z, .25, .8); U.uFade.value = sg(t0, GS + .05, GS + .9);
-      atm.visible = ga > 0; AU.uA.value = ga;
-      atm.scale.setScalar(Rz); atm.position.set(cx, -.35 * Rz, cz);
-      // camera: top-down -> a gentle tilt, then a very slow sway (+ parallax)
-      var k = Math.min(1, dt * 3); par.x += (par.tx - par.x) * k; par.y += (par.ty - par.y) * k;
-      var orb = reduce ? 0 : tl * Math.sin((t - 4.4) * .12) * 4 * D2R;
-      pose(EL0 + (EL1 - EL0) * tl + par.y * 2 * D2R * tl, orb + par.x * 4 * D2R * tl, TOP.d + (FIN.d - TOP.d) * tl, TOP.ox + (FIN.ox - TOP.ox) * tl, TOP.oy + (FIN.oy - TOP.oy) * tl);
-      // the zooming particle wordmark heads for the globe's centre on screen
-      var gc = ptOn ? P3(cx, -.35 * Rz, cz) : null; intro(t0, gc && gc[0], gc && gc[1]);
-      // sites pulse; the event site flashes red
-      var evI = ev && u >= 0 && u < 2.9 ? ev.i : -1, flash = evI < 0 ? 0 : o3(sg(u, 0, .3)) * (1 - sg(u, 1.3, 1.9));
-      nodes.forEach(function (n, i) {
-        var up = o3(sg(t, 3.5 + i * .08, 4.1 + i * .08)), red = i === evI ? flash : 0;
-        n.g.visible = up > 0;
-        if (!up) return;
-        if (!n.cc) n.d2.material.color.copy(BLUE).lerp(RED, red);
-        n.d1.scale.setScalar((n.cc ? 1.3 : 1) * up * (1 + .25 * red)); n.d2.scale.setScalar((n.cc ? .88 : .66 + .05 * Math.sin(t * 2.2 + i)) * up * (1 + .3 * red));
-        n.rings.forEach(function (r, j) { var ph = (t * (red ? 1.3 : .42) + i * .21 + j * .5) % 1; r.scale.setScalar(1 + (red ? 3.2 : 2.2) * o3(ph)); r.material.opacity = (red ? .8 : .45) * (1 - ph) * up; if (!n.cc) r.material.color.copy(BLUE).lerp(RED, red); });
-      });
-      // arcs and one packet per arc
-      var q = 0, pa = sg(t, 4.2, 4.8);
-      curves.forEach(function (c, i) {
-        c.lm.opacity = .26 * sg(t, 3.8, 4.5);
-        var e = io2((t * .3 + i * .37) % 1);
-        for (var r = 0; r < 6; r++) { c.c.getPoint(Math.max(0, e - r * .022), tmp); PK.pos[q * 3] = tmp.x; PK.pos[q * 3 + 1] = tmp.y; PK.pos[q * 3 + 2] = tmp.z; PK.al[q] = (.95 - r * .15) * pa * (i === evI ? .25 : 1); PK.sz[q] = (.62 - r * .07) * NK; q++; }
-      });
-      var pe = evI < 0 ? -1 : sg(u, .45, 1.15);
-      for (q = 0; q < 8; q++) {
-        if (pe > 0 && pe < 1) { curves[evI].c.getPoint(Math.max(0, io2(pe) - q * .028), tmp); RK.pos[q * 3] = tmp.x; RK.pos[q * 3 + 1] = tmp.y; RK.pos[q * 3 + 2] = tmp.z; RK.al[q] = q ? 1 - q * .12 : .2; RK.sz[q] = (q ? 1 - q * .09 : 2.6) * NK; } else RK.al[q] = 0;
-      }
-      [PK, RK].forEach(function (s) { s.g.attributes.position.needsUpdate = s.g.attributes.aA.needsUpdate = s.g.attributes.aS.needsUpdate = true; });
-      ack.forEach(function (r, m) { var a2 = evI < 0 ? 0 : sg(u, 1.15 + m * .22, 2.1 + m * .22); r.visible = a2 > 0 && a2 < 1; r.scale.setScalar((1.6 + 4.5 * o3(a2)) * NK); r.material.opacity = .8 * (1 - a2); });
-      R.render(scene, cam);
-      labels(P3, t, u);
-      rings(t, sg(t, 2.9, 4.1));
-    }
-    start(layout, step);
+    play();
 
-    // ---- no WebGL: the flat map with arcs and sites on a 2D canvas, fading in as the particle wordmark zooms out; the SVG rings still revolve
-    function flat2d() {
-      var c2 = document.createElement('canvas'), ctx = c2.getContext('2d'), P = null;
-      c2.setAttribute('aria-hidden', 'true'); cv.parentNode.replaceChild(c2, cv); cv = c2;
-      if (!ctx) return;
-      function dot(p, r, f) { ctx.fillStyle = f; ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, TAU); ctx.fill(); }
-      function step2d(t0) {
-        var t = t0 - OFF;
-        intro(t0, W / 2, H / 2); c2.style.opacity = sg(t0, GS, GS + 1.2).toFixed(3);
-        if (P) labels(P, t, -1);
-        rings(t, sg(t, 2.9, 4.1));
-      }
-      start(paint, step2d);
-      function paint() {
-        W = stage.clientWidth; H = stage.clientHeight;
-        if (!W || !H) return false;
-        var dpr = Math.min(window.devicePixelRatio || 1, 1.75); c2.width = Math.round(W * dpr); c2.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        measure();
-        var mw = Math.min(W * (mob ? .74 : .6), H * .84), mh = H * .76;
-        var s = Math.min(mw / (bx1 - bx0), mh / (bz1 - bz0)), ox = W / 2, oy = H / 2, r = Math.max(1.3, .19 * s * GAP);
-        P = function (x, y, z, o) { o = o || [0, 0]; o[0] = ox + x * s; o[1] = oy + (z - y) * s; return o; };
-        ctx.clearRect(0, 0, W, H); ctx.fillStyle = 'rgba(30,96,158,.82)'; ctx.beginPath();
-        DOTS.forEach(function (p) { var q = P(p[0], 0, p[1]); ctx.moveTo(q[0] + r, q[1]); ctx.arc(q[0], q[1], r, 0, TAU); });
-        ctx.fill();
-        var c = P(CCF[0], 0, CCF[1]); ctx.strokeStyle = 'rgba(14,59,102,.32)'; ctx.lineWidth = 1;
-        sites.forEach(function (st) { var a = P(st.f[0], 0, st.f[1]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.quadraticCurveTo((a[0] + c[0]) / 2, Math.min(a[1], c[1]) - Math.hypot(a[0] - c[0], a[1] - c[1]) * .3, c[0], c[1]); ctx.stroke(); });
-        sites.forEach(function (st) { var a = P(st.f[0], 0, st.f[1]); dot(a, 6.5, '#fff'); dot(a, 4.5, '#2673B5'); });
-        dot(c, 10, '#fff'); dot(c, 7, '#0E3B66'); dot(c, 2.4, '#fff');
-        return true;
-      }
+    /* ---------- the card: one Being at work ---------- */
+    var X$ = function (id) { return document.getElementById(id); };
+    var cBeing = X$('hcBeing'), cIn = X$('hcIn'), cDom = X$('hcDom'), cEv = X$('hcEv'), cWhere = X$('hcWhere'), cWhat = X$('hcWhat'),
+      cPlan = X$('hcPlan'), cOk = X$('hcOk'), cState = X$('hcState'), cNext = X$('hcNext'), cFoot = X$('hcFoot');
+    if (!cOk) return;
+    var EX = [
+      { b: 'NOAH', in: 'in Central Plexus', d: 'Highway', w: 'CAM-07 · km 42.6', e: 'Stopped vehicle on the shoulder',
+        p: [['Patrol', 'Send Patrol 3 to km 42.6'], ['Sign', 'Show “Vehicle ahead, slow down” on SIGN-14']], t: '00:41', done: 'Patrol on the way, sign updated, clip saved' },
+      { b: 'VAYU', in: 'in Cygnus', d: 'Port', w: 'Gate 3 · XX 00 AB 1234', e: 'Truck not on today’s gate list',
+        p: [['Gate', 'Hold the barrier at Gate 3'], ['Security', 'Call the security desk with the plate and clip']], t: '00:18', done: 'Barrier held, security on the way' },
+      { b: 'ASTRA', in: 'in AstraAlert', d: 'Call box', w: 'ECB-07 · km 18.2', e: 'Driver reports a breakdown, in Hindi',
+        p: [['Incident', 'Open an incident at the call box’s location'], ['Patrol', 'Alert the nearest patrol']], t: '00:26', done: 'Incident opened, patrol alerted' },
+      { b: 'NOAH', in: 'in Central Plexus (ICCC)', d: 'City', w: 'Junction J-12 · camera 3', e: 'Junction blocked for 4 minutes',
+        p: [['Police', 'Alert the traffic police desk'], ['Wall', 'Put junction J-12 on the command-centre wall']], t: '00:12', done: 'Desk alerted, junction on the wall' },
+      { b: 'KRITYA', in: 'in InfraX AI Ops', d: 'Field ops', w: 'Daily plan · Field team 2', e: '6 maintenance orders drafted for today',
+        p: [['Orders', 'Send the 6 orders to Field team 2'], ['Asset', 'Book the lift truck for 11:00']], t: '00:09', done: 'Orders sent, team notified' }
+    ];
+    var cur = -1, timers = [], phase = '', approvedOnce = false;
+    function later(fn, ms) { timers.push(setTimeout(function () { fn(); if (!running) draw(); }, ms)); }
+    function clear() { timers.forEach(clearTimeout); timers = []; }
+    function show(n) {
+      clear(); cur = (n + EX.length) % EX.length; var x = EX[cur];
+      cBeing.textContent = x.b; cIn.textContent = x.in; cDom.textContent = x.d; cWhere.textContent = x.w + ' · just now'; cWhat.textContent = x.e;
+      cEv.className = 'hc-ev';
+      cPlan.innerHTML = x.p.map(function (s) { return '<li><i aria-hidden="true"></i><span><small>' + s[0] + '</small>' + s[1] + '</span></li>'; }).join('');
+      cOk.disabled = true; cOk.classList.remove('ask'); cState.textContent = x.b + ' is looking at it…'; phase = 'detect';
+      ev = { g: pickEv(), st: 'ev' };
+      var lis = cPlan.children;
+      later(function () { lis[0] && lis[0].classList.add('on'); cState.textContent = x.b + ' proposes:'; }, reduce ? 0 : 800);
+      later(function () {
+        lis[1] && lis[1].classList.add('on'); cOk.disabled = false; cOk.classList.add('ask'); phase = 'wait';
+        cState.textContent = 'Your call.';
+        if (!reduce) later(hold, 9000);
+      }, reduce ? 0 : 1500);
     }
+    function hold() {
+      if (phase !== 'wait') return; phase = 'hold';
+      cOk.disabled = true; cOk.classList.remove('ask'); cEv.className = 'hc-ev hold'; if (ev) ev.st = 'hold';
+      cState.textContent = 'Held for the operator. Nothing moves without a person.';
+      later(function () { show(cur + 1); }, 3000);
+    }
+    function approve() {
+      if (phase !== 'wait') return; phase = 'act'; clear();
+      var x = EX[cur], lis = cPlan.children;
+      cOk.disabled = true; cOk.classList.remove('ask'); cState.textContent = 'On it…';
+      later(function () { lis[0] && lis[0].classList.add('done'); }, reduce ? 0 : 350);
+      later(function () {
+        lis[1] && lis[1].classList.add('done'); cEv.className = 'hc-ev ok'; phase = 'done';
+        cWhere.textContent = x.w + ' · closed in ' + x.t; cState.textContent = x.done + '. On record.';
+        if (ev) { ev.st = 'ok'; addArc(ev.g, pick(.2, .8), '47,158,85', 2.2); addArc(ev.g, pick(.2, .8), '47,158,85', 2.6); }
+        if (!approvedOnce) { approvedOnce = true; cFoot.hidden = false; }
+        if (!reduce) later(function () { show(cur + 1); }, approvedOnce && cFoot.dataset.seen ? 3600 : 5200);
+        cFoot.dataset.seen = '1';
+      }, reduce ? 0 : 900);
+    }
+    cOk.addEventListener('click', function () { approve(); if (!running) draw(); });
+    cNext.addEventListener('click', function () { show(cur + 1); });
+    later(function () { show(0); }, reduce ? 0 : 900);
   })();
 
   /* ---------- domain tiles ---------- */
