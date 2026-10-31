@@ -411,3 +411,45 @@
 :where(body[data-page="products"]) .cy-item .cy-mk{grid-column:1;grid-row:1;display:block;width:max(26px,calc(30*var(--s)));height:auto;aspect-ratio:1;margin-bottom:calc(4*var(--s))}
 :where(body[data-page="products"]) .cy-item b.cy-wm{display:inline-flex;align-items:center;flex-wrap:wrap;gap:calc(4*var(--s)) calc(10*var(--s));min-height:1.3em}
 :where(body[data-page="products"]) .cy-item b.cy-wm::before,:where(body[data-page="products"]) .cy-item b.cy-wm::after{content:none}
+
+/* station card popup: a scaled-up copy of the card, centred over a dimmed page */
+:where(body[data-page="products"]) .cy-pop-src{cursor:zoom-in}
+:where(body[data-page="products"]) .cy-pop-src::after{content:"\2922";position:absolute;right:calc(10*var(--s));bottom:calc(8*var(--s));font-size:14px;color:var(--muted);opacity:.7}
+.cy-pop{padding:0;border:0;background:transparent;overflow:visible;max-width:none;max-height:none}
+.cy-pop::backdrop{background:rgba(10,26,43,.55);backdrop-filter:blur(3px)}
+.cy-pop[open]{animation:cyPopIn .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes cyPopIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.cy-pop .cy-pop-card{position:relative;inset:auto;transform:none;width:min(900px,calc(100vw - 48px));max-height:calc(100dvh - 48px);overflow:auto;cursor:default;box-shadow:0 30px 80px -30px rgba(10,26,43,.6)}
+.cy-pop .cy-pop-card::after{content:none}
+.cy-pop .cy-rw{aspect-ratio:16/7}
+.cy-pop-x{position:absolute;top:12px;right:12px;z-index:5;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink);font:600 15px/1 var(--f-body);cursor:pointer;box-shadow:0 6px 18px -8px rgba(10,26,43,.4)}
+.cy-pop-x:hover{color:var(--blue);border-color:var(--blue)}
+.cy-pop .cy-p-head{padding-right:44px}
+@media (prefers-reduced-motion:reduce){.cy-pop[open]{animation:none}}
+/* product index: larger cards */
+:where(body[data-page="products"]) .cy-idx6 .cy-item{padding:calc(22*var(--s)) calc(22*var(--s)) calc(18*var(--s))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item .cy-mk{width:max(36px,calc(44*var(--s)));margin-bottom:calc(10*var(--s))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item .pb-name{height:max(20px,calc(24*var(--s)))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item .pb-x{font-size:max(13px,calc(14*var(--s)))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item>span{font-size:max(15px,calc(16*var(--s)));line-height:1.45;margin-top:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item i{font-size:calc(20*var(--s))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item .cy-meta{margin-top:calc(16*var(--s));padding-top:calc(14*var(--s))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item .cy-live{font-size:max(13px,calc(13.5*var(--s)))}
+/* demo video button: the YouTube mark */
+:where(body[data-page="products"]) .cy-item .cy-play{width:calc(34*var(--s));height:calc(24*var(--s));min-width:30px;min-height:21px;border-radius:0;background:none;box-shadow:none}
+:where(body[data-page="products"]) .cy-item .cy-play svg{width:100%;height:100%;margin:0}
+:where(body[data-page="products"]) .cy-yt:hover .cy-play{transform:scale(1.08);box-shadow:none}
+/* product index: names line up across cards; the status row sits at the bottom */
+:where(body[data-page="products"]) .cy-idx6 .cy-item{grid-template-rows:auto auto 1fr auto;align-content:stretch}
+:where(body[data-page="products"]) .cy-idx6 .cy-item>span:not(.cy-meta){align-self:start}
+:where(body[data-page="products"]) .cy-idx6 .cy-item .cy-meta{align-self:end}
+
+/* skip the tour: next to "Full screen", jumps past the tunnel */
+:where(body[data-page="products"]) .cy-skip{all:unset;box-sizing:border-box;position:absolute;right:var(--in);bottom:calc(104*var(--s));z-index:4;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:max(40px,calc(42*var(--s)));padding:0 calc(16*var(--s));border-radius:999px;background:rgba(255,255,255,.88);border:1px solid var(--line);backdrop-filter:blur(6px);font:600 max(13px,calc(14*var(--s)))/1 var(--f-body);color:var(--ink-2)}
+:where(body[data-page="products"]) .cy-skip:hover{color:var(--blue);border-color:var(--blue)}
+:where(body[data-page="products"]) .cy-skip:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+:where(body[data-page="products"]) .cy-static .cy-skip{display:none}
+/* station popup open: lock page scroll on the root only (locking body too unpins the sticky nav) */
+html.cy-pop-lock{overflow:hidden}
+/* detection boxes sit in a layer matching the photo's drawn area (placed by script), so they track the vehicles */
+:where(body[data-page="products"]) .rw-img{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}

@@ -4,8 +4,8 @@ export default function ServicesPath() {
   return (
     <section className="scene tight sv-path" id="sv-path" aria-labelledby="sv-path-title"><div className="wrap">
       <div className="sv-path-head">
-        <div><h2 className="h-1" id="sv-path-title" data-reveal="">A small first scope. Clear acceptance.</h2></div>
-        <p className="body">Nothing moves to the next step until you have seen it work.</p>
+        <div><h2 className="h-2 sv-h" id="sv-path-title" data-reveal="">A small first scope. Clear acceptance.</h2></div>
+        <p className="lead sv-tag">Nothing moves to the next step until you have seen it work.</p>
       </div>
       <div className="sv-rail" id="svRail">
         <div className="sv-rail-track" aria-hidden="true"><span className="sv-rail-fill" id="svRailFill"></span>

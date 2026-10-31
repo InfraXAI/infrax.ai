@@ -55,7 +55,7 @@ export default function ProductsTunnel() {
           </div>
 
           <div className="cy-card cy-tollcard" id="cyToll" aria-hidden="true">
-            <div className="cy-card-h">TollCloud · plaza P2 <span id="cyTollT">Lane 3</span></div>
+            <div className="cy-card-h">Naka · plaza P2 <span id="cyTollT">Lane 3</span></div>
             <p className="cy-tstat" id="cyTStat"><i></i><span>Edge ↔ cloud · synced</span></p>
             <ol className="cy-call cy-sess" id="cyTollList"></ol>
           </div>
@@ -80,6 +80,7 @@ export default function ProductsTunnel() {
           </div>
 
           <button type="button" className="cy-more" id="cyMore" aria-haspopup="dialog" aria-controls="cyPd"><span>Show more detail</span><i aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M8 3v10M3 8h10" /></svg></i></button>
+          <button type="button" className="cy-skip" id="cySkip">Skip the tour <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 3l5 5-5 5M9 3l5 5-5 5" /></svg></button>
           <button type="button" className="cy-fs" id="cyFs" aria-pressed="false" hidden><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path className="fs-on" d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4" /><path className="fs-off" d="M6 2v4H2M14 6h-4V2M10 14v-4h4M2 10h4v4" /></svg><span>Full screen</span></button>
 
           <nav className="cy-rail" aria-label="Product stations">

@@ -3,7 +3,7 @@
 export default function DeploymentEdge() {
   return (
     <>
-    <section className="scene" aria-labelledby="dp-edge-h" style={{ 'paddingTop': '0' }}>
+    <section className="scene" aria-labelledby="dp-edge-h">
       <div className="wrap dp-edge">
         <figure className="dp-photo" id="dpPhoto">
           <img decoding="async" src="/img/edge-box-sm.webp" srcSet="/img/edge-box-sm.webp 768w, /img/edge-box.webp 1536w" sizes="(min-width:1024.02px) 55vw, 100vw" alt="An engineer connecting the AI box inside a roadside cabinet, next to a network switch and fibre patch panel" loading="lazy" width="1536" height="864" />
