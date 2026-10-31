@@ -16,7 +16,7 @@ export default function ProductsTunnel() {
           <div className="cy-hud-l">
             <p className="eyebrow" id="cyHudEye">Highways</p>
             <div className="cy-bignum" id="cyNum" aria-hidden="true"><span>01</span><small>/ 07</small></div>
-            <p className="cy-hud-name" id="cyHudName" aria-hidden="true">InfraX AI VIDES</p>
+            <p className="cy-hud-name" id="cyHudName" aria-hidden="true">Dhrishya</p>
           </div>
           <div className="cy-hud-r" aria-hidden="true"><b>CAM G04-02 · LIVE</b><br /><span id="cyClock">--:--:-- IST</span> · <span className="fps">25 FPS</span></div>
 
@@ -31,7 +31,7 @@ export default function ProductsTunnel() {
           </aside>
 
           <div className="cy-card alert" id="cyEvi" aria-hidden="true">
-            <div className="cy-card-h">Central Plexus · #4471 <span id="cyEviT">14:32:07</span></div>
+            <div className="cy-card-h">Plexus · #4471 <span id="cyEviT">14:32:07</span></div>
             <div className="cy-frames"><i></i><i></i><i></i></div>
             <dl><dt>Where</dt><dd>Lane 1 · shoulder · km 41.2</dd><dt>Camera</dt><dd>CAM G04-02</dd><dt>Evidence</dt><dd>12 s clip · 3 frames</dd></dl>
             <ol className="cy-flow" id="cyFlow">
@@ -61,11 +61,11 @@ export default function ProductsTunnel() {
           </div>
 
           <div className="cy-card cy-opscard" id="cyOps" aria-hidden="true">
-            <div className="cy-card-h">InfraX AI Ops · WO-2219 <span id="cyOpsT">--:--</span></div>
+            <div className="cy-card-h">Ulka · WO-2219 <span id="cyOpsT">--:--</span></div>
             <div className="cy-phone">
               <div className="cy-ph-bar"><span>Field team 2</span><b>On shift</b></div>
               <p className="cy-ph-t">CAM R-14 · no video <span className="cy-ph-pill" id="cyOpsPill">Assigned</span></p>
-              <p className="cy-ph-s">km 41.6 · left shoulder · raised from Central Plexus</p>
+              <p className="cy-ph-s">km 41.6 · left shoulder · raised from Plexus</p>
               <ol className="cy-flow" id="cyOpsFlow">
                 <li><i></i>Assigned<small>--:--</small></li>
                 <li><i></i>On site<small>--:--</small></li>

@@ -10,7 +10,7 @@ export default function DeploymentHero() {
             <h1 className="h-hero" id="dp-h" data-reveal="">Runs on your<br />own servers.</h1>
           </div>
           <div><p className="lead">Standard CPU servers are enough. Add a GPU for more cameras and faster analytics.</p>
-            <p className="dp-roadmap">Four ways to deploy, mixed per site. InfraX AI Ops is already hosted at ops.infrax.ai; hosted Cygnus is on our roadmap.</p></div>
+            <p className="dp-roadmap">Four ways to deploy, mixed per site. Ulka is already hosted at ops.infrax.ai; hosted Cygnus is on our roadmap.</p></div>
         </div>
     
         <div role="tablist" aria-label="Deployment model" className="dp-tabs" id="dpTabs">

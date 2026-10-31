@@ -511,7 +511,7 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .hm-pc,.hm-tile,.hm-ops,.hm-agc,.hm-demo,.an-card,.an-dn-card,.dp-stage,.dp-reg,.hw-card,.in-card,.sv-card,.cy-panel{border-color:transparent;box-shadow:var(--sh-card)}
 .hm-tile:hover,.hm-tile:focus-visible,.hm-ops:hover,.hm-ops:focus-visible{border-color:transparent;box-shadow:var(--sh-card-h)}
 .hm-pc-vis,.hm-tile>:first-child{border-bottom-color:var(--edge)}
-.hm-pc-vis img,.hm-tile img,.hm-ops img,.sv-card img,.in-card img{outline:1px solid rgba(0,0,0,.06);outline-offset:-1px}
+.hm-pc-vis img,.hm-tile img,.hm-ops > img,.sv-card img,.in-card img{outline:1px solid rgba(0,0,0,.06);outline-offset:-1px}
 
 /* chips: soft tinted labels instead of solid blue blocks (dots and "Live" wording unchanged) */
 .hm-chips .st-live,.cy-panel .st-live,.sv-card .st-live,.in-card .st-live{background:#EBF3FB;color:#1A5A96;box-shadow:inset 0 0 0 1px rgba(38,115,181,.2);border-radius:calc(6*var(--s));letter-spacing:.04em}
@@ -614,3 +614,12 @@ body{background:transparent}
 :where(main) img:not([src$=".svg"]){outline:1px solid rgba(10,26,43,.08);outline-offset:-1px}
 /* one keyboard focus ring for anything that does not draw its own */
 :where(a,button,[role="button"],[tabindex]:not([tabindex="-1"]),summary,select,input,textarea):focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+/* product mark + name wordmark (ProductBrand, and the same markup built in lib/pages/products.js) */
+.pb{display:inline-flex;align-items:center;flex-wrap:wrap;gap:calc(6*var(--s)) calc(10*var(--s));vertical-align:middle}
+.pb-mark{flex:none;width:max(28px,calc(34*var(--s)));height:auto;aspect-ratio:1}
+.pb-name{flex:none;height:max(16px,calc(19*var(--s)));width:auto}
+.pb-x{font:500 max(12px,calc(13*var(--s)))/1.3 var(--f-mono);letter-spacing:.04em;color:var(--muted)}
+.menu-products a i.mk{background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.menu-products a i.mk::before{content:none}
+.menu-products a i.mk img{width:80%;height:80%}
+.menu-products a:hover i.mk{background:#fff;box-shadow:inset 0 0 0 1px var(--line-2)}

@@ -7,7 +7,7 @@
    props, edge rails, tube-and-coupler scaffold with boards and couplers, crane walkways/cab/hook block, vehicle
    hydraulics, mirrors and dummy plates, porta-cabins with steps and stair, hoarding posts and blank signs, merged
    static detail per surface type (one draw call each); ctx.mobile drops small props.
-   Products here: Access and parking (site gate) and Cygnus. Everything is shown as Live (brief-v9).
+   Products here: Toran (site gate) and Cygnus. Everything is shown as Live (brief-v9).
    Contract: brief-v8 §6. Registers INFRAX_DOMAINS.construction. */
 (function () {
   'use strict';
@@ -19,7 +19,7 @@
     title: 'Every gate, crane and pour camera in one control room',
     intro: 'Deliveries read at the site gate, a concrete truck’s plate reads from gate to pour, every lift on record, and the excavator’s swing radius watched.',
     stations: [
-      { id: 'gate', product: 'Access and parking', productSlug: 'access-parking', short: 'Site gate', title: 'Every delivery read at the gate',
+      { id: 'gate', product: 'Toran', productSlug: 'access-parking', short: 'Site gate', title: 'Every delivery read at the gate',
         body: 'The ANPR camera at the site gate reads each delivery’s plate and vehicle class. The barrier opens and the visit is logged against the plate.',
         rows: [['Gate', 'Site gate · in'], ['Plate', 'XX 00 AB 1234'], ['Class', 'Truck · transit mixer'], ['Logged', '07:58 IST']],
         live: ['ANPR', 'Vehicle detection & classification'], photo: 'img/construction-gate-sm.webp', photoCaption: 'Illustrative' },

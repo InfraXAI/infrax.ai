@@ -17,12 +17,12 @@ export default function DeploymentEdge() {
           <ul className="dp-notes" id="dpNotes">
             <li data-n="0"><b>1</b><p><strong>The AI runs in the box on the gantry,</strong> next to the cameras and radar.</p></li>
             <li data-n="1"><b>2</b><p><strong>If the link drops, it keeps reading.</strong> Reads sync once the link is back.</p></li>
-            <li data-n="2"><b>3</b><p><strong>Results go to Central Plexus (ATMS / ICCC)</strong> with images attached, ready for e-challan.</p></li>
+            <li data-n="2"><b>3</b><p><strong>Results go to Plexus (ATMS / ICCC)</strong> with images attached, ready for e-challan.</p></li>
             <li data-n="3"><b>4</b><p><strong>It plugs into the gantry network you already have.</strong></p></li>
           </ul>
           <div className="dp-up">
             <figure><figcaption><b>Raw video</b> · stays at the gantry</figcaption></figure>
-            <figure><figcaption><b>Plates, classes &amp; cases</b> · go to Central Plexus (ATMS / ICCC)</figcaption></figure>
+            <figure><figcaption><b>Plates, classes &amp; cases</b> · go to Plexus (ATMS / ICCC)</figcaption></figure>
           </div>
           <div className="dp-chips"><a className="dp-chip" href="/products#d-highways">Highways &amp; expressways</a><a className="dp-chip" href="/products#vides">Speed enforcement gantries</a><a className="dp-chip" href="/products#central-plexus">Control rooms</a></div>
         </div>

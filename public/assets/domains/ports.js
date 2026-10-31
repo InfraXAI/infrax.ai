@@ -878,14 +878,14 @@
   }
 
   /* =============================================================================================
-     PORTS: container port and logistics hub. Cygnus + Access and parking (truck gate) only.
+     PORTS: container port and logistics hub. Cygnus + Toran (truck gate) only.
      World (metres): water x < -42, quay edge at x = -42 with ship-to-shore cranes on rails and a moored
      ship, container yard blocks with RTGs and straddle carriers in the middle, a reefer row, light
      towers, truck gate complex at z = +46 (outside is +z) with the queue, operations building with the
      Cygnus 3×3 wall + playback east of the gate, berth camera on the quay.
      ============================================================================================= */
   var STATIONS = [
-    { id: 'gate', product: 'Access and parking', productSlug: 'access-parking', short: 'Gate lanes',
+    { id: 'gate', product: 'Toran', productSlug: 'access-parking', short: 'Gate lanes',
       title: 'Every truck read at the gate lane',
       body: 'Cameras over each gate lane read the plate and the class of every truck, day or night. Each read opens the gate transaction with the time, the lane and a snapshot.',
       rows: [['Plate', 'XX 00 AB 1234'], ['Class', 'Truck · container'], ['Lane', 'Gate 3 · in'], ['Barrier', 'Opened on read']],
@@ -909,7 +909,7 @@
       rows: [['Camera', 'Berth 2 · quay cam'], ['Status', 'Stream lost'], ['Next step', 'Maintenance ticket']],
       live: ['Camera tamper & health'],
       photo: 'img/port-berth-sm.webp', photoCaption: 'Illustrative' },
-    { id: 'queue', product: 'Access and parking', productSlug: 'access-parking', short: 'Gate queue',
+    { id: 'queue', product: 'Toran', productSlug: 'access-parking', short: 'Gate queue',
       title: 'How long trucks wait, lane by lane',
       body: 'Trucks queued outside each gate lane are counted with their waiting time, so the gate team opens another lane before the line reaches the road.',
       rows: [['Lane 1', '3 trucks · 6 min'], ['Lane 2', '2 trucks · 4 min'], ['Lane 3', '1 truck · 1 min'], ['Lane 4', '2 trucks · 3 min']],
@@ -1531,11 +1531,11 @@
     });
 
     /* ---------- station boards ---------- */
-    K.stationBoard('01', 'Gate lanes · plate reads', 'Access and parking', 24, 60, K.facing(24, 60, 24, 82) - .4);
+    K.stationBoard('01', 'Gate lanes · plate reads', 'Toran', 24, 60, K.facing(24, 60, 24, 82) - .4);
     K.stationBoard('02', 'Gate to berth', 'Cygnus', 14, 16, -Math.PI / 2 + .2);
     K.stationBoard('03', 'Yard wall', 'Cygnus', 22, 21, K.facing(22, 21, 20.5, 33.2));
     K.stationBoard('04', 'Camera health', 'Cygnus', -29, -4, 0);              // under the crane portal, facing the station camera
-    K.stationBoard('05', 'Gate queue', 'Access and parking', 28, 78, K.facing(28, 78, 34, 104));
+    K.stationBoard('05', 'Gate queue', 'Toran', 28, 78, K.facing(28, 78, 34, 104));
 
     /* ---------- tags ---------- */
     var tPlate = K.tag('<b>XX 00 AB 1234</b> · Truck · Gate 3', '', new T.Vector3(4.25, 5.4, 60));

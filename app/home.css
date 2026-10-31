@@ -229,7 +229,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) #hmPgrid .hm-chips .st{padding:calc(5*var(--s)) calc(7*var(--s))}
 :where(body[data-page="home"]) #hmPgrid .link-arrow{margin-top:auto;padding-top:0;min-height:max(36px,calc(36*var(--s)));font-size:max(14px,calc(14.5*var(--s)))}
 :where(body[data-page="home"]) #products .hm-ops{margin-top:calc(18*var(--s));padding:calc(8*var(--s)) calc(14*var(--s));gap:calc(14*var(--s))}
-:where(body[data-page="home"]) #products .hm-ops img{width:clamp(calc(140*var(--s)),14vw,calc(220*var(--s)));height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
+:where(body[data-page="home"]) #products .hm-ops > img{width:clamp(calc(140*var(--s)),14vw,calc(220*var(--s)));height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
 :where(body[data-page="home"]) #products .hm-ops h3{font-size:var(--fs-h3);line-height:var(--lh-h3)}
 :where(body[data-page="home"]) #products .hm-ops p{margin-top:calc(2*var(--s));font-size:max(14px,calc(14.5*var(--s)));line-height:1.45}
 :where(body[data-page="home"]) #products .hm-ops .link-arrow{min-height:max(36px,calc(36*var(--s)));font-size:max(14px,calc(14.5*var(--s)))}
@@ -266,7 +266,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .hm-ops:focus-visible{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}
 @media (hover:hover){:where(body[data-page="home"]) .hm-ops:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}}
 :where(body[data-page="home"]) .hm-tile:active,:where(body[data-page="home"]) .hm-ops:active{transform:translateY(0) scale(.99);transition-duration:var(--dur-1)}
-:where(body[data-page="home"]) .hm-ops img{flex:none;width:calc(96*var(--s));height:calc(60*var(--s));object-fit:cover;border-radius:calc(8*var(--s))}
+:where(body[data-page="home"]) .hm-ops > img{flex:none;width:calc(96*var(--s));height:calc(60*var(--s));object-fit:cover;border-radius:calc(8*var(--s))}
 :where(body[data-page="home"]) .hm-ops h3{font-size:var(--fs-h3);font-weight:600;display:flex;align-items:center;gap:calc(8*var(--s));flex-wrap:wrap}
 :where(body[data-page="home"]) .hm-ops p{margin:calc(4*var(--s)) 0 0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
 :where(body[data-page="home"]) .hm-ops .link-arrow{margin-left:auto;min-height:max(44px,calc(44*var(--s)));white-space:nowrap}

@@ -2,7 +2,7 @@
    A logistics warehouse / distribution centre: yard gate with ANPR, weighbridge, kerbs and bollards; a portal-frame
    shed with ribbed cladding, skylights, a dock canopy, levellers, seals and numbered doors; reefer and box trucks
    reversing to bays with reverse lights; racking aisles with varied loads, a reach truck, pallet jacks, LED high-bays
-   and floor markings; a yard video wall. Products here: Access and parking (gate) and Cygnus. All Live (brief-v9).
+   and floor markings; a yard video wall. Products here: Toran (gate) and Cygnus. All Live (brief-v9).
    Detail pass: I-section portal frame with haunches and purlins, insulated panels on a plinth, ribbed roof with rooflights
    and parapet, sectional dock doors with seals/levellers/bumpers/wheel guides, racking with real pallets and mixed
    loads, finned LED high-bays, counterbalance forklifts and a reach truck with drivers, detailed reefer, trailer and
@@ -18,7 +18,7 @@
     title: 'Every gate, dock and aisle in one control room',
     intro: 'Plates read at the yard gate, every read of a truck from gate to dock on one timeline, and every dock and aisle camera on one wall. It runs on your own servers.',
     stations: [
-      { id: 'gate', product: 'Access and parking', productSlug: 'access-parking', short: 'Yard gate', title: 'The gate reads every truck',
+      { id: 'gate', product: 'Toran', productSlug: 'access-parking', short: 'Yard gate', title: 'The gate reads every truck',
         body: 'An ANPR camera at the yard gate reads the plate and the vehicle class as the truck stops. The barrier opens and the visit is logged against the plate.',
         rows: [['Lane', 'Gate 1 · in'], ['Plate', 'XX 00 AB 1234'], ['Class', 'Truck · 3 axle'], ['Logged', '08:42 IST']],
         live: ['ANPR', 'Vehicle detection & classification'], photo: 'img/factory-gate-sm.webp', photoCaption: 'Illustrative' },

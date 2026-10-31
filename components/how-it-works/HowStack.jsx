@@ -21,7 +21,7 @@ export default function HowStack() {
           <li className="hw-step" data-step="2">
             <span className="ix" aria-hidden="true"><span className="ix" data-ix="wall" data-size="20"></span></span>
             <div><h3>Act</h3>
-              <p>The event reaches Central Plexus (ATMS / ICCC) with its clip; your operator dispatches patrol, updates signs or sends it for e-challan.</p></div>
+              <p>The event reaches Plexus (ATMS / ICCC) with its clip; your operator dispatches patrol, updates signs or sends it for e-challan.</p></div>
           </li>
         </ol>
       </div>

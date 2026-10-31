@@ -9,14 +9,14 @@ const GROUPS = [
     ['Bulk onboarding', 'Add cameras from a CSV or Excel template, or through the registry API.'],
     ['Other VMS and NVR products', 'A recorder that shares its channels over RTSP connects like a camera.'],
   ]],
-  ['Roadside devices', 'Through InfraX AI VIDES, Central Plexus and InfraX AI Ops', [
+  ['Roadside devices', 'Through Dhrishya, Plexus and Ulka', [
     ['Gantry radar', 'Radar speed paired with the camera read for each vehicle, on the gantry unit.'],
-    ['Other roadside systems', 'An administrator sets up an authenticated push route, and events arrive in Central Plexus.'],
-    ['Network monitoring', 'Device up or down status synced from a monitoring system into Central Plexus.'],
+    ['Other roadside systems', 'An administrator sets up an authenticated push route, and events arrive in Plexus.'],
+    ['Network monitoring', 'Device up or down status synced from a monitoring system into Plexus.'],
     ['LED message signs', 'Sign register, templates and incident previews, prepared by the operator.'],
-    ['Equipment heartbeats', 'Devices report CPU, temperature, signal and uptime to InfraX AI Ops with an ingest key.'],
+    ['Equipment heartbeats', 'Devices report CPU, temperature, signal and uptime to Ulka with an ingest key.'],
   ]],
-  ['Calls and enforcement', 'Through AstraAlert and Central Plexus', [
+  ['Calls and enforcement', 'Through AstraAlert and Plexus', [
     ['Emergency call boxes', 'Calls reach the control room over SIP, each tied to its box.'],
     ['Call box health', 'Status messages from each box update its power, battery, solar and door state.'],
     ['AI voice Being', 'Off by default. Answers in Hindi when no operator picks up, then files an incident with a briefing.'],

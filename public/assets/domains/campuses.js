@@ -878,19 +878,19 @@
   }
 
   /* =============================================================================================
-     CAMPUSES: corporate / hospital / university campus. Cygnus + Access and parking only.
+     CAMPUSES: corporate / hospital / university campus. Cygnus + Toran only.
      World (metres): internal road along z (gate at z=42, outside is +z), glass and white blocks with
      mullions and lit floors, a porte-cochere drop-off and entrance (Block A, east face), a 3-level
      parking deck (east), a basement ramp, and the security pavilion with the Cygnus wall (west).
      ============================================================================================= */
   var STATIONS = [
-    { id: 'gate', product: 'Access and parking', productSlug: 'access-parking', short: 'Gate',
+    { id: 'gate', product: 'Toran', productSlug: 'access-parking', short: 'Gate',
       title: 'Every vehicle in and out, read and logged',
       body: 'Plate reads at the main gate, in and out. Each read lands in the visitor and vehicle log with the time, the lane and a snapshot, so the front desk knows who is on campus.',
       rows: [['Plate', 'XX 00 AB 1234'], ['Lane', 'Main gate · entry'], ['Class', 'Car'], ['Sent to', 'Cygnus · event log', 'ok']],
       live: ['ANPR', 'Vehicle classification', 'Visitor and vehicle log'],
       photo: 'img/campus-sm.webp', photoCaption: 'Illustrative' },
-    { id: 'parking', product: 'Access and parking', productSlug: 'access-parking', short: 'Parking',
+    { id: 'parking', product: 'Toran', productSlug: 'access-parking', short: 'Parking',
       title: 'Free spaces by level, as they change',
       body: 'Every entry and exit updates the count for each level of the parking deck and goes to Cygnus as an event. Cameras at the basement ramp watch the cars going down to P2.',
       rows: [['Level 1', '12 free'], ['Level 2', '27 free'], ['Level 3', '41 free'], ['Ramp', 'P2 · 2 cameras']],
@@ -1713,8 +1713,8 @@
     /* ---------- station boards ---------- */
     // each board reads at its own station and stays out of the other stations' frames (checked by projecting every
     // board into every station camera, desktop and phone)
-    K.stationBoard('01', 'Gate · plate reads', 'Access and parking', 15, 47.5, K.facing(15, 47.5, -5, 64), null, .75);
-    K.stationBoard('02', 'Parking by level', 'Access and parking', 45.5, 39, -.5, null, .75);        // right of the deck, off the entry car's path
+    K.stationBoard('01', 'Gate · plate reads', 'Toran', 15, 47.5, K.facing(15, 47.5, -5, 64), null, .75);
+    K.stationBoard('02', 'Parking by level', 'Toran', 45.5, 39, -.5, null, .75);        // right of the deck, off the entry car's path
     K.stationBoard('03', 'One console', 'Cygnus', -16.5, 39.2, K.facing(-16.5, 39.2, 1, 26), null, .55);
     K.stationBoard('04', 'Camera health', 'Cygnus', 23, 10, K.facing(23, 10, 2, 27));          // set back from the camera path
     K.stationBoard('05', 'People counting', 'Cygnus', -11, -12, K.facing(-11, -12, -3, 15));
