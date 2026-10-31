@@ -15,7 +15,7 @@
 .dp-pill{position:absolute;z-index:0;top:calc(5*var(--s));bottom:calc(5*var(--s));left:0;border-radius:calc(999*var(--s));background:var(--blue);transition:transform .55s var(--ease)}
 .dp-auto{display:block;text-align:center;white-space:nowrap;margin-block:10px;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);letter-spacing:.04em;vertical-align:middle}
 .dp-stage{position:relative;margin-top:calc(18*var(--s));border:1px solid var(--line);border-radius:calc(22*var(--s));background:rgba(255,255,255,.78);overflow:hidden}
-.dp-svg{position:relative;display:block;width:100%;height:auto;max-height:min(66vh,620px);max-height:min(66svh,620px)}
+.dp-svg{position:relative;display:block;width:100%;height:auto;max-height:min(66vh,calc(620*var(--s)));max-height:min(66svh,calc(620*var(--s)))}
 .dp-zone rect{fill:rgba(220,235,247,.38);stroke:var(--line-2);stroke-width:1.2}
 .dp-zone.dash rect{fill:none;stroke:var(--blue-soft);stroke-dasharray:6 6}
 .dp-zone text{font:500 13px var(--f-mono);fill:var(--blue-mid);letter-spacing:.04em;text-transform:uppercase}
@@ -27,17 +27,20 @@
 .dp-vert .dp-l1{font-size:23px}
 .dp-vert .dp-l2{display:none}
 .dp-vert .dp-zone text{font-size:19px}
-.led{animation:dpled 1.6s infinite}
+.led{animation:dpled 1.6s infinite;animation-play-state:var(--ps,running)}
+/* the LEDs live in <symbol>s, which the shared [data-off] rule can't reach: the paused flag reaches them through the <use> element */
+[data-off] use{--ps:paused}
 .led.l2{animation-delay:.4s}.led.l3{animation-delay:.8s}
 @keyframes dpled{0%,100%{opacity:1}50%{opacity:.25}}
 .dp-legend{position:relative;display:flex;justify-content:flex-end;padding:0 calc(20*var(--s)) calc(14*var(--s));gap:calc(16*var(--s));font:500 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--muted)}
 .dp-legend i{display:inline-block;width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;margin-right:calc(6*var(--s));vertical-align:middle}
 .dp-panel{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.3fr) minmax(0,1fr);gap:clamp(calc(20*var(--s)),3vw,calc(44*var(--s)));padding:calc(30*var(--s)) calc(4*var(--s)) 0}
-.dp-panel h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+.dp-panel h2{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
 .dp-panel h4{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 calc(12*var(--s))}
 .dp-chips{display:flex;flex-wrap:wrap;gap:calc(8*var(--s));margin-top:calc(18*var(--s))}
-.dp-chip{display:inline-flex;align-items:center;gap:calc(8*var(--s));min-height:calc(36*var(--s));padding:0 calc(14*var(--s));border:1px solid var(--line-2);border-radius:calc(999*var(--s));font:500 max(12px,calc(13.5*var(--s))) var(--f-body);text-decoration:none;color:var(--ink-2);background:#fff;transition:border-color .2s,color .2s}
+.dp-chip{display:inline-flex;align-items:center;gap:calc(8*var(--s));min-height:calc(36*var(--s));padding:0 calc(14*var(--s));border:1px solid var(--line-2);border-radius:calc(999*var(--s));font:500 max(12px,calc(13.5*var(--s))) var(--f-body);text-decoration:none;color:var(--ink-2);background:#fff;transition:border-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
 .dp-chip:hover{border-color:var(--blue);color:var(--blue)}
+.dp-chip:active{scale:.96}
 .dp-chip::before{content:"";width:calc(6*var(--s));height:calc(6*var(--s));border-radius:50%;background:var(--blue)}
 .dp-where{margin:0;display:grid;gap:0}
 .dp-where div{display:grid;grid-template-columns:calc(120*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));padding:calc(11*var(--s)) 0;border-top:1px solid var(--line)}
@@ -52,8 +55,8 @@
 .dp-cams{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:clamp(calc(28*var(--s)),5vw,calc(72*var(--s)));align-items:start;position:relative}
 .dp-tray{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(16*var(--s));margin-top:calc(40*var(--s))}
 .dp-tray li{list-style:none;border:1px solid var(--line);border-radius:calc(14*var(--s));background:#fff;padding:calc(12*var(--s)) calc(8*var(--s)) calc(10*var(--s));text-align:center;font:500 max(12px,calc(12*var(--s))) var(--f-mono);color:var(--muted);position:relative;transition:opacity .4s}
-.dp-tray svg{width:calc(64*var(--s));height:calc(48*var(--s));display:block;margin:0 auto calc(6*var(--s))}
-.dp-tray li.done{opacity:.5}
+.dp-tray svg{width:calc(64*var(--s));height:calc(48*var(--s));display:block;margin:0 auto calc(6*var(--s));transition:opacity .4s}
+.dp-tray li.done svg{opacity:.5}
 .dp-tray li.done::after{content:"✓";position:absolute;top:calc(6*var(--s));right:calc(9*var(--s));color:var(--blue);font-weight:700}
 .dp-tray ul{margin:0;padding:0;display:contents}
 .dp-proto{display:flex;flex-wrap:wrap;gap:calc(8*var(--s));margin-top:calc(22*var(--s))}
@@ -117,12 +120,13 @@
 .dp-found .lbl{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
 .dp-found .it{display:inline-flex;align-items:center;gap:calc(8*var(--s));font:500 max(12px,calc(14*var(--s)))/1.3 var(--f-body);color:var(--ink)}
 .dp-found svg{width:calc(20*var(--s));height:calc(20*var(--s));color:var(--blue)}
-.dp-panel h3 .dp-req{vertical-align:middle;margin-left:calc(10*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);white-space:nowrap}
+.dp-panel h2 .dp-req{vertical-align:middle;margin-left:calc(10*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);white-space:nowrap}
 /* registry actions: ONVIF discovery + CSV import */
 .dp-reg-act{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-bottom:1px solid var(--line)}
-.dp-act{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:calc(34*var(--s)) minmax(0,1fr);gap:calc(10*var(--s));align-items:center;padding:calc(12*var(--s)) calc(18*var(--s));min-height:calc(58*var(--s))}
+.dp-act{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:calc(34*var(--s)) minmax(0,1fr);gap:calc(10*var(--s));align-items:center;padding:calc(12*var(--s)) calc(18*var(--s));min-height:calc(58*var(--s));transition:background-color var(--dur-2) var(--ease-out)}
 .dp-act+.dp-act{border-left:1px solid var(--line)}
 .dp-act:hover{background:var(--mist)}
+.dp-act:active{background:var(--wash)}
 .dp-act:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
 .dp-act svg{width:calc(34*var(--s));height:calc(34*var(--s))}
 .dp-act b{display:block;font:600 max(12px,calc(13.5*var(--s)))/1.2 var(--f-body);color:var(--ink)}
@@ -181,7 +185,7 @@
 /* touch: 44px tap targets */
 @media (pointer:coarse),(max-width:1024px){.dp-chip{min-height:44px}}
 /* v17 calmer visuals */
-@media (min-width:480.02px){.dp-stage{max-width:1040px;margin-inline:auto}.dp-stage svg,.dp-stage canvas{max-height:min(55vh,520px);max-height:min(55svh,520px)}}
+@media (min-width:480.02px){.dp-stage{max-width:calc(1040*var(--s));margin-inline:auto}.dp-stage svg,.dp-stage canvas{max-height:min(55vh,calc(520*var(--s)));max-height:min(55svh,calc(520*var(--s)))}}
 </style>
 
 <!-- icon sprite: equipment drawn as hardware, centred in a 96×72 box -->
@@ -365,20 +369,20 @@
       </ul>
       <div class="dp-proto"><span>ONVIF Profile S</span><span>ONVIF Profile T</span><span>RTSP</span><span>H.264 / H.265</span><span>Fixed · PTZ · ANPR</span><span>Any brand</span><span>Your VMS or NVR, through its API</span></div>
     </div>
-    <div class="dp-reg" role="table" aria-label="Camera registry, sample data">
-      <div class="dp-reg-top" role="row"><b role="columnheader">Camera registry</b><span role="columnheader">Sample data</span></div>
+    <div class="dp-reg" role="group" aria-label="Camera registry, sample data">
+      <div class="dp-reg-top"><b>Camera registry</b><span>Sample data</span></div>
       <div class="dp-reg-act">
         <button type="button" class="dp-act" id="dpDisc"><svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><circle cx="17" cy="17" r="15" stroke="#C5D4E2"/><circle cx="17" cy="17" r="9" stroke="#C5D4E2"/><path class="sweep" d="M17 17L17 2" stroke="#2673B5" stroke-width="2" stroke-linecap="round"/><circle cx="23" cy="10" r="2" fill="#2673B5"/><circle cx="9" cy="22" r="2" fill="#5A9FD4"/></svg>
           <span><b>ONVIF discovery</b><small id="dpDiscTxt">Finds cameras on the network</small><span class="pb"><i id="dpDiscBar"></i></span></span></button>
         <button type="button" class="dp-act" id="dpCsv"><svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M8 3h13l6 6v22H8z" fill="#fff" stroke="#0E3B66" stroke-width="1.6"/><path d="M21 3v6h6" stroke="#0E3B66" stroke-width="1.6"/><path d="M12 15h11M12 19h11M12 23h8" stroke="#5A9FD4" stroke-width="1.6"/></svg>
           <span><b>Bulk import</b><small id="dpCsvTxt">Add cameras from CSV or Excel</small><span class="pb"><i id="dpCsvBar"></i></span></span></button>
       </div>
-      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Bullet"><use href="#ic-bullet" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">CAM-HW-012<small>Highway gantry</small></span><span class="dp-reg-pr" role="cell">ONVIF S · H.265</span><span class="dp-on" role="cell">Online</span></div>
-      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="PTZ"><use href="#ic-ptz" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">GGN-JN-07<small>City junction</small></span><span class="dp-reg-pr" role="cell">ONVIF S/T · H.264</span><span class="dp-on" role="cell">Online</span></div>
-      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="ANPR"><use href="#ic-anpr" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">CMP-GATE-03<small>Campus gate</small></span><span class="dp-reg-pr" role="cell">RTSP · H.264</span><span class="dp-on" role="cell">Online</span></div>
-      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Box"><use href="#ic-box" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">PLT-GATE-02<small>Plant gate</small></span><span class="dp-reg-pr" role="cell">RTSP · H.265</span><span class="dp-on" role="cell">Online</span></div>
-      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Dome"><use href="#ic-dome" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">IND-YARD-11<small>Warehouse yard</small></span><span class="dp-reg-pr" role="cell">ONVIF T · H.265</span><span class="dp-on off" role="cell">Moved · view changed</span></div>
-      <div class="dp-reg-row" role="row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="cell" aria-label="Fisheye"><use href="#ic-fisheye" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id" role="cell">CMP-PARK-03<small>Campus parking</small></span><span class="dp-reg-pr" role="cell">ONVIF S · H.264</span><span class="dp-on" role="cell">Online</span></div>
+      <div class="dp-reg-row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="img" aria-label="Bullet"><use href="#ic-bullet" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id">CAM-HW-012<small>Highway gantry</small></span><span class="dp-reg-pr">ONVIF S · H.265</span><span class="dp-on">Online</span></div>
+      <div class="dp-reg-row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="img" aria-label="PTZ"><use href="#ic-ptz" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id">GGN-JN-07<small>City junction</small></span><span class="dp-reg-pr">ONVIF S/T · H.264</span><span class="dp-on">Online</span></div>
+      <div class="dp-reg-row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="img" aria-label="ANPR"><use href="#ic-anpr" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id">CMP-GATE-03<small>Campus gate</small></span><span class="dp-reg-pr">RTSP · H.264</span><span class="dp-on">Online</span></div>
+      <div class="dp-reg-row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="img" aria-label="Box"><use href="#ic-box" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id">PLT-GATE-02<small>Plant gate</small></span><span class="dp-reg-pr">RTSP · H.265</span><span class="dp-on">Online</span></div>
+      <div class="dp-reg-row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="img" aria-label="Dome"><use href="#ic-dome" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id">IND-YARD-11<small>Warehouse yard</small></span><span class="dp-reg-pr">ONVIF T · H.265</span><span class="dp-on off">Moved · view changed</span></div>
+      <div class="dp-reg-row"><svg class="dp-reg-ic" viewBox="-48 -36 96 72" role="img" aria-label="Fisheye"><use href="#ic-fisheye" x="-48" y="-36" width="96" height="72"/></svg><span class="dp-reg-id">CMP-PARK-03<small>Campus parking</small></span><span class="dp-reg-pr">ONVIF S · H.264</span><span class="dp-on">Online</span></div>
     </div>
   </div>
   <div class="wrap dp-mq" id="dpMq" role="region" aria-label="Camera brands that work with InfraX AI">
@@ -695,18 +699,18 @@
   }
 
   /* ---------- panel ---------- */
-  var tick = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5l4 4 8-9"/></svg>';
+  var tick = '<svg aria-hidden="true" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9.5l4 4 8-9"/></svg>';
   function esc(s) { return s.replace(/&/g, '&amp;'); }
   function renderPanel(M, anim) {
     var el = document.getElementById('dpPanel');
     el.innerHTML =
-      '<div><h3>' + M.title + '</h3><h4 role="none" style="margin-top:calc(22*var(--s))">Best for</h4><div class="dp-chips" style="margin-top:0">' +
+      '<div><h2>' + M.title + '</h2><h4 role="none" style="margin-top:calc(22*var(--s))">Best for</h4><div class="dp-chips" style="margin-top:0">' +
       M.best.map(function (b) { return '<a class="dp-chip" href="' + b[1] + '">' + esc(b[0]) + '</a>'; }).join('') + '</div></div>' +
       '<div><h4 role="none">Where your data lives</h4><dl class="dp-where">' +
       M.where.map(function (w) { return '<div><dt>' + esc(w[0]) + '</dt><dd>' + w[1] + '</dd></div>'; }).join('') + '</dl></div>' +
       '<div><h4 role="none">What you need</h4><ul class="dp-needs">' + M.needs.map(function (n) { return '<li>' + tick + '<span>' + n + '</span></li>'; }).join('') + '</ul></div>';
     if (anim) {
-      var items = el.querySelectorAll('h3,.dp-chip,.dp-where div,.dp-needs li');
+      var items = el.querySelectorAll('h2,.dp-chip,.dp-where div,.dp-needs li');
       gsap.from(items, { y: 16, opacity: 0, duration: .45, ease: 'sine.out', stagger: function (i) { return .05 * i + .04 * Math.sin(i * .9); } });
     }
   }
@@ -798,7 +802,7 @@
 
   /* ---------- edge photo notes ---------- */
   var hots = [].slice.call(document.querySelectorAll('.dp-hot')), notes = [].slice.call(document.querySelectorAll('#dpNotes li'));
-  function focusNote(n) { hots.forEach(function (h) { h.classList.toggle('on', +h.dataset.n === n); }); notes.forEach(function (l) { l.classList.toggle('on', +l.dataset.n === n); }); }
+  function focusNote(n) { hots.forEach(function (h) { h.classList.toggle('on', +h.dataset.n === n); h.setAttribute('aria-pressed', String(+h.dataset.n === n)); }); notes.forEach(function (l) { l.classList.toggle('on', +l.dataset.n === n); }); }
   hots.forEach(function (h) { ['pointerenter', 'focus', 'click'].forEach(function (ev) { h.addEventListener(ev, function () { focusNote(+h.dataset.n); }); }); });
   notes.forEach(function (l) { l.addEventListener('pointerenter', function () { focusNote(+l.dataset.n); }); });
   focusNote(0);

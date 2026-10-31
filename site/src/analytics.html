@@ -7,18 +7,26 @@
 .an-bar{position:sticky;top:calc(var(--nav-h) + env(safe-area-inset-top,0px));z-index:5;background:rgba(255,255,255,.97);border-block:1px solid var(--line)}
 .an-filter{display:flex;gap:calc(6*var(--s));overflow-x:auto;padding-block:calc(12*var(--s));scrollbar-width:none}
 .an-filter::-webkit-scrollbar{display:none}
-@media (max-width:768px){.an-filter{-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}}
-.an-filter button{all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:max(44px,calc(44*var(--s)));padding:0 calc(16*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line-2);font:500 max(12px,calc(14*var(--s)))/calc(44*var(--s)) var(--f-body);color:var(--ink-2);background:#fff;transition:background .2s,color .2s,border-color .2s}
+/* phones and tablets: every filter visible, wrapping onto more lines (no sideways scrolling) */
+@media (max-width:768px){.an-filter{flex-wrap:wrap;overflow:visible;gap:8px}}
+/* small phones: three wrapped rows would cover almost half the screen while the bar is stuck, so it becomes one row
+   that scrolls sideways inside itself (the page does not), with the right edge fading to show there is more */
+@media (max-width:480px){.an-filter{flex-wrap:nowrap;overflow-x:auto;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent)}}
+.an-filter button{all:unset;box-sizing:border-box;cursor:pointer;flex:none;min-height:max(44px,calc(44*var(--s)));padding:0 calc(16*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line-2);font:500 max(12px,calc(14*var(--s)))/calc(44*var(--s)) var(--f-body);color:var(--ink-2);background:#fff;transition:background-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),border-color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
 .an-filter button:hover{border-color:var(--blue);color:var(--ink)}
+.an-filter button:active{scale:.96}
 .an-filter button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
 .an-filter button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-.an-filter .count{font:500 max(12px,calc(12*var(--s))) var(--f-mono);margin-left:calc(6*var(--s));opacity:.75}
+/* the count is filled in by the page script: its two-digit slot is reserved up front, so the pills never widen and re-wrap after load */
+.an-filter .count{display:inline-block;min-width:2ch;font-variant-numeric:tabular-nums;font:500 max(12px,calc(12*var(--s))) var(--f-mono);margin-left:calc(6*var(--s));opacity:.75}
+.an-filter [aria-pressed="true"] .count{opacity:.95}
 .an-groups{padding-block:var(--gap-c) var(--sec-t)}
 .an-ghead{display:flex;align-items:baseline;justify-content:space-between;gap:calc(16*var(--s));margin-bottom:calc(32*var(--s));flex-wrap:wrap}
+.an-ghead[hidden]{display:none}
 .an-ghead p{margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--muted);max-width:40em}
 /* ~300px+ columns, never more than three; auto-fill keeps a filtered single card at column width */
-.an-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,max(300px,calc((100% - 2*var(--gap-g))/3))),1fr));gap:var(--gap-g)}
-.an-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:calc(14*var(--s));overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,box-shadow .25s}
+.an-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,max(calc(300*var(--s)),calc((100% - 2*var(--gap-g))/3))),1fr));gap:var(--gap-g)}
+.an-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:calc(14*var(--s));overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color var(--dur-3) var(--ease-out),box-shadow var(--dur-3) var(--ease-out)}
 .an-card:hover{border-color:var(--line-2);box-shadow:0 calc(24*var(--s)) calc(50*var(--s)) calc(-36*var(--s)) rgba(10,26,43,.45)}
 .an-card[hidden]{display:none!important}
 .an-viz{position:relative;aspect-ratio:16/9;background:#fff;border-bottom:1px solid var(--line)}
@@ -35,11 +43,12 @@
 .an-ghead2{margin-top:clamp(calc(64*var(--s)),7vw,calc(96*var(--s)))}
 .an-also{margin:calc(18*var(--s)) 0 0;color:var(--ink-2)}
 .an-grid{grid-auto-rows:1fr}
-.an-dn-grid{max-width:1040px}
+.an-dn-grid{max-width:calc(1040*var(--s))}
 /* day / night */
-.an-dn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(360px,calc((100% - var(--gap-g))/2))),1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
+.an-dn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,max(calc(360*var(--s)),calc((100% - var(--gap-g))/2))),1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
 .an-dn-card{margin:0;border:1px solid var(--line);border-radius:calc(16*var(--s));overflow:hidden;background:#fff;min-width:0;container:andn/inline-size}
 /* narrow cards: the labels under the boxes would run into the ones above, so only the boxes above keep their tags */
+@container andn (max-width:440px){.an-dn-box:not(.big) i{display:none}} /* phones: the small labels would print over each other; their boxes stay */
 @container andn (max-width:560px){.an-dn-box.below i{display:none}}
 .an-dn-shot{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0A1A2B}
 .an-dn-shot>img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
@@ -73,7 +82,7 @@
 .an-dn-count{position:absolute;left:calc(10*var(--s));top:calc(10*var(--s));font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#fff;background:rgba(10,26,43,.78);border:1px solid rgba(127,184,232,.6);padding:calc(5*var(--s)) calc(8*var(--s));border-radius:calc(4*var(--s))}
 .an-dn-irbox.car{border-color:rgba(255,255,255,.85);border-width:1.5px}
 /* v17 calmer visuals */
-.an-dn-grid{max-width:1080px;margin-inline:auto}
+.an-dn-grid{max-width:calc(1080*var(--s));margin-inline:auto}
 /* day / night: centred heading, 2pt larger than the other section headings; the note centred under the pictures */
 #anDnH{text-align:center;font-size:var(--fs-h2)}
 .an-dn-note{text-align:center}
@@ -97,7 +106,7 @@
 </div></div>
 
 <section class="an-groups"><div class="wrap" id="anWrap">
-  <div class="an-ghead"><h2 class="h-sub">Plates and vehicles. Live today.</h2></div>
+  <div class="an-ghead"><h2 class="h-sub">Plates and vehicles.</h2></div>
   <div class="an-grid">
     <article class="an-card" data-sim="anpr" data-d="hwy city campus ports wh cons" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Number plate recognition</h3><span class="st st-live">Live</span></div><p>Indian plates, including two-row, HSRP and BH series, with a confidence score.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="classify" data-d="hwy city ports" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Vehicle detection &amp; classification</h3><span class="st st-live">Live</span></div><p>Car, truck, bus or two-wheeler for every vehicle.</p><div class="an-doms"></div></div></article>
@@ -108,16 +117,23 @@
   </div>
   <p class="an-empty" id="anEmpty" hidden>No live analytics for this domain yet. Ask us about it.</p>
 
-  <div class="an-ghead an-ghead2"><h2 class="h-sub">Incidents, safety and sites. Also live.</h2><p>Incident, safety and site analytics on the same cameras.</p></div>
+  <div class="an-ghead an-ghead2"><h2 class="h-sub">Incidents, safety and sites.</h2><p>Incident, safety and site analytics on the same cameras.</p></div>
   <div class="an-grid an-grid2">
     <article class="an-card" data-sim="wrongway" data-d="hwy" data-p="Cygnus · VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Wrong-way driving</h3><span class="st st-live">Live</span></div><p>A vehicle moving against the traffic raises an alert with the clip and the lane.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="stopped" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Stopped or stalled vehicle</h3><span class="st st-live">Live</span></div><p>A vehicle stopped on the carriageway or shoulder is flagged with its location.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="speed" data-d="hwy" data-p="InfraX AI VIDES"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Radar speed fusion</h3><span class="st st-live">Live</span></div><p>Camera and radar on the gantry give every vehicle a speed in km/h, with images for overspeed cases.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="track" data-d="hwy city" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Camera-to-camera tracking</h3><span class="st st-live">Live</span></div><p>Follows one vehicle across cameras by its plate and its look.</p><div class="an-doms"></div></div></article>
-    <article class="an-card" data-sim="people" data-d="campus ports wh" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>People counting</h3><span class="st st-live">Live</span></div><p>In and out counts at gates, lobbies and walkways, by hour.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="people" data-d="campus ports wh" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>People counting</h3><span class="st st-live">Live</span></div><p>In and out counts at gates, lobbies and walkways.</p><div class="an-doms"></div></div></article>
     <article class="an-card" data-sim="zone" data-d="campus ports wh cons" data-p="Cygnus"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Zone intrusion · line crossing</h3><span class="st st-live">Live</span></div><p>An alert when someone enters a marked zone or crosses a line.</p><div class="an-doms"></div></div></article>
   </div>
-  <p class="an-also mono">Also live: search recorded video in plain words, such as “two-wheeler on the road”.</p>
+  <div class="an-ghead an-ghead2"><h2 class="h-sub">Beings and field operations.</h2></div>
+  <div class="an-grid an-grid2">
+    <article class="an-card" data-sim="overspeedcheck" data-d="hwy" data-p="Central Plexus (ATMS / ICCC)"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>AI evidence check for overspeed cases</h3><span class="st st-live">Live</span></div><p>AI reads the photo and clip of each overspeed case, checks the plate, the speed shown and any other vehicle in view, then passes or rejects it with the reason.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="voice" data-d="hwy" data-p="AstraAlert"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>AI voice Being for emergency calls</h3><span class="st st-live">Live</span></div><p>When no operator picks up in time, AI answers the call box in Hindi, asks what happened and gives the control room a short briefing.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="ask" data-d="hwy" data-p="AstraAlert"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Ask about your call boxes</h3><span class="st st-live">Live</span></div><p>Ask in plain words about call boxes, recent calls or fleet health, and AI looks it up and answers.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="attendance" data-d="hwy" data-p="InfraX AI Ops"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Attendance anomaly analytics</h3><span class="st st-live">Live</span></div><p>Flags repeated identical GPS, sudden location jumps, unusual hours and repeated lateness for a manager to review.</p><div class="an-doms"></div></div></article>
+    <article class="an-card" data-sim="repeatfault" data-d="hwy" data-p="InfraX AI Ops"><div class="an-viz"><canvas aria-hidden="true"></canvas></div><div class="an-body"><div class="an-top"><h3>Repeat-fault and overdue-work analytics</h3><span class="st st-live">Live</span></div><p>Flags equipment with repeated corrective work, overdue work orders and stale shift handovers, with a daily digest.</p><div class="an-doms"></div></div></article>
+  </div>
 </div></section>
 
 <section class="scene tight an-dn" aria-labelledby="anDnH"><div class="wrap">
@@ -175,7 +191,7 @@
 (function () {
   var X = window.INFRAX || {}, reduce = !!X.reduce;
   var lite = X.lite !== undefined ? !!X.lite : !!(window.matchMedia && matchMedia('(max-width:768px),(pointer:coarse)').matches);
-  var dpr = lite ? 1 : Math.min(devicePixelRatio || 1, 2);
+  var dpr = Math.min(devicePixelRatio || 1, 2);
   var DOM = { hwy: 'Highways', city: 'Cities', campus: 'Campuses', ports: 'Ports', wh: 'Warehouses', cons: 'Construction' };
   var B = '38,115,181', D = '14,59,102', S = '90,159,212', A = '214,69,61', INK = '10,26,43', MUT = '91,110,130';
   var cards = [].slice.call(document.querySelectorAll('.an-card'));
@@ -199,6 +215,19 @@
     c.fillStyle = '#fff'; c.fillText(s, x + 6, y - 5);
   }
   function vline(c, x, y0, y1, col, w) { c.strokeStyle = col; c.lineWidth = w || 2; c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); }
+  // a round check mark (ok) or cross in the given colour
+  function tick(c, x, y, ok, col) {
+    c.beginPath(); c.arc(x, y, 7, 0, 7); c.fillStyle = 'rgba(' + col + ',1)'; c.fill();
+    c.strokeStyle = '#fff'; c.lineWidth = 1.8; c.beginPath();
+    if (ok) { c.moveTo(x - 3, y); c.lineTo(x - 1, y + 2.5); c.lineTo(x + 3.5, y - 2.5); } else { c.moveTo(x - 2.5, y - 2.5); c.lineTo(x + 2.5, y + 2.5); c.moveTo(x + 2.5, y - 2.5); c.lineTo(x - 2.5, y + 2.5); }
+    c.stroke();
+  }
+  // a chat bubble with one line of text; right-aligned when mine
+  function bubble(c, x, y, maxW, s, mine, col) {
+    font(c, 12); var tw = Math.min(c.measureText(s).width, maxW - 16), bw = tw + 16, bx = mine ? x + maxW - bw : x;
+    rr(c, bx, y, bw, 24, 8); c.fillStyle = mine ? 'rgba(' + (col || B) + ',1)' : 'rgba(' + S + ',.18)'; c.fill();
+    c.fillStyle = mine ? '#fff' : 'rgba(' + INK + ',1)'; c.fillText(s, bx + 8, y + 16, bw - 16);
+  }
 
   var PLATES = ['XX 26 AB 1234', 'XX 03 CD 1290', 'XX 16 CT 4411', 'XX 04 KU 6620', '22 BH 0000 XX', 'XX 05 MN 7720'];
   var SIMS = {
@@ -306,8 +335,10 @@
       font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('XX 26 AB 1234 · white hatchback', 14, H * .55 + 52);
       c.fillStyle = 'rgba(' + B + ',1)'; c.fillText(Math.max(0, m) + ' of 3 cameras · match 0.94 · sample', 14, H * .55 + 72);
     },
-    // a camera over a gate: each person is boxed and tracked; crossing the counting line adds to IN (walking in, down
-    // the frame) or OUT (walking up). Counts, the hourly bars and the camera are dummies.
+    // a camera over a gate: each person is boxed and tracked; their centre crossing the operator's line adds to IN
+    // (walking in, down the frame) or OUT (walking up). The live tile shows "N in / N out"; the side panel is the
+    // Detections dashboard: IN, OUT and NET (in − out, an estimate, so never called "inside") and the latest saved
+    // events, each with its snapshot. No hourly chart: people counts can't yet be shown on their own. All values are dummies.
     people: function (c, W, H, t) {
       var fx = 12, fy = 12, fw = W * .62, fh = H - 40, lineY = fy + fh * .55, P = 7, inN = 0, outN = 0;
       c.save(); rr(c, fx, fy, fw, fh, 6); c.clip();
@@ -333,15 +364,30 @@
         if (just) { font(c, 11, 600); c.fillStyle = 'rgba(' + S + ',1)'; c.fillText(into ? '+1 IN' : '+1 OUT', px + sc * .7, py - sc); }
       }
       c.restore();
+      var IN = 318 + inN, OUT = 277 + outN;
+      // the count on the live video tile
+      font(c, 11, 600); var tl = IN + ' in / ' + OUT + ' out', tw = c.measureText(tl).width + 12;
+      c.fillStyle = 'rgba(10,26,43,.6)'; rr(c, fx + 6, fy + 6, tw, 19, 3); c.fill(); c.fillStyle = '#fff'; c.fillText(tl, fx + 12, fy + 20);
       font(c, 11, 600); c.fillStyle = 'rgba(255,255,255,.85)'; c.fillText('CAM-21', fx + 6, fy + fh - 8);
       font(c, 11); c.fillStyle = 'rgba(' + S + ',1)'; c.textAlign = 'right'; c.fillText('IN ↓', fx + fw - 6, lineY - 6, fw); c.fillText('OUT ↑', fx + fw - 6, lineY + 16, fw); c.textAlign = 'left';
-      // counters and the hourly bars
-      var rx = fx + fw + 16, IN = 318 + inN, OUT = 277 + outN;
-      font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('IN', rx, fy + 12); c.fillText('OUT', rx, fy + 50); c.fillText('INSIDE', rx, fy + 88);
-      font(c, 20, 600); c.fillStyle = 'rgba(' + D + ',1)'; c.fillText(IN, rx, fy + 34); c.fillText(OUT, rx, fy + 72); c.fillStyle = 'rgba(' + B + ',1)'; c.fillText(IN - OUT, rx, fy + 110);
-      var HB = [12, 30, 46, 38, 24, 28, 41, 19], bw = Math.max(4, (W - rx - 16) / HB.length - 3), bb = fy + fh;
-      HB.forEach(function (v, j) { var h = v / 46 * (fh * .3); c.fillStyle = j === HB.length - 1 ? 'rgba(' + B + ',1)' : 'rgba(' + S + ',.5)'; c.fillRect(rx + j * (bw + 3), bb - h, bw, h); });
-      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Gate 2 entrance · counting line · by hour · sample', 14, H - 8);
+      // the Detections dashboard: IN, OUT and NET side by side, then the latest saved events (newest first), each with its snapshot
+      var rx = fx + fw + 16, cw = (W - rx - 8) / 3;
+      [['IN', IN, D], ['OUT', OUT, D], ['NET', IN - OUT, B]].forEach(function (m, j) {
+        font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText(m[0], rx + j * cw, fy + 12, cw - 4);
+        font(c, 18, 600); c.fillStyle = 'rgba(' + m[2] + ',1)'; c.fillText(m[1], rx + j * cw, fy + 33, cw - 4);
+      });
+      font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('EVENTS', rx, fy + 62);
+      var ev = Math.floor(t / 2.2), rh = Math.min(26, (fh - 70) / 3);
+      for (var e = 0; e < 3; e++) {
+        var k = ev - e, ey = fy + 70 + e * rh, sn = rh - 6, dir = ((k % 3) + 3) % 3 === 2 ? 'OUT' : 'IN', s = 8 * 3600 + 42 * 60 + k * 7;
+        rr(c, rx, ey, sn, sn, 3); c.fillStyle = 'rgba(' + D + ',.95)'; c.fill();
+        c.fillStyle = 'rgba(255,255,255,.85)'; c.beginPath(); c.arc(rx + sn / 2, ey + sn * .32, sn * .14, 0, 7); c.fill(); c.fillRect(rx + sn * .38, ey + sn * .5, sn * .24, sn * .38);
+        var hh = Math.floor(s / 3600) % 24, mm = Math.floor(s / 60) % 60, ss = s % 60;
+        font(c, 11, e ? 500 : 600); c.fillStyle = e ? 'rgba(' + MUT + ',1)' : 'rgba(' + D + ',1)';
+        var tm = String(hh).padStart(2, '0') + ':' + String(mm).padStart(2, '0') + (W - rx - sn - 12 < 100 ? '' : ':' + String(ss).padStart(2, '0')); // seconds only when they fit
+        c.fillText((dir + '  ').slice(0, 4) + tm, rx + sn + 6, ey + sn / 2 + 4);
+      }
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Gate 2 entrance · counting line · sample', 14, H - 8);
     },
     zone: function (c, W, H, t) {
       var Z = [[.52, .22], [.9, .3], [.86, .78], [.5, .7]], inside = false;
@@ -356,6 +402,100 @@
       if (inside) pill(c, Math.min(W - 140, W * .55), H * .2, 'ZONE INTRUSION', A);
       else if (px > W * .3) pill(c, W * .32, H * .2, 'LINE CROSSED', B);
       font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('excavation zone · sample', 14, H - 8);
+    },
+    // Central Plexus: the AI checks an overspeed case's photo against three rules, then passes or rejects it with the
+    // reason. Every third case has a second vehicle in view and is rejected. Plate and speed are dummies.
+    overspeedcheck: function (c, W, H, t) {
+      var cyc = 7, k = (t % cyc) / cyc, rej = Math.floor(t / cyc) % 3 === 2, fx = 12, fy = 12, fw = W * .48, fh = H - 42;
+      c.save(); rr(c, fx, fy, fw, fh, 6); c.clip();
+      c.fillStyle = 'rgba(' + D + ',.95)'; c.fillRect(fx, fy, fw, fh);
+      c.fillStyle = 'rgba(255,255,255,.06)'; c.beginPath(); c.moveTo(fx + fw * .38, fy); c.lineTo(fx + fw * .62, fy); c.lineTo(fx + fw, fy + fh); c.lineTo(fx, fy + fh); c.closePath(); c.fill();
+      var cx = fx + fw * .3, cy = fy + fh * .46, cw = fw * .4, ch = fh * .3;
+      car(c, cx, cy, cw, ch, 'rgba(255,255,255,.92)');
+      var pw = cw * .62, px = cx + (cw - pw) / 2, py = cy + ch * .58;
+      c.fillStyle = '#fff'; c.fillRect(px, py, pw, 12); c.strokeStyle = 'rgba(' + INK + ',.6)'; c.lineWidth = 1; c.strokeRect(px, py, pw, 12);
+      c.font = '600 9px "Geist Mono",monospace'; c.fillStyle = '#111'; c.textAlign = 'center'; c.fillText('AB 1234', px + pw / 2, py + 9); c.textAlign = 'left';
+      if (rej) { car(c, fx + fw * .72, fy + fh * .16, fw * .2, fh * .15, 'rgba(255,255,255,.6)'); if (k > .5) { c.strokeStyle = 'rgba(' + A + ',1)'; c.lineWidth = 2; c.strokeRect(fx + fw * .7, fy + fh * .13, fw * .24, fh * .21); } }
+      if (k > .2) { c.strokeStyle = 'rgba(' + S + ',1)'; c.lineWidth = 2; c.strokeRect(px - 4, py - 4, pw + 8, 20); }
+      c.restore();
+      pill(c, fx + 6, fy + 24, '104 km/h', A);
+      var x0 = fx + fw + 14, R = ['Plate readable', 'Speed matches record', 'No other vehicle'];
+      font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('AI CHECK', x0, fy + 10);
+      R.forEach(function (r, i) {
+        if (k < .2 + i * .15) return; var y = fy + 32 + i * 26, ok = !(rej && i === 2);
+        tick(c, x0 + 7, y - 4, ok, ok ? B : A); font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText(r, x0 + 20, y);
+      });
+      if (k > .68) pill(c, x0, fy + 32 + 3 * 26 + 10, rej ? 'REJECT · other vehicle' : 'PASS · for review', rej ? A : B);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Overspeed case · photo and clip · sample', 14, H - 8);
+    },
+    // AstraAlert: no operator picks up within the wait, so the AI answers in Hindi, asks what happened and sends the
+    // control room a short briefing. The call, its words and the place are dummies.
+    voice: function (c, W, H, t) {
+      var cyc = 10, k = (t % cyc) / cyc, bx = 14, bw = Math.min(96, W * .26), by = 12, bh = H - 42, on = k >= .3;
+      rr(c, bx, by, bw, bh, 8); c.fillStyle = 'rgba(' + D + ',.95)'; c.fill();
+      font(c, 11, 600); c.fillStyle = 'rgba(255,255,255,.85)'; c.fillText('ECB-21', bx + 8, by + 18, bw - 12);
+      var r = 9 + (on ? 0 : 3 * Math.abs(Math.sin(t * 6))); c.beginPath(); c.arc(bx + bw / 2, by + bh * .38, r, 0, 7); c.fillStyle = 'rgba(' + A + ',1)'; c.fill();
+      if (on) for (var i = 0; i < 7; i++) { var h = 4 + 14 * Math.abs(Math.sin(t * 7 + i * 1.3)); c.fillStyle = 'rgba(' + S + ',1)'; c.fillRect(bx + 12 + i * ((bw - 24) / 7), by + bh * .68 - h / 2, (bw - 24) / 7 - 3, h); }
+      font(c, 11); c.fillStyle = 'rgba(255,255,255,.75)';
+      if (!on) c.fillText('00:' + String(Math.max(0, Math.ceil(20 * (1 - k / .3)))).padStart(2, '0'), bx + 8, by + bh - 10, bw - 12);
+      else c.fillText('AI · Hindi', bx + 8, by + bh - 10, bw - 12);
+      var x0 = bx + bw + 14, mw = W - x0 - 12;
+      font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText(on ? 'AI ANSWERED' : 'WAITING FOR AN OPERATOR', x0, by + 10, mw);
+      if (k > .36) bubble(c, x0, by + 20, mw, 'Namaste. Kya hua hai?', false);
+      if (k > .5) bubble(c, x0, by + 50, mw, 'Accident, km 41 ke paas', true, D);
+      if (k > .66) {
+        var y = by + 84, cardH = Math.min(52, by + bh - y); rr(c, x0, y, mw, cardH, 8); c.fillStyle = 'rgba(' + B + ',.08)'; c.fill(); c.strokeStyle = 'rgba(' + B + ',.5)'; c.lineWidth = 1; c.stroke();
+        font(c, 11, 600); c.fillStyle = 'rgba(' + B + ',1)'; c.fillText('BRIEFING → CONTROL ROOM', x0 + 8, y + 17, mw - 16);
+        font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('Accident · km 41 · caller safe', x0 + 8, y + 37, mw - 16);
+      }
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('No operator in 20 s · sample', 14, H - 8);
+    },
+    // AstraAlert: a question about the call boxes in plain words is typed, looked up and answered. Boxes and numbers are dummies.
+    ask: function (c, W, H, t) {
+      var cyc = 9, k = (t % cyc) / cyc, x0 = 14, mw = W - 28, q = 'Which call boxes need attention?';
+      bubble(c, x0, 14, mw, q.slice(0, Math.max(1, Math.round(Math.min(1, k / .28) * q.length))), true);
+      if (k > .3 && k < .45) { font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Looking up call boxes' + '...'.slice(0, 1 + Math.floor(t * 3) % 3), x0, 62); }
+      if (k > .45) {
+        var y = 48, L = [['2 of 48 call boxes need attention', INK, 600], ['ECB-07 · battery 18%', A], ['ECB-22 · no network since 06:10', A], ['Last call: ECB-12 · 08:41 · accident', B]];
+        rr(c, x0, y, Math.min(mw, 320), Math.min(H - y - 30, 22 + L.length * 22), 8); c.fillStyle = 'rgba(' + S + ',.14)'; c.fill();
+        L.forEach(function (l, i) {
+          if (k < .45 + i * .08) return; var ly = y + 22 + i * 22;
+          if (i) { c.beginPath(); c.arc(x0 + 14, ly - 4, 3.5, 0, 7); c.fillStyle = 'rgba(' + l[1] + ',1)'; c.fill(); }
+          font(c, 12, l[2] || 500); c.fillStyle = 'rgba(' + (i ? INK : l[1]) + ',1)'; c.fillText(l[0], x0 + (i ? 24 : 12), ly, Math.min(mw, 320) - 30);
+        });
+      }
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Plain-word question · sample', 14, H - 8);
+    },
+    // InfraX AI Ops: field check-ins arrive one by one; rule checks flag the odd ones for a manager. Names, times and places are dummies.
+    attendance: function (c, W, H, t) {
+      var ROWS = [['RK', '09:02 · Toll plaza 2', ''], ['SM', '09:03 · Toll plaza 2', 'Same GPS 3 times'], ['AP', '09:41 · km 112', 'Jumped 42 km in 6 min'], ['VD', '02:14 · Depot', 'Unusual hour'], ['NS', '10:12 · km 88', 'Late 4 days running']];
+      var cyc = 8, k = (t % cyc) / cyc, rh = Math.min(30, (H - 42) / ROWS.length), fx = W * .5;
+      ROWS.forEach(function (r, i) {
+        if (k < i * .12) return; var y = 14 + i * rh, flag = !!r[2];
+        c.beginPath(); c.arc(26, y + rh / 2 - 2, 10, 0, 7); c.fillStyle = 'rgba(' + (flag ? A : S) + ',' + (flag ? '.9' : '.35') + ')'; c.fill();
+        c.font = '600 9px "Geist Mono",monospace'; c.fillStyle = flag ? '#fff' : 'rgba(' + D + ',1)'; c.textAlign = 'center'; c.fillText(r[0], 26, y + rh / 2 + 1); c.textAlign = 'left';
+        font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText(r[1], 44, y + rh / 2 + 2, fx - 52);
+        font(c, 12, flag ? 600 : 500); c.fillStyle = flag ? 'rgba(' + A + ',1)' : 'rgba(' + MUT + ',1)'; c.fillText(flag ? r[2] : 'ok', fx, y + rh / 2 + 2);
+        c.fillStyle = 'rgba(' + D + ',.08)'; c.fillRect(14, y + rh - 2, W - 28, 1);
+      });
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Field check-ins · for a manager to review · sample', 14, H - 8);
+    },
+    // InfraX AI Ops: equipment with repeated corrective work, an overdue work order and a stale handover roll up into
+    // the daily digest. Equipment, orders and times are dummies.
+    repeatfault: function (c, W, H, t) {
+      var cyc = 8, k = (t % cyc) / cyc, EQ = [['CAM R-14', 4], ['ECB-07', 2], ['VMS-03', 1]], y = 14;
+      font(c, 11); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('CORRECTIVE WORK · 30 DAYS', 14, y + 8);
+      EQ.forEach(function (e, i) {
+        var ey = y + 30 + i * 24, n = Math.min(e[1], Math.floor(k * 10) - i), hot = e[1] >= 3;
+        font(c, 12, hot ? 600 : 500); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText(e[0], 14, ey, W * .3);
+        for (var j = 0; j < e[1]; j++) { c.beginPath(); c.arc(W * .32 + j * 16, ey - 4, 5, 0, 7); c.fillStyle = j < n ? 'rgba(' + (hot ? A : S) + ',1)' : 'rgba(' + D + ',.1)'; c.fill(); }
+        if (hot && n >= e[1]) { font(c, 12, 600); c.fillStyle = 'rgba(' + A + ',1)'; c.fillText('repeat fault', W * .32 + 4 * 16 + 6, ey); }
+      });
+      var oy = y + 30 + 3 * 24 + 8;
+      if (k > .45) { tick(c, 21, oy - 4, false, A); font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('WO-2219 · overdue 3 days', 34, oy); }
+      if (k > .55) { tick(c, 21, oy + 20, false, A); font(c, 12); c.fillStyle = 'rgba(' + INK + ',1)'; c.fillText('Shift handover · not updated in 14 h', 34, oy + 24); }
+      if (k > .7) pill(c, Math.max(14, W - 190), 30, 'DAILY DIGEST · 3 items', B);
+      font(c, 12); c.fillStyle = 'rgba(' + MUT + ',1)'; c.fillText('Highway O&M · daily digest 07:00 · sample', 14, H - 8);
     },
     anpr: function (c, W, H, t) {
       var cyc = 3.2, k = (t % cyc) / cyc, p = PLATES[Math.floor(t / cyc) % PLATES.length];
@@ -503,6 +643,8 @@
     var first = new Map(); cards.forEach(function (c) { if (!c.hidden) first.set(c, c.getBoundingClientRect()); });
     cards.forEach(function (c) { c.hidden = !(f === 'all' || c.dataset.d.split(' ').indexOf(f) > -1); });
     document.getElementById('anEmpty').hidden = !!document.querySelector('.an-card:not([hidden])');
+    // a group's heading hides with its last card, so a filter never leaves a heading over nothing
+    document.querySelectorAll('.an-grid').forEach(function (g) { var h = g.previousElementSibling; if (h && h.classList.contains('an-ghead')) h.hidden = !g.querySelector('.an-card:not([hidden])'); });
     items.forEach(function (it) { if (!it.card.hidden) size(it); });
     wake();
     if (reduce || !window.gsap) return;

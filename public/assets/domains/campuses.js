@@ -12,9 +12,9 @@
     var gcache = {}, mcache = {};
     if (T.ColorManagement) T.ColorManagement.legacyMode = false;
 
-    var renderer = new T.WebGLRenderer({ antialias: !MOB && !LOW && (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance' });
+    var renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.debug.checkShaderErrors = false; // no synchronous compile-log reads
-    renderer.setPixelRatio(Math.min(ctx.dpr || 1, MOB ? 1.25 : 1.75));
+    renderer.setPixelRatio(Math.min(ctx.dpr || 1, 2));
     renderer.setClearColor(0xffffff, 0);
     renderer.physicallyCorrectLights = true;
     renderer.outputEncoding = T.sRGBEncoding;
@@ -27,7 +27,7 @@
     host.appendChild(cv);
 
     var scene = new T.Scene();
-    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .0055 : .0042);
+    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .003 : .0023);
     var camera = new T.PerspectiveCamera(MOB ? 62 : 50, 1, .4, 900);
 
     (function env() {

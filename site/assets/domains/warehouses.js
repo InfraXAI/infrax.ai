@@ -67,7 +67,7 @@
     if (SH) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap; renderer.shadowMap.autoUpdate = false; }
 
     var scene = new T.Scene();
-    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .0075 : .0058);
+    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .0041 : .0032);
     var cam = new T.PerspectiveCamera(MOB ? 62 : 50, 1, .3, 600);
     var envTex;
     (function env() {

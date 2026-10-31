@@ -14,11 +14,11 @@
   --s:clamp(1px, calc(.041667vw + .3333px), 1.25px);
   /* side gutter, fluid 16px (phones) to 64px (large screens); the column caps at 1440px, widening to 1600px by 1920px */
   --gut:clamp(16px, 2.5vw + 6px, 64px);
-  --col-max:clamp(1440px, calc(50vw + 640px), 1600px);
+  --col-max:clamp(calc(1440*var(--s)), calc(50vw + calc(640*var(--s))), calc(1600*var(--s)));
   --col:min(100%, calc(var(--col-max) + 2 * var(--gut)));
   --nav-h:68px;
   /* breakpoints (site.js INFRAX.mq): phone ≤480 · tablet ≤768 · laptop ≤1024 · wide ≥1440 */
-  --r-xs:calc(4*var(--s)); --r-sm:calc(8*var(--s)); --r-md:calc(12*var(--s)); --r-lg:calc(16*var(--s)); --r-xl:calc(24*var(--s)); --r-pill:999px;
+  --r-xs:calc(4*var(--s)); --r-sm:calc(8*var(--s)); --r-md:calc(12*var(--s)); --r-lg:calc(16*var(--s)); --r-xl:calc(24*var(--s)); --r-pill:calc(999*var(--s));
   --sh-1:0 1px 2px rgba(10,26,43,.06); --sh-2:0 1px 2px rgba(10,26,43,.05),0 8px 24px -10px rgba(14,59,102,.16); --sh-3:0 2px 6px rgba(10,26,43,.05),0 24px 64px -24px rgba(14,59,102,.28);
   --ease-out:cubic-bezier(.22,1,.36,1); --ease-in-out:cubic-bezier(.65,0,.35,1); --ease-in:cubic-bezier(.4,0,1,1);
   --dur-1:120ms; --dur-2:180ms; --dur-3:280ms; --dur-4:480ms; --dur-5:800ms;
@@ -32,7 +32,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--blue);outline-offset:calc(3*var(--s))}
-.skip{position:absolute;left:calc(-999*var(--s));top:calc(8*var(--s));background:var(--ink);color:#fff;padding:calc(8*var(--s)) calc(12*var(--s));z-index:100;border-radius:calc(6*var(--s))}
+.skip{position:absolute;left:calc(-999*var(--s));top:calc(8*var(--s));background:var(--ink);color:#fff;padding:calc(8*var(--s)) calc(12*var(--s));min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;z-index:100;border-radius:calc(6*var(--s))}
 .skip:focus{left:calc(12*var(--s))}
 
 /* page content sits above the plexus canvas */
@@ -159,7 +159,7 @@ p,li,dd{text-wrap:pretty}
 /* brand: the logo on the left; the blurb beside it, then the address and Contact side by side */
 .foot-brand{grid-row:1/5;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:calc(18*var(--s));align-content:start}
 .foot-brand>img{grid-row:1/3;margin-top:2px}
-.foot-grid>div:not(.foot-brand){display:grid;grid-template-columns:164px minmax(0,1fr);align-items:baseline;gap:12px}
+.foot-grid>div:not(.foot-brand){display:grid;grid-template-columns:calc(164*var(--s)) minmax(0,1fr);align-items:baseline;gap:12px}
 .foot-grid .foot-h{margin:0;font:600 max(15px,calc(16*var(--s)))/1.3 var(--f-display);letter-spacing:-.01em;text-transform:none;color:var(--blue)}
 .foot-grid ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0 14px}
 .foot-grid a{text-decoration:none;color:var(--ink-2);font-size:max(13px,calc(13.5*var(--s)));display:inline-flex;align-items:center;min-height:30px}
@@ -175,7 +175,7 @@ p,li,dd{text-wrap:pretty}
 .foot-contact a{color:var(--blue-mid)}
 .foot-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:calc(12*var(--s));margin-top:calc(16*var(--s));padding-top:calc(12*var(--s));border-top:1px solid var(--line);font:400 max(12px,calc(12*var(--s)))/1.5 var(--f-mono);color:var(--muted)}
 .foot-base .copy{user-select:none}
-@media (pointer:coarse){.foot-grid a{min-height:40px}}
+@media (pointer:coarse){.foot-grid a,.foot-brand address a{min-height:44px}.foot-grid ul a{padding-inline:6px;margin-inline:-6px}}
 @media (max-width:768px){.foot-grid{grid-template-columns:minmax(0,1fr)}.foot-brand{grid-row:auto;grid-template-columns:minmax(0,1fr)}.foot-brand>img{grid-row:auto;margin-bottom:calc(8*var(--s))}.foot-grid>div:not(.foot-brand){grid-template-columns:minmax(0,1fr);gap:2px}}
 
 /* page-to-page wave transition overlay */
@@ -192,6 +192,9 @@ p,li,dd{text-wrap:pretty}
 
 /* reveal helpers (visible at rest; JS adds motion) */
 .split-line{display:block;overflow:hidden;padding:.06em 0 .3em;margin:-.06em 0 -.3em}
+/* a heading that splits into masked lines is its own block formatting context, so the lines' negative margins cannot
+   collapse through it: its height is the same before and after the split (no layout shift when the reveal starts) */
+[data-reveal],:has(> .split-line){display:flow-root}
 .split-line>span{display:block}
 
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
@@ -382,10 +385,10 @@ html.dm-lock{overflow:hidden}
 .dm-w{display:inline-block;white-space:pre}
 @media (prefers-reduced-motion:no-preference){
   .dm.is-open .dm-photo img{animation:dmPush 16s cubic-bezier(.2,.6,.3,1) forwards}
-  .dm-glass{opacity:0;transform:translateY(18px) scale(.97);filter:blur(10px);transition:opacity .6s ease,transform .8s cubic-bezier(.2,.8,.2,1),filter .7s ease}
-  .dm.is-open .dm-glass{opacity:1;transform:none;filter:none;transition-delay:.15s}
-  .dm-w{opacity:0;filter:blur(8px);transform:translateY(.35em);transition:opacity .5s ease,filter .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:calc(.35s + var(--i) * 70ms)}
-  .dm.is-open .dm-w{opacity:1;filter:none;transform:none}
+  .dm-glass{opacity:0;transform:translateY(18px) scale(.97);transition:opacity .6s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+  .dm.is-open .dm-glass{opacity:1;transform:none;transition-delay:.15s}
+  .dm-w{opacity:0;transform:translateY(.35em);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:calc(.35s + var(--i) * 70ms)}
+  .dm.is-open .dm-w{opacity:1;transform:none}
   .dm-glass .dm-intro,.dm-steps li{opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease;transition-delay:var(--d,.9s)}
   .dm.is-open .dm-glass .dm-intro,.dm.is-open .dm-steps li{opacity:1;transform:none}
 }
@@ -402,7 +405,7 @@ body:not([data-page="home"]){
   --fs-h2:clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);--lh-h2:1.12;
   --fs-h3:clamp(1.125rem, 1.08rem + .2vw, 1.25rem);
   --fs-body:clamp(1rem, .98rem + .1vw, 1.0625rem);
-  --sec:clamp(64px, 7vw, 112px);--sec-t:clamp(56px, 6vw, 96px);--gap-c:clamp(32px, 3.2vw, 48px)}
+  --sec:clamp(64px, 7vw, calc(112*var(--s)));--sec-t:clamp(56px, 6vw, 96px);--gap-c:clamp(32px, 3.2vw, 48px)}
 @media (max-width:768px){body:not([data-page="home"]){--sec:56px;--sec-t:56px}}
 /* inner-page hero bands: fit their content, no tall empty bands */
 body:not([data-page="home"]) :is(.an-hero,.hw-hero,.dp-hero,.in-hero,.sv-hero){padding-top:clamp(40px, 5vw, 72px)}
@@ -413,7 +416,7 @@ body:not([data-page="home"]) :is(.an-hero,.hw-hero,.dp-hero,.in-hero,.sv-hero){p
 .h-sub+.lead{margin-top:10px}
 /* Home: section headings sit clearly below the hero H1 (hero ≈58–72px on desktop, sections ≤42px) */
 body[data-page="home"]{--fs-h2:clamp(1.75rem, 1.2rem + 1.45vw, 2.5rem);--fs-body:clamp(1rem, .98rem + .1vw, 1.0625rem);
-  --sec:clamp(64px, 7.5vw, 112px);--sec-t:clamp(56px, 6vw, 96px)}
+  --sec:clamp(64px, 7.5vw, calc(112*var(--s)));--sec-t:clamp(56px, 6vw, 96px)}
 @media (max-width:768px){body[data-page="home"]{--sec:64px;--sec-t:56px}}
 
 /* ---------- compact cards (all pages): card titles 17–18px, card text 15–16px, grid gaps 20–24px, padding 16–20px ---------- */
@@ -534,7 +537,9 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .foot-grid .foot-social a[href*="linkedin.com"]{color:#0A66C2}
 .foot-grid .foot-social a[href*="youtube.com"]{color:#FF0000}
 .foot-grid .foot-social a[href*="github.com"]{color:#181717}
-@media (pointer:coarse){.foot-grid .foot-social a{width:42px;height:42px;min-height:42px}}
+@media (pointer:coarse){.foot-grid .foot-social a{width:44px;height:44px;min-height:44px}}
+/* touch: inline email and map links get a 44px-tall tap area (vertical padding on an inline box does not move the text); the demo form's custom select options reach 44px */
+@media (pointer:coarse){main a[href^="mailto:"],main a[href*="mail.google.com"],main a[href*="google.com/maps"],.dm a[href^="mailto:"],.dm a[href*="mail.google.com"]{padding-block:13px}.dm-sel-list li{min-height:44px}}
 /* "address copied" note after an email link is clicked */
 
 /* domain list in the demo form: themed dropdown over the native select */
@@ -547,7 +552,7 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .dm-sel-btn:hover{border-color:rgba(38,115,181,.45)}
 .dm-sel-btn:focus-visible,.dm-sel.open .dm-sel-btn{background:#fff;border-color:var(--blue);box-shadow:0 0 0 4px rgba(38,115,181,.14)}
 .dm-f.bad .dm-sel-btn{border-color:var(--alert)}
-.dm-sel-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:5;margin:0;padding:6px;list-style:none;max-height:min(300px,50vh);overflow:auto;overscroll-behavior:contain;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1px solid var(--line);border-radius:calc(12*var(--s));box-shadow:0 0 0 1px rgba(14,59,102,.04),0 4px 10px rgba(10,26,43,.05),0 24px 48px -24px rgba(14,59,102,.4);animation:dmSelIn .18s var(--ease-out)}
+.dm-sel-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:5;margin:0;padding:6px;list-style:none;max-height:min(calc(300*var(--s)),50vh);overflow:auto;overscroll-behavior:contain;background:rgba(255,255,255,.97);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1px solid var(--line);border-radius:calc(12*var(--s));box-shadow:0 0 0 1px rgba(14,59,102,.04),0 4px 10px rgba(10,26,43,.05),0 24px 48px -24px rgba(14,59,102,.4);animation:dmSelIn .18s var(--ease-out)}
 .dm-sel-list[hidden]{display:none}
 .dm-sel-list li{position:relative;display:flex;align-items:center;min-height:42px;padding:0 36px 0 12px;border-radius:8px;cursor:pointer;font:500 max(14px,calc(15*var(--s)))/1.3 var(--f-body);color:var(--ink-2)}
 .dm-sel-list li.at{background:rgba(38,115,181,.08);color:var(--ink)}
@@ -555,3 +560,55 @@ p,li,.lead,.body,.d{text-wrap:pretty}
 .dm-sel-list li[aria-selected="true"]::after{content:"";position:absolute;right:14px;top:50%;width:10px;height:5px;margin-top:-4px;border:solid var(--blue);border-width:0 0 2px 2px;transform:rotate(-45deg)}
 @keyframes dmSelIn{from{opacity:0;transform:translateY(-4px)}}
 @media (prefers-reduced-motion:reduce){.dm-sel-list{animation:none}}
+/* interaction feel: nav pills and menu rows ease their hover tint (no snap); menus leave faster than they arrive */
+.nav-links>li>a,.nav-links>li>button,.menu a{transition:background-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+.nav-links>li>a:active,.nav-links>li>button:active{scale:.96}
+.menu a:active{background:var(--wash)}
+.menu{transition:opacity 140ms var(--ease-in),transform 140ms var(--ease-in),visibility 0s 140ms}
+.has-menu:hover .menu,.has-menu.open .menu{transition:opacity var(--dur-2) var(--ease-out),transform var(--dur-3) var(--ease-out),visibility 0s}
+.foot-grid a{transition:color var(--dur-2) var(--ease-out)}
+.foot-grid .foot-social a{transition:transform var(--dur-2) var(--ease-out),opacity var(--dur-2) var(--ease-out)}
+.foot-grid .foot-social a:active{transform:translateY(0) scale(.92)}
+.link-arrow{transition:color var(--dur-2) var(--ease-out)}
+.link-arrow:active::after{transform:translateX(calc(1*var(--s)))}
+.dm-x{transition:border-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+.dm-x:active{scale:.92}
+/* large screens (1600px and up, 1440p, 4K, ultra-wide): the whole layout keeps its laptop proportions and scales with the
+   screen, so nothing sits small in the middle */
+@media (min-width:1600.02px){
+  /* one scale for everything, from the smaller of width and height (vs a 1600x900 laptop), never below the laptop size:
+     a wide but short window (ultra-wide, or a browser zoomed out) grows text, map, cards and spacing together */
+  :root{--s:max(1px, min(calc(100vw / 1600), calc(100vh / 900)));--gut:calc(64 * var(--s));--col-max:calc(1440 * var(--s));--nav-h:calc(68 * var(--s))}
+  html{font-size:max(16px, min(calc(100vw / 100), calc(100vh * 16 / 900)))}
+}
+
+/* ---------- premium layer: light, grid, surfaces ----------
+   The page is lit, not flat: a cool wash with soft brand light falling from the top (left navy, right sky), a faint
+   blueprint grid that fades out below the fold, and the particle network drawn crisp on top (site.js plexus).
+   Cards sit on it as white panels with a fine edge and a soft, layered shadow. Nothing here is blurred or animated. */
+:root{--sh-rest:0 1px 2px rgba(10,26,43,.04),0 14px 32px -24px rgba(14,59,102,.26),inset 0 1px 0 rgba(255,255,255,.9)}
+html{background:linear-gradient(180deg,#F4F8FC 0,#FAFCFE 40%,#F2F6FB 100%) #F7FAFD}
+body{background:transparent}
+/* one fixed layer for every screen: soft light from above (brand blue, sky to the right, a touch of navy left)
+   under a fine grid that fades out from the top */
+.site-grid{position:fixed;inset:0;z-index:0;pointer-events:none}
+.site-grid::before,.site-grid::after{content:"";position:absolute;inset:0}
+.site-grid::before{background:
+  radial-gradient(62vw 46vh at 50% -12vh,rgba(38,115,181,.15),rgba(38,115,181,0) 72%),
+  radial-gradient(46vw 60vh at 104% 8vh,rgba(90,180,234,.17),rgba(90,180,234,0) 70%),
+  radial-gradient(40vw 60vh at -6% 30vh,rgba(14,59,102,.075),rgba(14,59,102,0) 70%),
+  radial-gradient(54vw 50vh at 96% 108vh,rgba(90,180,234,.12),rgba(90,180,234,0) 70%)}
+.site-grid::after{
+  background-image:linear-gradient(rgba(14,59,102,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(14,59,102,.055) 1px,transparent 1px);
+  background-size:calc(56*var(--s)) calc(56*var(--s));background-position:center top;
+  -webkit-mask-image:radial-gradient(ellipse 85% 70% at 50% 0,#000 20%,rgba(0,0,0,.35) 55%,transparent 85%);mask-image:radial-gradient(ellipse 85% 70% at 50% 0,#000 20%,rgba(0,0,0,.35) 55%,transparent 85%)}
+/* resting depth for the white card surfaces (zero specificity: a page's own shadow or hover still wins) */
+:where(.an-card,.an-dn-card,.dp-reg,.hm-demo,.hm-ops,.hm-pc,.hm-tile,.hw-card,.hw-dist-fig,.in-card,.hm-xwrap,.cy-item,.sv-card,.sv-mini,.hw-step){box-shadow:var(--sh-rest)}
+/* headings break into even lines; long paragraphs avoid a lone last word */
+:where(h2,h3,.h-sub){text-wrap:balance}
+:where(p){text-wrap:pretty}
+::selection{background:rgba(38,115,181,.2);color:var(--ink)}
+/* photographs keep a crisp edge on white surfaces: a neutral hairline inside the image (not brand-tinted) */
+:where(main) img:not([src$=".svg"]){outline:1px solid rgba(10,26,43,.08);outline-offset:-1px}
+/* one keyboard focus ring for anything that does not draw its own */
+:where(a,button,[role="button"],[tabindex]:not([tabindex="-1"]),summary,select,input,textarea):focus-visible{outline:2px solid var(--blue);outline-offset:2px}

@@ -58,7 +58,7 @@
     if (SHADOWS) { renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFShadowMap; renderer.shadowMap.autoUpdate = false; }
     var scene = new T.Scene();
     // fog: thinner than before so the city reads to the horizon; thinned further when the camera rises (see update)
-    var FOG0 = MOB ? .0046 : .0032;
+    var FOG0 = MOB ? .0025 : .0018;
     scene.fog = new T.FogExp2(0xF2F6FA, FOG0);
     var cam = new T.PerspectiveCamera(MOB ? 60 : 48, 1, .5, 1400);
     var MAXA = Math.min(MOB ? 4 : 16, renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 8);

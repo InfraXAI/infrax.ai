@@ -1,4 +1,4 @@
-<!--META title="InfraX AI" desc="The agentic OS for infrastructure. AI agents run the routine work across every camera, asset and site; your people approve what matters. On your own servers or hosted." page="home" libs="gsap,three"-->
+<!--META title="InfraX AI" desc="The agentic OS for infrastructure. AI Beings run the routine work across every camera, asset and site; your people approve what matters. On your own servers or hosted." page="home" libs="gsap,three"-->
 <style>
 /* Home: particle wave hero (domains), product grid (real photos), product exchange, digital twin (GIS map that dives into a 3D street twin),
    domains, live corridor wall, company, demo. Motion: fast reveals, pulses on connectors, animated line icons. */
@@ -10,10 +10,10 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
    headline and CTAs, so the whole hero fits one screen below the nav (capped at 1000px); on short screens it keeps a
    340px floor and the page scrolls a little instead. Labels and ring text size from the visual (container units). */
 .hm-hero{--hx-pad:clamp(16px,2.2vw,40px);--hx-fs:var(--fs-display);
-  --hx-copy:calc(2 * 1.06 * var(--hx-fs) + var(--hx-subl,2) * 1.5 * var(--fs-body) + max(44px,calc(48*var(--s))) + clamp(78px,7svh,104px));
-  --hx-vh:clamp(340px,calc(min(100svh - var(--nav-h),1000px) - 2 * var(--hx-pad) - var(--hx-copy)),780px);
+  --hx-copy:calc(2 * 1.06 * var(--hx-fs) + var(--hx-subl,2) * 1.5 * var(--fs-body) + max(44px,calc(48*var(--s))) + clamp(78px,7svh,calc(104*var(--s))));
+  --hx-vh:clamp(calc(340*var(--s)),calc(min(100svh - var(--nav-h),calc(1000*var(--s))) - 2 * var(--hx-pad) - var(--hx-copy)),calc(780*var(--s)));
   position:relative;overflow-x:clip;padding-block:var(--hx-pad)}
-.hx{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(min(100svh - var(--nav-h),1000px) - 2 * var(--hx-pad))}
+.hx{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(min(100svh - var(--nav-h),calc(1000*var(--s))) - 2 * var(--hx-pad))}
 .hx-vis{position:relative;width:min(100%,calc(var(--hx-vh) * 1.5));aspect-ratio:1.5/1;flex:none;container-type:inline-size}
 .hx-copy{position:relative;z-index:2;margin-top:clamp(18px,2.6svh,36px);display:flex;flex-direction:column;align-items:center}
 .hm-h1{font-size:var(--hx-fs);line-height:1.06;letter-spacing:-.035em;max-width:17em;text-wrap:balance}
@@ -37,14 +37,14 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 /* the ring words: drawn on a canvas (moving SVG text-path re-laid out and repainted the whole hero on every step) */
 .hx-rc{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:0;transition:opacity 1s ease}
 .hx-rc.on{opacity:1}
-.hx-rings text{font:500 clamp(10px,1.45cqi,13px)/1 var(--f-mono);letter-spacing:.3em;text-transform:uppercase;fill:var(--blue)}
+.hx-rings text{font:500 clamp(10px,1.45cqi,calc(13*var(--s)))/1 var(--f-mono);letter-spacing:.3em;text-transform:uppercase;fill:var(--blue)}
 /* a small visual (zoomed or short desktop windows) keeps the rings but drops their words, so they never run through the labels */
 @media (min-width:480.02px){@container (max-width:520px){.hx-rings text{display:none}}}
 .hx-map,.hx-lbs{position:absolute;inset:0}
 .hx-map{z-index:0}
 .hx-map canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hx-lbs{pointer-events:none;z-index:2}
-.hx-lb,.hx-ev{position:absolute;left:0;top:0;display:flex;align-items:center;white-space:nowrap;font:500 clamp(12px,1.6cqi,14px)/1 var(--f-mono);border-radius:.5em;opacity:0;transition:opacity .4s ease,color .2s,border-color .2s;pointer-events:none;will-change:transform}
+.hx-lb,.hx-ev{position:absolute;left:0;top:0;display:flex;align-items:center;white-space:nowrap;font:500 clamp(12px,1.6cqi,calc(14*var(--s)))/1 var(--f-mono);border-radius:.5em;opacity:0;transition:opacity .4s ease,color .2s,border-color .2s;pointer-events:none;will-change:transform}
 .hx-lb{height:2.05em;padding:0 .7em;background:rgba(255,255,255,.92);border:1px solid var(--line);color:var(--ink-2);box-shadow:0 calc(4*var(--s)) calc(12*var(--s)) calc(-6*var(--s)) rgba(14,59,102,.25)}
 .hx-lb.cc{background:var(--blue-deep);border-color:var(--blue-deep);color:#fff;height:2.35em;padding:0 .85em}
 .hx-ev{gap:.6em;height:2.2em;padding:0 .75em;background:#fff;border:1px solid rgba(229,72,77,.55);color:#B42A30;box-shadow:0 calc(8*var(--s)) calc(18*var(--s)) calc(-8*var(--s)) rgba(14,59,102,.35);z-index:3}
@@ -53,6 +53,15 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hx-ev.ack{color:var(--ok);border-color:rgba(31,138,91,.45)}
 .hx-ev.ack i{background:var(--ok)}
 
+/* phones held sideways (short, wide screens): the map on the left, the headline and buttons beside it, all in one view */
+@media (orientation:landscape) and (max-height:500px){
+  .hm-hero{--hx-fs:clamp(22px,4vw,34px)}
+  .hm-hero .hx{flex-direction:row;gap:clamp(16px,3vw,32px);text-align:left;min-height:calc(100svh - var(--nav-h) - 2 * var(--hx-pad))}
+  .hm-hero .hx-vis{width:min(52%,calc((100svh - var(--nav-h) - 2 * var(--hx-pad)) * 1.5));aspect-ratio:1.5/1}
+  .hm-hero .hx-copy{flex:1;min-width:0;margin-top:0;align-items:flex-start}
+  .hm-hero .hx-copy .btn-row{justify-content:flex-start}
+  .hm-hero .hm-h1{max-width:none}
+}
 @media (max-width:768px){
   .hm-hero{--hx-fs:var(--fs-display)}
   .hx{min-height:0}
@@ -60,7 +69,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   .hm-h1{max-width:12em}
 }
 @media (max-width:480px){
-  .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,320px)}
+  .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,calc(320*var(--s)))}
   .hx-copy .btn{justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){.hx-copy>*,.hx-rings,.hx-rc{transition:none!important}}
@@ -106,10 +115,12 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 /* domains */
 .hm-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap-g)}
 .hm-tile{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:var(--r-lg,calc(16*var(--s)));overflow:hidden;background:#fff;transition:transform var(--dur-3,280ms) var(--ease-out,cubic-bezier(.22,1,.36,1)),box-shadow var(--dur-3,280ms) var(--ease-out,cubic-bezier(.22,1,.36,1)),border-color var(--dur-3,280ms) var(--ease-out,cubic-bezier(.22,1,.36,1))}
-.hm-tile:hover,.hm-tile:focus-visible{transform:translateY(-2px);box-shadow:var(--sh-2,0 1px 2px rgba(10,26,43,.05),0 8px 24px -10px rgba(14,59,102,.16));border-color:var(--line-2)}
+.hm-tile:focus-visible{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}
+/* lift only where hover is real (no lift stuck on after a tap); a press settles the card */
+@media (hover:hover){.hm-tile:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}}
 .hm-photo{position:relative;aspect-ratio:16/9;overflow:hidden;background:#fff}
 .hm-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease)}
-.hm-tile:hover .hm-photo img{transform:scale(1.04)}
+@media (hover:hover){.hm-tile:hover .hm-photo img{transform:scale(1.04)}}
 .hm-scan{position:absolute;top:0;bottom:0;left:0;width:10%;transform:translateX(-120%);background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.4),rgba(255,255,255,0));border-right:1.5px solid rgba(255,255,255,.9);pointer-events:none}
 .hm-dbox{position:absolute;border:2px solid #fff;border-radius:calc(4*var(--s));box-shadow:0 0 0 1px rgba(10,26,43,.35);opacity:0}
 .hm-dbox span{position:absolute;left:-2px;top:calc(-24*var(--s));white-space:nowrap;background:var(--blue);color:#fff;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s))}
@@ -121,7 +132,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hm-cap p{margin:0;font-size:var(--fs-body);color:var(--ink-2);line-height:var(--lh-body)}
 .hm-cap .runs{font:500 max(12px,calc(12.5*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
 .hm-cap .runs b{color:var(--blue);font-weight:500}
-.hm-go{width:calc(32*var(--s));height:calc(32*var(--s));border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;flex:none;transition:background .25s,color .25s,border-color .25s}
+.hm-go{width:calc(32*var(--s));height:calc(32*var(--s));border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center;flex:none;transition:background-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),border-color var(--dur-2) var(--ease-out)}
 .hm-tile:hover .hm-go{background:var(--blue);border-color:var(--blue);color:#fff}
 .hm-proofline{font:500 max(12px,calc(12.5*var(--s)))/1.3 var(--f-mono);color:var(--blue)}
 
@@ -145,14 +156,15 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hw-cam{position:absolute;left:calc(8*var(--s));top:calc(8*var(--s));z-index:3;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#fff;padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(4*var(--s));background:rgba(5,14,24,.62)}
 .hw-bx{position:absolute;border:1.5px solid var(--c);border-radius:2px;opacity:0;transform:scale(1.25);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.9,.25,1.15)}
 .hw-bx.on{opacity:1;transform:scale(1)}
+.hw-bx.nolbl span{display:none} /* no free spot for this label at this size (home.js labels()) */
 .hw-bx span{position:absolute;left:-1.5px;bottom:100%;margin-bottom:2px;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#06121d;background:var(--c);padding:2px calc(4*var(--s));border-radius:2px;white-space:nowrap}
 .hw-bx.rt span{left:auto;right:-1.5px}
 .hw-bx.lo span{bottom:auto;top:100%;margin:2px 0 0}
 .hw-bx.al{border-color:#FF4D55;border-width:2px}
-.hw-bx.al span{background:#FF4D55;color:#fff}
+.hw-bx.al span{background:#C8323A;color:#fff} /* 5.3:1 with white; the box outline stays bright red */
 .hw-bx.hid{display:none}
 .hw-t.alarm{transform:scale(1.1);z-index:6;box-shadow:0 0 0 2px #FF4D55,0 calc(24*var(--s)) calc(48*var(--s)) calc(-12*var(--s)) rgba(0,0,0,.55)}
-.hw-flag{position:absolute;left:calc(8*var(--s));bottom:calc(8*var(--s));z-index:3;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);color:#fff;background:#E5484D;padding:calc(5*var(--s)) calc(7*var(--s));border-radius:calc(4*var(--s));opacity:0;transform:translateY(calc(6*var(--s)));transition:opacity .3s ease .15s,transform .4s cubic-bezier(.2,.8,.2,1) .15s;white-space:nowrap}
+.hw-flag{position:absolute;left:calc(8*var(--s));bottom:calc(8*var(--s));z-index:3;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);color:#fff;background:#C8323A;padding:calc(5*var(--s)) calc(7*var(--s));border-radius:calc(4*var(--s));opacity:0;transform:translateY(calc(6*var(--s)));transition:opacity .3s ease .15s,transform .4s cubic-bezier(.2,.8,.2,1) .15s;white-space:nowrap}
 .hw-t.alarm .hw-flag{opacity:1;transform:none}
 .hw-t::after{content:"";position:absolute;inset:0;background:rgba(5,12,20,.3);opacity:0;transition:opacity .4s;pointer-events:none}
 .hw-t.dim::after{opacity:1}
@@ -173,6 +185,13 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hm-facts div{display:grid;grid-template-columns:calc(130*var(--s)) minmax(0,1fr);gap:calc(16*var(--s));padding:calc(18*var(--s)) 0;border-bottom:1px solid var(--line)}
 .hm-facts dt{font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .hm-facts dd{margin:0;font-size:var(--fs-body);color:var(--ink-2);line-height:var(--lh-body)}
+/* company copy: the paragraph, the address under it, the four lines of what we do */
+.hm-facts dd p{margin:0}
+.hm-facts dd p+p{margin-top:calc(10*var(--s))}
+.hm-co-list{list-style:none;margin:0 0 calc(6*var(--s));padding:0;display:grid;gap:calc(10*var(--s))}
+.hm-co-list li{position:relative;padding-left:calc(16*var(--s))}
+.hm-co-list li::before{content:"";position:absolute;left:0;top:.7em;width:calc(6*var(--s));height:calc(6*var(--s));min-width:5px;min-height:5px;border-radius:50%;background:var(--blue)}
+.hm-co-list b{font-weight:600;color:var(--ink)}
 
 /* demo: CTA that opens the shared modal (site.js) */
 .hm-demo-cta{padding:clamp(calc(22*var(--s)),3vw,calc(40*var(--s)));display:flex;flex-direction:column;justify-content:center}
@@ -205,10 +224,11 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 #hmPgrid .hm-chips .st{padding:calc(5*var(--s)) calc(7*var(--s))}
 #hmPgrid .link-arrow{margin-top:auto;padding-top:0;min-height:max(36px,calc(36*var(--s)));font-size:max(14px,calc(14.5*var(--s)))}
 #products .hm-ops{margin-top:calc(18*var(--s));padding:calc(8*var(--s)) calc(14*var(--s));gap:calc(14*var(--s))}
-#products .hm-ops img{width:clamp(140px,14vw,220px);height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
+#products .hm-ops img{width:clamp(calc(140*var(--s)),14vw,calc(220*var(--s)));height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
 #products .hm-ops h3{font-size:var(--fs-h3);line-height:var(--lh-h3)}
 #products .hm-ops p{margin-top:calc(2*var(--s));font-size:max(14px,calc(14.5*var(--s)));line-height:1.45}
 #products .hm-ops .link-arrow{min-height:max(36px,calc(36*var(--s)));font-size:max(14px,calc(14.5*var(--s)))}
+@media (pointer:coarse){#hmPgrid .link-arrow{min-height:44px}}
 .ov-box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--blue);border-radius:calc(4*var(--s));animation:ovBox 3.2s ease-in-out infinite}
 .ov-box span{position:absolute;left:-2px;bottom:calc(100% + 4px);white-space:nowrap;background:var(--blue);color:#fff;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s))}
 .ov-box.r span{left:auto;right:-2px}
@@ -238,7 +258,9 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hm-pc-vis .hm-ill{z-index:3}
 @container (max-width:360px){.hm-pc-vis [data-minor]{display:none}.hm-pc-vis .ov-box.b[data-flip] span{top:auto;bottom:calc(100% + 4px)}}
 .hm-ops{display:flex;align-items:center;gap:calc(16*var(--s));margin-top:var(--gap-g);border:1px solid var(--line);border-radius:var(--r-lg,calc(16*var(--s)));padding:calc(14*var(--s)) calc(18*var(--s));background:#fff;text-decoration:none;color:inherit;transition:transform var(--dur-3,280ms) var(--ease-out,cubic-bezier(.22,1,.36,1)),box-shadow var(--dur-3,280ms) var(--ease-out,cubic-bezier(.22,1,.36,1)),border-color var(--dur-3,280ms) var(--ease-out,cubic-bezier(.22,1,.36,1))}
-.hm-ops:hover,.hm-ops:focus-visible{transform:translateY(-2px);box-shadow:var(--sh-2,0 1px 2px rgba(10,26,43,.05),0 8px 24px -10px rgba(14,59,102,.16));border-color:var(--line-2)}
+.hm-ops:focus-visible{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}
+@media (hover:hover){.hm-ops:hover{transform:translateY(-2px);box-shadow:var(--sh-2);border-color:var(--line-2)}}
+.hm-tile:active,.hm-ops:active{transform:translateY(0) scale(.99);transition-duration:var(--dur-1)}
 .hm-ops img{flex:none;width:calc(96*var(--s));height:calc(60*var(--s));object-fit:cover;border-radius:calc(8*var(--s))}
 .hm-ops h3{font-size:var(--fs-h3);font-weight:600;display:flex;align-items:center;gap:calc(8*var(--s));flex-wrap:wrap}
 .hm-ops p{margin:calc(4*var(--s)) 0 0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
@@ -257,13 +279,13 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .ov-box.al span,.hm-dbox.al span{background:#C93A33}
 .ov-box.b span{bottom:auto;top:calc(100% + 4px)}
 .hm-dbox.b span{top:auto;bottom:calc(-24*var(--s))}
-.ov-box span em,.hm-dbox span em{font-style:normal;opacity:.78;margin-left:calc(6*var(--s))}
+.ov-box span em,.hm-dbox span em{font-style:normal;opacity:.95;margin-left:calc(6*var(--s))}
 .ov-time{position:absolute;right:calc(10*var(--s));bottom:calc(10*var(--s));font:500 calc(12*var(--s))/1 var(--f-mono);color:#fff;background:rgba(10,26,43,.66);padding:calc(4*var(--s)) calc(7*var(--s));border-radius:calc(4*var(--s));pointer-events:none;font-variant-numeric:tabular-nums}
 /* digital twin = demo G "Map to street": one full-bleed stage, the copy and step strip on the left over a white fade, the 3D twin
    behind it (GIS map -> cursor opens CAM-07 -> dive to the street -> live camera tile). Scroll-driven: the stage pins for ~2 screens
    (1.3 on phones) and scroll progress drives the choreography; pills, device chips, cards and Replay are real buttons */
 #main #twin.scene{padding-block:0}
-.tw-g{--twx:max(var(--gut),calc((100% - var(--col)) / 2 + var(--gut)));--txw:clamp(320px,30vw,560px);position:relative;height:clamp(min(420px,calc(100svh - var(--nav-h))),calc(100svh - var(--nav-h)),980px);overflow:hidden;background:#fff;isolation:isolate;color:#0A1A2B}
+.tw-g{--twx:max(var(--gut),calc((100% - var(--col)) / 2 + var(--gut)));--txw:clamp(calc(320*var(--s)),30vw,calc(560*var(--s)));position:relative;height:clamp(min(calc(420*var(--s)),calc(100svh - var(--nav-h))),calc(100svh - var(--nav-h)),calc(980*var(--s)));overflow:hidden;background:#fff;isolation:isolate;color:#0A1A2B}
 .tw-vp{position:absolute;inset:0}
 .tw-vp .gl{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 .tw-vp,.tw-vp *{pointer-events:none;user-select:none;-webkit-user-select:none}
@@ -273,14 +295,15 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .tw-g .tx h2 em{font-style:normal;color:#2673B5}
 .tw-g .tx p{margin:calc(22*var(--s)) 0 0;font-size:var(--fs-body);line-height:1.55;color:#41566B;letter-spacing:-.01em;max-width:calc(400*var(--s))}
 .tw-g .lyr{display:inline-flex;gap:2px;padding:3px;margin-top:34px;border:1px solid #DCE5EF;border-radius:12px;background:#F4F8FC}
-.tw-g .lyr button{position:relative;display:flex;align-items:center;gap:8px;height:44px;padding:0 15px;margin:0;border:0;border-radius:9px;background:none;overflow:hidden;font:500 14px/1 var(--f-body);color:#41566B;white-space:nowrap;cursor:pointer;transition:background .3s,color .3s,box-shadow .3s}
+.tw-g .lyr button{position:relative;display:flex;align-items:center;gap:8px;height:44px;padding:0 15px;margin:0;border:0;border-radius:9px;background:none;overflow:hidden;font:500 14px/1 var(--f-body);color:#41566B;white-space:nowrap;cursor:pointer;transition:background-color .3s var(--ease-out),color .3s var(--ease-out),box-shadow .3s var(--ease-out),scale var(--dur-1) var(--ease-out)}
 .tw-g .lyr button:hover{color:#0A1A2B}
+.tw-g .lyr button:active{scale:.97}
 .tw-g .lyr button.on{background:#fff;color:#0A1A2B;box-shadow:0 1px 2px rgba(14,59,102,.08),0 0 0 1px #DCE5EF}
 .tw-g .lyr button b{position:absolute;left:10px;right:10px;bottom:5px;height:2px;border-radius:1px;background:#2673B5;transform:scaleX(0);transform-origin:left;opacity:0}
 .tw-g .lyr button.on b{opacity:1}
 /* interactive bits only: pills, device chips, card buttons, replay; everything else in the stage stays pointer-events:none */
 .tw-g .lyr button:focus-visible,.tw-g .tpin .ch:focus-visible,.tw-g .go:focus-visible,.tw-g .tw-rp:focus-visible,.tw-g .pcard .x:focus-visible{outline:2px solid #2673B5;outline-offset:2px}
-.tw-g .tw-rp{display:inline-flex;align-items:center;gap:8px;height:44px;margin:14px 0 0;padding:0 14px 0 10px;border:0;border-radius:10px;background:none;font:500 14px/1 var(--f-body);color:#2673B5;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+.tw-g .tw-rp{display:inline-flex;align-items:center;gap:8px;height:44px;margin:14px 0 0;padding:0 14px 0 10px;border:0;border-radius:10px;background:none;font:500 14px/1 var(--f-body);color:#2673B5;cursor:pointer;opacity:0;visibility:hidden;transition:opacity .3s var(--ease-out),visibility 0s .3s,background-color var(--dur-2) var(--ease-out)}
 .tw-g .tw-rp svg{width:16px;height:16px}
 .tw-g .tw-rp:hover{background:#F4F8FC}
 .tw-g .tw-rp.on{opacity:1;visibility:visible;transition-delay:0s}
@@ -291,7 +314,8 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .tpin[data-s="warn"]{--c:#F2A93B}.tpin[data-s="sel"]{--c:#2673B5}
 .tpin .dt{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px #fff,0 1px 4px rgba(14,59,102,.35)}
 .tpin .stm{position:absolute;left:-.5px;bottom:4px;width:1px;height:20px;background:rgba(14,59,102,.4);transform-origin:bottom}
-.tpin .ch{position:absolute;left:0;bottom:24px;display:flex;align-items:center;gap:6px;height:32px;margin:0;padding:0 10px;border-radius:7px;background:rgba(255,255,255,.95);border:1px solid #DCE5EF;font:500 12px/1 var(--f-mono);color:#0A1A2B;white-space:nowrap;box-shadow:0 6px 16px -8px rgba(14,59,102,.4);transform:translateX(-50%);cursor:pointer;pointer-events:auto;transition:border-color .2s,box-shadow .2s}
+.tpin .ch{position:absolute;left:0;bottom:24px;display:flex;align-items:center;gap:6px;height:32px;margin:0;padding:0 10px;border-radius:7px;background:rgba(255,255,255,.95);border:1px solid #DCE5EF;font:500 12px/1 var(--f-mono);color:#0A1A2B;white-space:nowrap;box-shadow:0 6px 16px -8px rgba(14,59,102,.4);transform:translateX(-50%);cursor:pointer;pointer-events:auto;transition:border-color var(--dur-2) var(--ease-out),box-shadow var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+.tpin .ch:active{scale:.95}
 .tpin .ch::before{content:"";position:absolute;inset:-10px -6px}
 .tpin .ch:hover{border-color:#2673B5;box-shadow:0 8px 18px -8px rgba(14,59,102,.5)}
 .tpin .ch[aria-expanded="true"]{border-color:#2673B5;box-shadow:0 0 0 2px rgba(38,115,181,.25)}
@@ -307,23 +331,24 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .tw-g .cur svg{width:22px;height:22px;display:block;filter:drop-shadow(0 2px 3px rgba(5,20,40,.35))}
 .tw-g .cur.on{opacity:1}
 .tw-g .rip{position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:2px solid #2673B5;opacity:0}
-.tw-g .gcard{position:absolute;left:0;top:0;width:236px;padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .3s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}
+.tw-g .gcard{position:absolute;left:0;top:0;width:calc(236*var(--s));padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .3s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}
 .tw-g .gcard.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}
 .tw-g .gcard .r1{display:flex;align-items:center;gap:8px;font:500 12px/1 var(--f-mono);color:#5B6E82}
 .tw-g .gcard .r1 i{width:7px;height:7px;border-radius:50%;background:#2FB47C}
 .tw-g .gcard .tt{margin:9px 0 10px;font:600 17px/1.2 var(--f-body);letter-spacing:-.015em;color:#0A1A2B}
-.tw-g .go{display:flex;align-items:center;justify-content:space-between;width:100%;height:44px;margin:0;padding:0 12px;border:0;border-radius:9px;background:#2673B5;color:#fff;font:600 14px/1 var(--f-body);cursor:pointer;pointer-events:auto;transition:background .2s}
+.tw-g .go{display:flex;align-items:center;justify-content:space-between;width:100%;height:44px;margin:0;padding:0 12px;border:0;border-radius:9px;background:#2673B5;color:#fff;font:600 14px/1 var(--f-body);cursor:pointer;pointer-events:auto;transition:background-color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
 .tw-g .go:hover{background:#1F5F97}
+.tw-g .go:active{scale:.98}
 .tw-g .go svg{width:13px;height:13px}
 /* small info card for any other device pin (id, type, km, status) */
-.tw-g .pcard{position:absolute;left:0;top:0;z-index:5;width:236px;padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .25s}
+.tw-g .pcard{position:absolute;left:0;top:0;z-index:5;width:calc(236*var(--s));padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .25s}
 .tw-g .pcard.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}
 .tw-g .pcard .r1{display:flex;align-items:center;gap:8px;font:500 12px/1.2 var(--f-mono);color:#5B6E82}
 .tw-g .pcard .r1 i{width:7px;height:7px;border-radius:50%;background:#2FB47C;flex:none}
 .tw-g .pcard.warn .r1 i{background:#F2A93B}
 .tw-g .pcard .tt{margin:9px 0 10px;font:600 17px/1.2 var(--f-body);letter-spacing:-.015em;color:#0A1A2B}
 /* live camera tile (real footage; the box sits on the truck) */
-.tw-g .live{position:absolute;right:24px;bottom:32px;width:clamp(200px,17vw,320px);border-radius:14px;overflow:hidden;background:#0B1824;box-shadow:0 30px 60px -24px rgba(5,20,40,.55),0 0 0 1px rgba(14,59,102,.12);opacity:0;transform:translateY(14px) scale(.97);transform-origin:right bottom;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+.tw-g .live{position:absolute;right:24px;bottom:32px;width:clamp(calc(200*var(--s)),17vw,calc(320*var(--s)));border-radius:14px;overflow:hidden;background:#0B1824;box-shadow:0 30px 60px -24px rgba(5,20,40,.55),0 0 0 1px rgba(14,59,102,.12);opacity:0;transform:translateY(14px) scale(.97);transform-origin:right bottom;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
 .tw-g .live.on{opacity:1;transform:none}
 @media (max-width:1700px){.tw-g .live .hd em{display:none}}
 .tw-g .live .hd{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;background:#fff;font:500 12px/1 var(--f-mono);color:#41566B;border-bottom:1px solid #EBF1F7;white-space:nowrap}
@@ -340,9 +365,9 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .tw-g .chrome span{width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid #DCE5EF;display:grid;place-items:center;font:500 18px/1 var(--f-body);color:#41566B;box-shadow:0 4px 12px -6px rgba(14,59,102,.3)}
 .tw-g .scl{position:absolute;right:var(--twx);bottom:24px;display:flex;align-items:flex-end;gap:8px;font:500 12px/1 var(--f-mono);color:#5B6E82;transition:opacity .4s}
 .tw-g .scl i{width:64px;height:6px;border:1.5px solid #5B6E82;border-top:0}
-@media (min-width:768.02px) and (max-width:1024px){.tw-g .tx{width:min(380px,50%)}.tw-g .tx h2{font-size:clamp(28px,4vw,36px)}.tw-g .tx p{font-size:16px;max-width:360px}.tw-g .live{width:clamp(190px,24vw,240px)}.tw-g .live .hd em{display:none}}
+@media (min-width:768.02px) and (max-width:1024px){.tw-g .tx{width:min(calc(380*var(--s)),50%)}.tw-g .tx h2{font-size:clamp(28px,4vw,36px)}.tw-g .tx p{font-size:16px;max-width:calc(360*var(--s))}.tw-g .live{width:clamp(calc(190*var(--s)),24vw,calc(240*var(--s)))}.tw-g .live .hd em{display:none}}
 /* short desktop windows (768px laptops, 1080p at 125-150%): copy higher and smaller, a smaller live tile */
-@media (min-width:768.02px) and (max-height:700px){.tw-g .tx{top:18%}.tw-g .tx h2{font-size:clamp(28px,4.6svh,40px)}.tw-g .tx p{margin-top:14px}.tw-g .lyr{margin-top:20px}.tw-g .live{width:clamp(200px,17vw,260px);bottom:20px}.tw-g .chrome{top:20px}}
+@media (min-width:768.02px) and (max-height:700px){.tw-g .tx{top:18%}.tw-g .tx h2{font-size:clamp(28px,4.6svh,40px)}.tw-g .tx p{margin-top:14px}.tw-g .lyr{margin-top:20px}.tw-g .live{width:clamp(calc(200*var(--s)),17vw,calc(260*var(--s)));bottom:20px}.tw-g .chrome{top:20px}}
 /* phones: the copy above, then a taller stage with a fixed street camera */
 @media (max-width:768px){
   .tw-g{height:auto;max-height:none;display:flex;flex-direction:column;padding-top:calc(48*var(--s))}
@@ -352,17 +377,17 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   .tw-g .lyr{display:flex;margin-top:18px}
   .tw-g .lyr button{flex:1 1 0;justify-content:center;min-width:0;height:44px;padding:0 6px;font-size:13px}
   .tw-g .tw-rp{position:absolute;right:var(--gut);top:-6px;margin:0}
-  .tw-g .pcard{width:200px;padding:11px}
+  .tw-g .pcard{width:calc(200*var(--s));padding:11px}
   .tw-g .fadeL,.tw-g .chrome,.tw-g .scl{display:none}
-  .tw-vp{position:relative;inset:auto;height:clamp(470px,128vw,560px);margin-top:8px}
-  .tw-g .live{right:10px;bottom:12px;width:170px;border-radius:10px}
+  .tw-vp{position:relative;inset:auto;height:clamp(calc(470*var(--s)),128vw,calc(560*var(--s)));margin-top:8px}
+  .tw-g .live{right:10px;bottom:12px;width:calc(170*var(--s));border-radius:10px}
   .tw-g .live .hd{height:30px;padding:0 9px}
   .tw-g .live .hd em{display:none}
-  .tw-g .gcard{width:190px;padding:11px}
+  .tw-g .gcard{width:calc(190*var(--s));padding:11px}
   .tw-g .gcard .tt{font-size:15px}
 }
 /* badge on the map */
-.tw-g .tw-badge{position:absolute;top:16px;left:var(--twx);z-index:4;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.92);box-shadow:0 0 0 1px #DCE5EF;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#0A1A2B}
+.tw-g .tw-badge{position:absolute;top:16px;left:var(--twx);z-index:4;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:calc(999*var(--s));background:rgba(255,255,255,.92);box-shadow:0 0 0 1px #DCE5EF;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#0A1A2B}
 .tw-g .tw-badge i{width:7px;height:7px;border-radius:50%;background:#2FB47C}
 @media (max-width:768px){.tw-g .tw-badge{left:16px;top:12px}}
 @media (prefers-reduced-motion:reduce){.tw-g .gcard,.tw-g .live,.tw-g .live .bx,.tw-g .lyr button,.tw-g .pcard,.tw-g .tw-rp{transition:none}}
@@ -399,12 +424,12 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 .hm-mcp .d{margin:calc(8*var(--s)) 0 0;font-size:var(--fs-card,16px);line-height:1.5;color:var(--ink-2)}
 .hm-mcp .hm-ag-chat{margin:0;padding:0}
 .hm-mcp-flow{display:flex;align-items:center;gap:10px;min-width:0}
-.hm-mcp-node{flex:none;padding:9px 14px;border:1px solid var(--line-2);border-radius:999px;background:#fff;font:600 max(13px,calc(14*var(--s)))/1 var(--f-body);color:var(--ink)}
+.hm-mcp-node{flex:none;padding:9px 14px;border:1px solid var(--line-2);border-radius:calc(999*var(--s));background:#fff;font:600 max(13px,calc(14*var(--s)))/1 var(--f-body);color:var(--ink)}
 .hm-mcp-node.hub{background:var(--blue);border-color:var(--blue);color:#fff}
 .hm-mcp-line{position:relative;flex:1 1 18px;min-width:18px;height:2px;background:var(--line-2);overflow:hidden}
 .hm-mcp-line i{position:absolute;inset:0;width:40%;background:var(--blue);animation:hmMcp 2.2s linear infinite}
 @keyframes hmMcp{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
-.hm-mcp-node.hub small{display:block;margin-top:3px;font:500 max(11px,calc(11*var(--s)))/1 var(--f-mono);letter-spacing:.04em;opacity:.85}
+.hm-mcp-node.hub small{display:block;margin-top:3px;font:500 max(12px,calc(11*var(--s)))/1 var(--f-mono);letter-spacing:.04em;opacity:.85}
 .hm-mcp-flow{flex-wrap:wrap;row-gap:8px}
 .hm-mcp-back{flex-basis:100%;text-align:right;font:500 max(12px,calc(12.5*var(--s)))/1.3 var(--f-body);color:var(--muted)}
 @media (max-width:1024px){.hm-mcp{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.hm-mcp-t{grid-column:1/-1}}
@@ -416,6 +441,8 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 @media (prefers-reduced-motion:reduce){.hm-ag-dot::before{animation:none}.hm-ag.typing .hm-ag-chat span{transition:none}}
 /* seven product cards: the first and last span two columns (2+1 / 3 / 1+2), their photo kept to the row height */
 @media (min-width:1024.02px){#hmPgrid>.hm-pc:is(:first-child,:last-child){grid-column:span 2}#hmPgrid>.hm-pc:is(:first-child,:last-child) .hm-pc-vis{aspect-ratio:32/8.6}}
+/* wide cards: photo exactly as tall as a 16:9 single-column photo, so sibling photos, kickers and chips share one baseline */
+@media (min-width:1024.02px){#hmPgrid{container-type:inline-size}#hmPgrid>.hm-pc:is(:first-child,:last-child) .hm-pc-vis{aspect-ratio:auto;height:calc(((100cqw - 2 * var(--hm-cgap)) / 3 - 2px) * 9 / 16)}}
 @media (min-width:768.02px) and (max-width:1024px){#hmPgrid>.hm-pc:last-child{grid-column:span 2}#hmPgrid>.hm-pc:last-child .hm-pc-vis{aspect-ratio:32/8.6}}
 @media (max-width:1024px){
   .hm-head,.hw,.hm-co,.hm-demo{grid-template-columns:minmax(0,1fr)}
@@ -426,8 +453,6 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   .hm-facts div{grid-template-columns:minmax(0,1fr);gap:calc(4*var(--s))}
 }
 @media (max-width:480px){
-  .hm-tiles{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:calc(12*var(--s));margin-inline:calc(-1 * max(var(--gut),env(safe-area-inset-left,0px)));padding:0 max(var(--gut),env(safe-area-inset-left,0px)) calc(8*var(--s));scroll-padding-inline:max(var(--gut),env(safe-area-inset-left,0px))}
-  .hm-tile{flex:0 0 82%;scroll-snap-align:start}
   .hw-top,.hw-bot{flex-wrap:wrap;white-space:normal;row-gap:6px}
 }
 @media (max-width:768px){
@@ -459,12 +484,24 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 #hmTiles .hm-go{width:calc(28*var(--s));height:calc(28*var(--s))}
 #hmTiles .hm-dbox span{top:-21px;padding:3px 5px}
 #hmTiles .hm-dbox.b span{top:auto;bottom:-21px}
+/* phones: the six domain cards two per row, all visible at once (no sideways swiping); type steps down to fit the half width */
+@media (max-width:480px){
+  #hmTiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  #hmTiles .hm-cap{padding:10px 11px 12px}
+  #hmTiles .hm-cap h3{font-size:clamp(14px,4.3vw,16px)}
+  #hmTiles .hm-cap p{font-size:13px;line-height:1.4}
+  #hmTiles .hm-cap .runs,#hmTiles .hm-proofline{font-size:12px}
+  #hmTiles .hm-go{width:24px;height:24px}
+  #hmTiles .hm-dbox span{display:none}
+}
+/* the smallest phones: the whole card is the link, so the arrow gives its room to the title */
+@media (max-width:360px){#hmTiles .hm-go{display:none}}
 #hmTiles .ov-time,#hmPgrid .ov-time{top:8px;bottom:auto;right:8px}
 #hmPgrid .ov-rec~.ov-time{top:auto;bottom:8px}
 /* live on national highways: head on top, the wall centred under it */
 #proof .hw{align-items:center}
 #proof .hw-fig{max-width:none;margin:0}
-#proof .hw-card{max-width:320px}
+#proof .hw-card{max-width:calc(320*var(--s))}
 #proof .hm-head{margin-bottom:0}
 /* the proof heading sits beside the wall at page-hero size */
 #proof .hm-head .h-1{font-size:var(--fs-h2);line-height:var(--lh-h2)}
@@ -475,7 +512,6 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
   #hmPgrid{grid-template-columns:minmax(0,1fr);gap:20px}
   #products .hm-ops{margin-top:20px}
 }
-@media (max-width:480px){#hmTiles{display:flex;max-width:none;gap:12px;margin-inline:calc(-1 * max(var(--gut),env(safe-area-inset-left,0px)))}}
 
 /* demo panel in the site's light theme (matches the Book a demo dialog): light-blue gradient, live particle network, blue steps */
 .hm-demo-side{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(165deg,#F4F8FC 0%,#E4EFF9 100%);color:var(--ink)}
@@ -497,6 +533,54 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 /* type review: map chips get a bigger touch target; domain tile rows share one height */
 @media (pointer:coarse){.tpin .ch::after{content:"";position:absolute;inset:-6px}}
 .hm-tiles{grid-auto-rows:1fr}
+/* company: the left column carries who we are, the office and the contact under the heading */
+.hm-co-who{margin-top:calc(28*var(--s));padding-top:calc(22*var(--s));border-top:1px solid var(--line)}
+.hm-co-k{margin:0 0 calc(10*var(--s));font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.hm-co-who p:not(.hm-co-k){margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2);max-width:36em}
+.hm-co-meta{margin:calc(24*var(--s)) 0 0;display:grid;grid-template-columns:minmax(0,1fr);gap:calc(20*var(--s)) calc(28*var(--s))}
+.hm-co-meta dt{font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:calc(6*var(--s))}
+.hm-co-meta dd{margin:0;font-size:var(--fs-card);line-height:1.55;color:var(--ink-2)}
+@media (max-width:600px){.hm-co-meta{grid-template-columns:1fr}}
+/* company, three layers: heading + who we are · what we do (four cards) · office and contact strip */
+.hm-co-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),5vw,calc(80*var(--s)));align-items:start}
+.hm-co-top .lead{margin-top:calc(16*var(--s))}
+.hm-co-who{margin:0;padding:calc(6*var(--s)) 0 0;border:0}
+.hm-co-k{display:block;margin:0 0 calc(10*var(--s));font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hm-co-who .hm-co-intro{margin:0;max-width:none;font-size:clamp(calc(17*var(--s)),1.35vw,calc(20*var(--s)));line-height:1.6;color:var(--ink-2);text-wrap:pretty}
+.hm-co-k2{margin-top:clamp(calc(40*var(--s)),5vw,calc(64*var(--s)))}
+.hm-co-cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g)}
+.hm-co-cards li{display:flex;flex-direction:column;gap:calc(10*var(--s));padding:calc(22*var(--s)) calc(22*var(--s)) calc(24*var(--s));border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--sh-rest)}
+.hm-co-ic{width:40px;height:40px;margin-bottom:calc(6*var(--s));border-radius:11px;background:var(--wash);color:var(--blue);display:grid;place-items:center}
+.hm-co-cards b{font:650 calc(17*var(--s))/1.3 var(--f-display);letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+.hm-co-cards p{margin:0;font-size:var(--fs-card);line-height:1.55;color:var(--ink-2);text-wrap:pretty}
+.hm-co-foot{margin-top:calc(28*var(--s));padding-top:calc(22*var(--s));border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:flex-start;gap:calc(18*var(--s)) clamp(calc(28*var(--s)),4vw,calc(64*var(--s)))}
+.hm-co-foot>div{display:flex;flex-direction:column;font-size:var(--fs-card);line-height:1.55;color:var(--ink-2);max-width:32em}
+.hm-co-foot .hm-co-k{margin-bottom:calc(4*var(--s))}
+.hm-co-more{margin-left:auto;align-self:center}
+@media (max-width:1024px){
+  .hm-co-top{grid-template-columns:minmax(0,1fr)}
+  .hm-co-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  .hm-co-cards{grid-template-columns:minmax(0,1fr)}
+  .hm-co-more{margin-left:0}
+}
+/* the contact line stays on one line wherever the strip has the room (it wraps on narrow screens) */
+.hm-co-foot>div:nth-child(2){max-width:none}
+@media (min-width:1024.02px){.hm-co-foot>div:nth-child(2)>span{white-space:nowrap}}
+/* MCP card row: Agent <-> MCP (scoped access) <-> the products; two-way connectors with an arrowhead at each end */
+.hm-mcp-line.two{overflow:visible;background:var(--blue-soft)}
+.hm-mcp-line.two::before,.hm-mcp-line.two::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3.5px;border:solid var(--blue-soft);border-width:2px 2px 0 0}
+.hm-mcp-line.two::before{left:0;transform:rotate(-135deg)}
+.hm-mcp-line.two::after{right:0;transform:rotate(45deg)}
+.hm-mcp-prods{flex:none;display:flex;flex-direction:column;gap:6px}
+.hm-mcp-prods span{padding:6px 12px;border:1px solid var(--line-2);border-radius:8px;background:#fff;font:600 max(12px,calc(13*var(--s)))/1.1 var(--f-body);color:var(--ink);white-space:nowrap}
+@media (max-width:640px){
+  .hm-mcp-line.two{width:2px;height:22px;flex:none;min-width:0}
+  .hm-mcp-line.two::before{left:50%;top:0;margin:0 0 0 -3.5px;transform:rotate(-45deg)}
+  .hm-mcp-line.two::after{left:50%;right:auto;top:auto;bottom:0;margin:0 0 0 -3.5px;transform:rotate(135deg)}
+  .hm-mcp-prods{align-items:center}
+}
 </style>
 
 <!-- ============ HERO ============ -->
@@ -506,7 +590,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     window.INFRAX_HX_SKIP=seen&&!(nv&&nv.type==='reload')}catch(e){}
   try{if(!window.INFRAX_HX_SKIP&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.currentScript.parentNode.classList.add('hx-intro');
     var de=document.documentElement,show=function(){de.classList.remove('nav-wait');removeEventListener('scroll',onS)},onS=function(){if(scrollY>8)show()};
-    de.classList.add('nav-wait');addEventListener('scroll',onS,{passive:true});setTimeout(show,9000);window.INFRAX_NAV_IN=show}}catch(e){}</script>
+    de.classList.add('nav-wait');addEventListener('scroll',onS,{passive:true});setTimeout(show,9000);var sn=document.querySelector('.site-nav');if(sn)sn.addEventListener('focusin',show);window.INFRAX_NAV_IN=show}}catch(e){}</script>
   <canvas class="hx-pt" id="hxPt" aria-hidden="true"></canvas>
   <div class="wrap hx">
     <div class="hx-vis" id="hxStage">
@@ -517,7 +601,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     </div>
     <div class="hx-copy">
       <h1 class="h-hero hm-h1" id="hmTitle"><span class="hx-brand">InfraX AI</span> — where infrastructure runs itself.</h1>
-      <p class="hx-sub"><strong>The agentic OS for infrastructure.</strong> AI agents run the routine work across every camera, asset and site; your people approve what matters.</p>
+      <p class="hx-sub"><strong>The agentic OS for infrastructure.</strong> AI Beings run the routine work across every camera, asset and site; your people approve what matters.</p>
       <div class="btn-row">
         <a class="btn btn-primary" href="home.html#demo" data-magnetic>Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
         <a class="btn btn-ghost" href="products.html">See the products <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
@@ -530,8 +614,8 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 <section class="scene" id="agents" aria-labelledby="hmAgT">
   <div class="wrap">
     <div class="hm-head hm-c">
-      <div><h2 class="h-1" id="hmAgT" data-reveal>AI agents that work across every product.</h2></div>
-      <p class="body">Each product has an agent for the routine work, and a person approves what matters. Your own agents can plug in too.</p>
+      <div><h2 class="h-1" id="hmAgT" data-reveal>AI Beings that work across every product.</h2></div>
+      <p class="body">Each product has a Being for the routine work, and a person approves what matters. Your own Beings can plug in too.</p>
     </div>
     <div class="hm-ag" id="hmAg">
       <article class="hm-agc">
@@ -561,19 +645,20 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     </div>
     <article class="hm-mcp">
       <div class="hm-mcp-t">
-        <p class="hm-ag-k"><span class="hm-ag-dot" aria-hidden="true"></span>For your own agents</p>
+        <p class="hm-ag-k"><span class="hm-ag-dot" aria-hidden="true"></span>For your own Beings</p>
         <h3>MCP</h3>
-        <p class="d">Connect your own AI agents to InfraX AI Ops through MCP (Model Context Protocol). Agents call Ops features as tools, using only the access you grant them.</p>
+        <p class="d">Connect your own AI Beings to InfraX AI Ops through MCP (Model Context Protocol). Beings call Ops features as tools, using only the access you grant them.</p>
       </div>
       <div class="hm-mcp-flow" aria-hidden="true">
-        <span class="hm-mcp-node">Your agent</span>
-        <span class="hm-mcp-line"><i></i></span>
-        <span class="hm-mcp-node hub">MCP<small>scoped token</small></span>
-        <span class="hm-mcp-line"><i></i></span>
+        <!-- a Being, scoped MCP access, InfraX AI Ops (both ways); MCP runs for Ops only today -->
+        <span class="hm-mcp-node">Being</span>
+        <span class="hm-mcp-line two"></span>
+        <span class="hm-mcp-node hub">MCP<small>scoped access</small></span>
+        <span class="hm-mcp-line two"></span>
         <span class="hm-mcp-node">InfraX AI Ops</span>
-        <span class="hm-mcp-back">↩ Result goes back to your agent</span>
+        <span class="hm-mcp-back">↩ Result goes back to your Being</span>
       </div>
-      <div class="hm-ag-chat" aria-hidden="true"><span class="q">agent → get today's ops digest</span><span class="a">Daily digest returned from Ops</span></div>
+      <div class="hm-ag-chat" aria-hidden="true"><span class="q">Being → get today's ops digest</span><span class="a">Daily digest returned from Ops</span></div>
     </article>
     <p class="hm-ag-note">Example exchanges, illustrative data.</p>
   </div>
@@ -651,14 +736,14 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
           <p class="hm-pc-k"><span class="ix" data-ix="callbox" data-size="16" aria-hidden="true"></span>Emergency call boxes</p>
           <h3>AstraAlert</h3>
           <p class="d">Every call box press reaches the control room, located on the map and recorded.</p>
-          <div class="hm-chips"><span class="st st-live">Call located</span><span class="st st-live">Box health</span><span class="st st-live">AI voice agent</span></div>
+          <div class="hm-chips"><span class="st st-live">Call located</span><span class="st st-live">Box health</span><span class="st st-live">AI voice Being</span></div>
           <a class="link-arrow" href="products.html#astraalert" aria-label="Explore AstraAlert">Explore</a>
         </div>
       </article>
       <article class="hm-pc">
         <div class="hm-pc-vis"><img decoding="async" src="img/toll-lane-sm.jpg" srcset="img/toll-lane-sm.jpg 768w, img/toll-lane.jpg 1536w" sizes="(min-width:1024.02px) 33vw, (min-width:768.02px) 50vw, 100vw" alt="A toll lane with a barrier lifting for a car" loading="lazy" width="768" height="432"><span class="ov-box r" style="left:51.8%;top:45.1%;width:22.4%;height:27.8%"><span>Car<em>98%</em></span></span><span class="ov-box b" style="left:57.9%;top:56.2%;width:6.2%;height:3%"><span>XX 07 CD 5521</span></span><span class="ov-tag dk" style="left:4%;top:8%">Lane ↔ cloud · synced</span><span class="hm-ill">Illustrative</span><span class="ov-time" data-clock aria-hidden="true">--:--:--</span></div>
         <div class="hm-pc-body">
-          <p class="hm-pc-k"><span class="ix" data-ix="toll" data-size="16" aria-hidden="true"></span>Toll lanes</p>
+          <p class="hm-pc-k"><span class="ix" data-ix="toll" data-size="16" aria-hidden="true"></span>Toll plazas</p>
           <h3>TollCloud</h3>
           <p class="d">FASTag, ANPR, UPI and RFID lanes that keep running when the link drops.</p>
           <div class="hm-chips"><span class="st st-live">FASTag</span><span class="st st-live">ANPR</span><span class="st st-live">UPI</span><span class="st st-live">RFID</span></div>
@@ -689,7 +774,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 
     <a class="hm-ops" href="products.html#ops">
       <img decoding="async" src="img/atms-cabinet-sm.jpg" alt="" loading="lazy" width="220" height="124">
-      <div><h3>InfraX AI Ops <span class="st st-live">Live</span></h3><p>Field operations, workforce and assets, run by AI agents. Hosted at ops.infrax.ai.</p></div>
+      <div><h3>InfraX AI Ops <span class="st st-live">Live</span></h3><p>Field operations, workforce and assets, run by AI Beings. Hosted at ops.infrax.ai.</p></div>
       <span class="link-arrow">Explore</span>
     </a>
 
@@ -734,16 +819,31 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 
 <!-- ============ COMPANY ============ -->
 <section class="scene" id="company" aria-labelledby="hmCoT">
-  <div class="wrap hm-co">
-    <div>
-      <h2 class="h-1" id="hmCoT" data-reveal>Field-tested before it ships.</h2>
-      <p class="lead">A product company in Gurugram, built in India. Every feature is used in the field first.</p>
+  <div class="wrap">
+    <div class="hm-co-top">
+      <div>
+        <h2 class="h-1" id="hmCoT" data-reveal>Field-tested before it ships.</h2>
+        <p class="lead">A product company in Gurugram, built in India. Every feature is used in the field first.</p>
+      </div>
+      <div class="hm-co-who">
+        <p class="hm-co-k">Who we are</p>
+        <p class="hm-co-intro">InfraX AI builds the operating system for infrastructure. Cameras, sensors and control-room software come together on one platform, and AI Beings run the routine work across it: they watch, flag and propose, and a person approves before anything moves. We are a product company from India, built by NaturNest AI Private Limited, and our software runs live on a national highway today.</p>
+      </div>
     </div>
-    <dl class="hm-facts">
-      <div><dt>Who we are</dt><dd>InfraX AI, by NaturNest AI Private Limited. Built in India.<br><a href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City, Gurugram, Haryana 122002</a></dd></div>
-      <div><dt>Services</dt><dd>Integration and delivery for operators and system integrators. <a class="link-arrow" href="services.html" style="min-height:44px">See services</a></dd></div>
-      <div><dt>Contact</dt><dd><a href="mailto:info@infrax.ai">info@infrax.ai</a></dd></div>
-    </dl>
+
+    <h3 class="hm-co-k hm-co-k2" id="hmCoWhat">What we do</h3>
+    <ul class="hm-co-cards" aria-labelledby="hmCoWhat">
+      <li><span class="hm-co-ic" aria-hidden="true"><span class="ix" data-ix="gantry" data-size="20"></span></span><b>Highway and city traffic management</b><p>ATMS / ICCC control rooms, incident detection, enforcement.</p></li>
+      <li><span class="hm-co-ic" aria-hidden="true"><span class="ix" data-ix="camera" data-size="20"></span></span><b>Video intelligence</b><p>Cygnus, our AI-native video management system, with our own plate recognition for Indian roads.</p></li>
+      <li><span class="hm-co-ic" aria-hidden="true"><span class="ix" data-ix="api" data-size="20"></span></span><b>Integration</b><p>We connect the cameras, signals, toll and parking systems you already have, so you don’t rip and replace.</p></li>
+      <li><span class="hm-co-ic" aria-hidden="true"><span class="ix" data-ix="people" data-size="20"></span></span><b>Operations and support</b><p>Deployment, training and long-term maintenance by our own team.</p></li>
+    </ul>
+
+    <div class="hm-co-foot">
+      <div><span class="hm-co-k">Office</span><a href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City, Gurugram, Haryana 122002</a></div>
+      <div><span class="hm-co-k">Contact</span><span><a href="mailto:info@infrax.ai">info@infrax.ai</a>. Tell us about your road, city or site, and we&rsquo;ll get back to you.</span></div>
+      <a class="link-arrow hm-co-more" href="services.html" style="min-height:44px">See services</a>
+    </div>
   </div>
 </section>
 
@@ -1167,7 +1267,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
 
     // ---- WebGL scene (one renderer); without WebGL a 2D map stands in
     var R = null;
-    if (TH) try { R = new TH.WebGLRenderer({ canvas: cv, antialias: false, alpha: true, powerPreference: 'low-power' }); } catch (e) { R = null; }
+    if (TH) try { R = new TH.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: 'low-power' }); } catch (e) { R = null; }
     if (!R) { flat2d(); return; }
     R.debug.checkShaderErrors = false;
     R.setClearColor(0xffffff, 0);
@@ -1204,6 +1304,9 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     dg.setAttribute('aKind', new TH.Float32BufferAttribute(kd, 1)); dg.setAttribute('aD', new TH.Float32BufferAttribute(dd, 1));
     var U = { uLon0: { value: 0 }, uLat0: { value: 0 }, uR: { value: 30 }, uMorph: { value: 0 }, uTime: { value: 0 }, uPx: { value: 1 }, uK: { value: 1 }, uLive: { value: 0 },
       uWorld: { value: 1 }, uFade: { value: 1 }, uZs: { value: 1 }, uDot: { value: GAP / .9 }, uC: { value: new TH.Vector2() }, uCol: { value: BLUE.clone() }, uCol2: { value: DEEP.clone() } };
+    // dark theme: the globe's dots go sky and pale blue so they read on navy (everything else keeps the brand colours)
+    function globeTheme() { var d = document.documentElement.getAttribute('data-theme') === 'dark'; U.uCol.value.set(d ? 0x5AB4EA : 0x2673B5); U.uCol2.value.set(d ? 0xA9D0F2 : 0x0E3B66); }
+    globeTheme(); document.addEventListener('infrax:theme', globeTheme);
     var dots = new TH.Points(dg, add(new TH.ShaderMaterial({ uniforms: U, vertexShader: DVS, fragmentShader: DFS, transparent: true, depthTest: false, depthWrite: false })));
     dots.frustumCulled = false; scene.add(dots);
     // a soft atmosphere glow around the particle globe, fading as the camera closes in
@@ -1258,7 +1361,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     function layout() {
       W = stage.clientWidth; H = stage.clientHeight;
       if (!W || !H) return false;
-      var dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+      var dpr = Math.min(window.devicePixelRatio || 1, 2); // full sharpness
       R.setPixelRatio(dpr); R.setSize(W, H, false);
       cam.aspect = W / H; cam.updateProjectionMatrix();
       U.uPx.value = dpr; U.uK.value = (H / 2) / Math.tan(FOV * D2R / 2);
@@ -1336,7 +1439,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       function paint() {
         W = stage.clientWidth; H = stage.clientHeight;
         if (!W || !H) return false;
-        var dpr = Math.min(window.devicePixelRatio || 1, 1.75); c2.width = Math.round(W * dpr); c2.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var dpr = Math.min(window.devicePixelRatio || 1, 2); c2.width = Math.round(W * dpr); c2.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         measure();
         var mw = Math.min(W * (mob ? .74 : .6), H * .84), mh = H * .76;
         var s = Math.min(mw / (bx1 - bx0), mh / (bz1 - bz0)), ox = W / 2, oy = H / 2, r = Math.max(1.3, .19 * s * GAP);
@@ -1423,8 +1526,51 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       card = wall.querySelector('.hw-card'); cNo = card.querySelector('.no'); cEl = card.querySelector('.el'); cTt = card.querySelector('.tt');
       s1 = card.querySelector('.s1'); s2 = card.querySelector('.s2');
       alarms = AL.filter(function (a) { return ids.indexOf(a.id) > -1; });
+      // the alarm flags get their text now (they stay invisible until the alarm), so labels() can keep clear of them
+      alarms.forEach(function (a) { tw[ids.indexOf(a.id)].querySelector('.hw-flag').textContent = m ? a.km : a.what + ' · ' + a.km; });
       document.getElementById('hwTitle').textContent = m ? 'Corridor wall' : 'Corridor wall · 12 feeds';
       document.getElementById('hwEdge').textContent = m ? 'Edge AI' : 'Edge AI · on-prem';
+      labels();
+    }
+    /* box labels are placed by measurement, so none prints over another, the CAM tag or the alarm flag at any size:
+       the alarm box's label first (sized for "stopped"), then the rest, each above its box or else below it, inside the
+       tile. A label with no free spot is left off; its box still shows. */
+    // tile-local layout boxes (offsets ignore the boxes' entrance scale and the alarm tile's zoom)
+    function lbox(e, dx) { return { left: dx + e.offsetLeft, top: e.offsetTop, right: dx + e.offsetLeft + e.offsetWidth, bottom: e.offsetTop + e.offsetHeight }; }
+    function labels() {
+      tw.forEach(function (el, i) {
+        if (!el.offsetWidth) return;
+        var tr = { left: 0, top: 0, right: el.offsetWidth, bottom: el.offsetHeight }, ti = el.querySelector('.hw-ti'), tx = ti.offsetLeft - ti.offsetWidth / 2; // .hw-ti is centred by translateX(-50%)
+        var taken = [lbox(el.querySelector('.hw-cam'), 0)], fl = el.querySelector('.hw-flag');
+        if (fl.textContent) taken.push(lbox(fl, 0));
+        var a = AL.filter(function (x) { return x.id === ids[i]; })[0];
+        var order = boxes[i].map(function (b, j) { return j; }).sort(function (p, q) { return (a && q === a.b) - (a && p === a.b); });
+        order.forEach(function (j) {
+          var b = boxes[i][j], s = b.firstChild; if (b.classList.contains('hid')) return;
+          b.classList.remove('nolbl'); s.style.left = s.style.right = '';
+          var isAl = a && j === a.b, t0 = s.textContent;
+          if (isAl) s.textContent = 'stopped'; // the alarm label is measured with the word it will show
+          var r = lbox(b, tx), h = s.offsetHeight, w = s.offsetWidth;
+          if (isAl) s.textContent = t0;
+          // try above/below, each aligned to the box's own side first, then to the other side
+          var rt0 = b.classList.contains('rt'), lo0 = b.classList.contains('lo'), spot = null, C = [];
+          (lo0 ? ['lo', 'up'] : ['up', 'lo']).forEach(function (k) { C.push([k, rt0], [k, !rt0]); });
+          // last, a spot slid sideways just clear of the CAM tag, still under (or over) the box
+          var cam = taken[0], xs = Math.min(tr.right - w, Math.max(cam.right + 2, r.left - 1.5));
+          if (xs < r.right && xs + w > r.left) C.push(['lo', false, xs], ['up', false, xs]);
+          var fit = null; // the alarm label always shows: when every spot is taken it uses the first one inside the tile
+          C.some(function (c) {
+            var x0 = c.length > 2 ? c[2] : c[1] ? r.right + 1.5 - w : r.left - 1.5, y = c[0] === 'up' ? r.top - 2 - h : r.bottom + 2, q = { left: x0, right: x0 + w, top: y, bottom: y + h };
+            if (q.top < tr.top || q.bottom > tr.bottom || q.left < tr.left - 1 || q.right > tr.right + 1) return false;
+            if (!fit) fit = [c, q];
+            if (taken.some(function (t) { return q.left < t.right + 1 && q.right > t.left - 1 && q.top < t.bottom + 1 && q.bottom > t.top - 1; })) return false;
+            spot = c; taken.push(q); return true;
+          });
+          if (!spot && isAl && fit) { spot = fit[0]; taken.push(fit[1]); }
+          if (spot) { b.classList.toggle('lo', spot[0] === 'lo'); b.classList.toggle('rt', spot[1]); if (spot.length > 2) { s.style.left = (spot[2] - r.left) + 'px'; s.style.right = 'auto'; } }
+          else b.classList.add('nolbl');
+        });
+      });
     }
     function place(a) {
       var m = mode === 'm', i = ids.indexOf(a.id), el = tw[i], cols = m ? 2 : 4, col = i % cols;
@@ -1461,6 +1607,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       if (live) cEl.textContent = '00:' + pad(Math.floor(u * 3));
     }
     build();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(labels); // label widths settle once the mono font is in
     var vis = false, raf = 0, last = 0;
     function loop(now) {
       raf = 0;
@@ -1477,7 +1624,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       clearTimeout(rt);
       rt = setTimeout(function () {
         if ((tablet() ? 'm' : 'd') !== mode) { build(); frame(reduce ? 2.9 : tNow); }
-        else if (curA > -1) place(alarms[curA]);
+        else { labels(); if (curA > -1) place(alarms[curA]); }
       }, 120);
     });
   })();
@@ -1524,9 +1671,9 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       var f = new THREE.DirectionalLight(0xDDE9F6, .14); f.position.set(R0, R0 * .4, -R0); scene.add(f);
       return d;
     }
-    // phones: no shadows, no antialias, default GPU; desktop: shadows, the shadow map refreshed every few frames (see frame)
+    // phones: no shadows, default GPU (antialias always on); desktop: shadows, the shadow map refreshed every few frames (see frame)
     function renderer(cv, m) {
-      var R; try { R = new THREE.WebGLRenderer({ canvas: cv, antialias: !m && !X.lowGPU, powerPreference: m ? 'default' : 'high-performance' }); } catch (e) { return null; }
+      var R; try { R = new THREE.WebGLRenderer({ canvas: cv, antialias: true, powerPreference: m ? 'default' : 'high-performance' }); } catch (e) { return null; }
       R.debug.checkShaderErrors = false;
       R.shadowMap.enabled = !m; R.shadowMap.type = THREE.PCFShadowMap; R.shadowMap.autoUpdate = false; R.shadowMap.needsUpdate = !m; R.setClearColor(0xffffff, 1);
       return R;
@@ -1684,12 +1831,16 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       var R = renderer(cv, m); if (!R) return null;
       var fc = 0, CW = 1, CH = 1, cutX = 560, cutY = 0, scene = new THREE.Scene(), K = kit(), o3 = new THREE.Object3D();
       var cam = new THREE.PerspectiveCamera(20, 1, 1, 3000);
+      var badge = null, szGen = 0; // the "Digital Twin · Live" badge in stage coordinates: pins must not put their label on it
       function size() {
         CW = Math.max(1, vp.clientWidth); CH = Math.max(1, vp.clientHeight);
-        R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25, Math.sqrt(2.2e6 / (CW * CH)))); R.setSize(CW, CH, false);
+        R.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); R.setSize(CW, CH, false);
         // desktop: G's frame, the scene pushed right of the copy; phones: the lower part of a taller frame (less empty sky)
         var fw = m ? CW : CW * 1.3, fh = m ? CH * 1.2 : CH; cam.aspect = fw / fh; cam.setViewOffset(fw, fh, 0, fh - CH, CW, CH);
         var r0 = vp.getBoundingClientRect(), rt = tx.getBoundingClientRect(); cutX = rt.right - r0.left + 48; cutY = rt.bottom - r0.top + 8;
+        var bd = vp.parentNode && vp.parentNode.querySelector('.tw-badge'), rb = bd && bd.getBoundingClientRect();
+        badge = rb && rb.width ? { l: rb.left - r0.left - 4, r: rb.right - r0.left + 4, t: rb.top - r0.top - 4, b: rb.bottom - r0.top + 4 } : null;
+        szGen++; // label widths are measured again after a resize
       }
       size();
       scene.fog = new THREE.Fog(0xffffff, 4000, 5000);
@@ -1821,7 +1972,18 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
         PN.place(cam, CW, CH);
         var on = t > 2.45; PN.set(sel, 's', on ? 'sel' : 'ok'); sel.em.textContent = on ? 'km 42.6' : '';
         others.forEach(function (p, i) { if (m && (i === 3 || i === 4)) return; PN.set(p, 'off', t < .2 + i * .08 || t > 3.5); });
-        PN.list.forEach(function (p) { var h = p.zb || (!m && p.x < cutX && p.y - 56 < cutY); if (h !== p.hid) { p.hid = h; p.el.style.opacity = h ? '0' : ''; p.el.style.visibility = h ? 'hidden' : ''; } });
+        // a pin whose label would sit on the badge or on a label already placed (the selected pin first) stays hidden this
+        // frame, so labels never print over each other on small or short screens. Label widths are measured once and cached.
+        var taken = badge ? [badge] : [];
+        [sel].concat(PN.list.filter(function (q) { return q !== sel; })).forEach(function (p) {
+          var h = p.zb || (!m && p.x < cutX && p.y - 56 < cutY);
+          if (!h && !p.off) {
+            if (!p.cw || p.gen !== szGen) { p.cw = p.btn.offsetWidth || 80; p.chh = p.btn.offsetHeight || 32; p.gen = szGen; }
+            var w = p.cw + (p === sel && p.em.textContent ? 64 : 0), r = { l: p.x - 2, r: p.x + w + 2, t: p.y - 24 - p.chh - 2, b: p.y - 22 };
+            if (p !== sel && taken.some(function (q) { return r.l < q.r && r.r > q.l && r.t < q.b && r.b > q.t; })) h = true; else taken.push(r);
+          }
+          if (h !== p.hid) { p.hid = h; p.el.style.opacity = h ? '0' : ''; p.el.style.visibility = h ? 'hidden' : ''; }
+        });
         // cursor, click (then a real-time pulse while it rests on CAM-07), card
         var sx = sel.x, sy = sel.y, k = E.io3(seg(t, .9, 2.3));
         var x0 = m ? CW * .86 : CW * .74, y0 = m ? CH * .98 : CH * .94;
@@ -1849,7 +2011,10 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
         if (!m && (dt <= 0 || ++fc % 6 === 0)) R.shadowMap.needsUpdate = true;
         R.render(scene, cam);
       }
-      return { frame: frame, resize: size, destroy: function () { K.dispose(); disposeAll(scene, R); } };
+      // link every shader in the background (hidden street objects shown for a moment) so the first frame never stalls the scroll
+      function link(done) { var hid = []; scene.traverse(function (o) { if (!o.visible) { hid.push(o); o.visible = true; } });
+        (window.INFRAX_WARM || function (r, s, c, d) { d(); })(R, scene, cam, function () { hid.forEach(function (o) { o.visible = false; }); done(); }); }
+      return { frame: frame, resize: size, warm: link, ready: false, destroy: function () { K.dispose(); disposeAll(scene, R); } };
     }
     /* ---- controller. Autoplay: the choreography time runs on its own and loops; a step button or pin jumps to a step and stops it,
        Replay restarts it. Ambient motion runs in real time. Renders only while the stage is on screen and the tab is visible.
@@ -1909,12 +2074,12 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       closeCard();
       if (inst) { inst.destroy(); inst = null; var n = cv.cloneNode(false); cv.parentNode.replaceChild(n, cv); cv = n; }
       mode = md; inst = mount(md === 'm');
-      if (!inst) fallback();
+      if (!inst) fallback(); else { var mi = inst; mi.warm(function () { mi.ready = true; if (inst === mi && onScreen) play(); }); }
     }
-    function paint() { if (inst) inst.frame(tCur, 0, amb); }
+    function paint() { if (inst && inst.ready) inst.frame(tCur, 0, amb); }
     function tick(now) {
       raf = 0;
-      if (!onScreen || document.hidden || !inst || covered()) { away = true; return; }
+      if (!onScreen || document.hidden || !inst || !inst.ready || covered()) { away = true; return; }
       raf = requestAnimationFrame(tick);
       if (now - last < 31) return; // 30 fps: the twin moves slowly, and this halves its GPU and DOM work
       var dt = Math.min(.1, (now - last) / 1000); last = now;
@@ -1924,7 +2089,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
       amb += dt; var d = tGoal - tCur; tCur = Math.abs(d) < .002 ? tGoal : tCur + d * (1 - Math.exp(-dt * 7));
       inst.frame(tCur, dt, amb);
     }
-    function play() { ensure(); if (!inst) return; if (reduce) { paint(); return; } if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
+    function play() { ensure(); if (!inst || !inst.ready) return; if (reduce) { paint(); return; } if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }
     lyr.forEach(function (b, i) { b.addEventListener('click', function () { closeCard(); go(STEP_T[i]); }); });
     card.querySelector('.go').addEventListener('click', function () { go(dead ? TEND : TST); });
     pcard.querySelector('.go').addEventListener('click', function () { var p = S.pc; closeCard(); if (p && p.btn) p.btn.blur(); go(TST); });
@@ -1947,7 +2112,7 @@ html.nav-wait .site-nav{transform:translateY(-100%);opacity:0;pointer-events:non
     }, 160); });
   })();
 
-  /* ---------- AI agents: the example exchanges appear once the section is on screen ---------- */
+  /* ---------- AI Beings: the example exchanges appear once the section is on screen ---------- */
   (function () {
     var g = document.getElementById('hmAg'); if (!g || reduce || !window.IntersectionObserver) return;
     g.classList.add('typing');

@@ -69,14 +69,20 @@
   (function plexus() {
     var canvas = document.createElement('canvas');
     canvas.setAttribute('aria-hidden', 'true');
-    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.34';
+    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.5';
     document.body.prepend(canvas);
-    // opaque canvas (page is white): cheaper to composite; prefilled white so the trail fade looks identical
-    var ctx = canvas.getContext('2d', { alpha: false }); if (!ctx) { X.pausePlexus = function () {}; return; }
+    // the faint blueprint grid under the network (site.css .site-grid), behind the canvas
+    var gridEl = document.createElement('div'); gridEl.className = 'site-grid'; gridEl.setAttribute('aria-hidden', 'true'); document.body.prepend(gridEl);
+    // transparent canvas, cleared every frame: crisp lines and dots (no smeared trails) over the page's light wash (site.css html)
+    var ctx = canvas.getContext('2d'); if (!ctx) { X.pausePlexus = function () {}; return; }
     var particles = [], W = 0, H = 0, lineGrad = null;
     function vw() { return document.documentElement.clientWidth || innerWidth; }
     // 1 canvas px per CSS px (as the original); the layer sits at 34% opacity so higher DPR buys nothing
     function count() { return X.lite ? 40 : vw() <= 1024 ? 60 : 100; }
+    // full strength behind the first screen, then a little lighter behind the reading sections
+    var OP0 = .7, OP1 = .4, fq = 0;
+    function fade() { fq = 0; var k = Math.min(1, (window.scrollY || 0) / (innerHeight * 1.1)); canvas.style.opacity = (OP0 - (OP0 - OP1) * k).toFixed(3); }
+    addEventListener('scroll', function () { if (!fq) fq = requestAnimationFrame(fade); }, { passive: true }); fade();
     // sprite atlas, uploaded once as an ImageBitmap: 6 glows (by connection count 0..5), 2 drifting blobs, 3 solid dots (navy, blue, sky)
     var SPR = 32, D = 16, DOT = SPR * 6 + 200, atlas = document.createElement('canvas'); atlas.width = DOT + D * 3; atlas.height = 100;
     (function () {
@@ -100,10 +106,7 @@
       // mobile URL bar showing/hiding only changes the height a little: keep the scene (the canvas just stretches)
       if (oldW && w === oldW && Math.abs(h - oldH) < 150 && particles.length === n) return;
       W = canvas.width = w; H = canvas.height = h;
-      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
-      // the lines shade across the screen: navy top left, brand blue in the middle, sky blue bottom right
-      lineGrad = ctx.createLinearGradient(0, 0, W, H);
-      lineGrad.addColorStop(0, '#0E3B66'); lineGrad.addColorStop(.5, '#2673B5'); lineGrad.addColorStop(1, '#4FB0E6');
+      shade();
       if (particles.length !== n || oldW === 0) {
         particles = [];
         for (var i = 0; i < n; i++) particles.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - .5) * .5, vy: (Math.random() - .5) * .5, radius: Math.random() * 2 + 1, connections: 0 });
@@ -113,10 +116,20 @@
       }
       if (reduce) still();
     }
+    // the lines shade across the screen: navy top left, brand blue in the middle, sky blue bottom right
+    // (dark theme: brand blue to sky to pale sky, so they read on navy)
+    var dark = false;
+    function shade() {
+      dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      lineGrad = ctx.createLinearGradient(0, 0, W, H);
+      var C = dark ? ['#3A8BD2', '#5AB4EA', '#A9D8F5'] : ['#0E3B66', '#2673B5', '#4FB0E6'];
+      lineGrad.addColorStop(0, C[0]); lineGrad.addColorStop(.5, C[1]); lineGrad.addColorStop(1, C[2]);
+    }
+    document.addEventListener('infrax:theme', function () { shade(); if (reduce) still(); });
     var NB = 8, buckets = []; for (var q = 0; q < NB; q++) buckets.push([]);
     var grid = new Map();
     function frame(dtk) {
-      ctx.fillStyle = 'rgba(255,255,255,0.05)'; ctx.fillRect(0, 0, W, H);
+      ctx.clearRect(0, 0, W, H);
       var mob = W <= 768, maxD = mob ? 100 : 150, maxD2 = maxD * maxD, n = particles.length, i, p;
       grid.clear();
       for (i = 0; i < n; i++) {
@@ -152,7 +165,7 @@
       ctx.strokeStyle = lineGrad;
       for (q = 0; q < NB; q++) {
         var L = buckets[q]; if (!L.length) continue;
-        ctx.globalAlpha = (q + .5) / NB * .34;
+        ctx.globalAlpha = (q + .5) / NB * .5;
         ctx.beginPath();
         for (var e = 0; e < L.length; e += 4) { ctx.moveTo(L[e], L[e + 1]); ctx.lineTo(L[e + 2], L[e + 3]); }
         ctx.stroke();
@@ -160,15 +173,16 @@
       ctx.globalAlpha = 1;
       for (i = 0; i < n; i++) { p = particles[i]; var R = p.radius * 3; ctx.drawImage(src, Math.min(5, p.connections) * SPR, 0, SPR, SPR, p.x - R, p.y - R, R * 2, R * 2); }
       // dot colour follows the same diagonal as the lines; well-connected dots go a shade deeper
-      for (i = 0; i < n; i++) { p = particles[i]; var r = p.radius, tone = Math.min(2, ((p.x / W + p.y / H) * 1.5) | 0); if (p.connections > 3 && tone) tone--; ctx.drawImage(src, DOT + tone * D, 0, D, D, p.x - r, p.y - r, r * 2, r * 2); }
+      for (i = 0; i < n; i++) { p = particles[i]; var r = p.radius, tone = Math.min(2, ((p.x / W + p.y / H) * 1.5) | 0); if (p.connections > 3 && tone) tone--; if (dark) tone = Math.max(1, tone); ctx.drawImage(src, DOT + tone * D, 0, D, D, p.x - r, p.y - r, r * 2, r * 2); }
+      // three soft glows drift slowly across the screen
       var cc = mob ? 2 : 3, cs = mob ? 35 : 50, t = reduce ? 0 : Date.now() * .001;
       for (var kk = 0; kk < cc; kk++) {
         var x = (Math.sin(t + kk * 2) * .5 + .5) * W, y = (Math.cos(t * .7 + kk * 2) * .5 + .5) * H;
         ctx.drawImage(src, SPR * 6 + (kk % 2) * 100, 0, 100, 100, x - cs, y - cs, cs * 2, cs * 2);
       }
     }
-    // reduced motion: no loop; paint the settled still (the trail fade needs a few passes to reach it)
-    function still() { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H); for (var k = 0; k < 30; k++) frame(0); }
+    // reduced motion: no loop; one settled frame
+    function still() { frame(0); }
     // keeps moving while the page scrolls, time-based at 15 fps (10 on phones/touch: the drift is slow, so this reads as smooth); sleeps while hidden, covered or paused
     var last = 0, raf = 0, paused = false;
     function idle() { return reduce || paused || X.covered || document.hidden; }
@@ -205,7 +219,7 @@
       if (!cx) return { start: function () {}, stop: function () {} };
       // seeded once; later sizes keep the particles and rescale their positions
       function size() {
-        var r = cv.getBoundingClientRect(), d = X.lite ? 1 : Math.min(devicePixelRatio || 1, 2), w = r.width, h = r.height, i;
+        var r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2), w = r.width, h = r.height, i;
         if (!w || !h) return false;
         var cw = Math.round(w * d), ch = Math.round(h * d);
         if (cv.width !== cw || cv.height !== ch) { cv.width = cw; cv.height = ch; }
@@ -363,14 +377,9 @@
     gsap.from(parts, Object.assign({ yPercent: 110, duration: .65, ease: 'expo.out', stagger: .05 }, opts || {}));
   };
 
-  /* ---------- magnetic buttons ---------- */
-  X.magnetic = function (el, k) {
-    if (reduce || !window.gsap || matchMedia('(pointer:coarse)').matches) return;
-    k = k || .3;
-    var qx = gsap.quickTo(el, 'x', { duration: .5, ease: 'power3' }), qy = gsap.quickTo(el, 'y', { duration: .5, ease: 'power3' });
-    el.addEventListener('pointermove', function (e) { var r = el.getBoundingClientRect(); qx((e.clientX - r.left - r.width / 2) * k); qy((e.clientY - r.top - r.height / 2) * k); });
-    el.addEventListener('pointerleave', function () { qx(0); qy(0); });
-  };
+  /* ---------- buttons stay still under the cursor: the old "magnetic" pull is switched off site-wide.
+     Kept as a no-op so the [data-magnetic] buttons and their callers need no change. ---------- */
+  X.magnetic = function () {};
   document.querySelectorAll('[data-magnetic]').forEach(function (el) { X.magnetic(el); });
   document.querySelectorAll('[data-reveal]').forEach(function (el) {
     if (reduce || !window.gsap) return;
