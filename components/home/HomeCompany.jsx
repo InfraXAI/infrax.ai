@@ -30,7 +30,7 @@ export default function HomeCompany() {
 
         <div className="hm-co-foot">
           <div><span className="hm-co-k">Office</span><a href="https://www.google.com/maps/search/?api=1&query=WeWork+DLF+Forum+Cyber+City+Gurugram+122002" target="_blank" rel="noopener">WeWork DLF Forum, Cyber City, Gurugram, Haryana 122002</a></div>
-          <div><span className="hm-co-k">Contact</span><span><a href="mailto:info@infrax.ai">info@infrax.ai</a>. Tell us about your road, city or site, and we&rsquo;ll get back to you.</span></div>
+          <div><span className="hm-co-k">Contact</span><a className="hm-co-mail" href="mailto:info@infrax.ai">info@infrax.ai</a><span className="hm-co-ask">Tell us about your road, city or site, and we&rsquo;ll get back to you.</span></div>
           <a className="link-arrow hm-co-more" href="/services" style={{ 'minHeight': '44px' }}>See services</a>
         </div>
       </div>

@@ -200,6 +200,8 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .hm-demo-cta{padding:clamp(calc(22*var(--s)),3vw,calc(40*var(--s)));display:flex;flex-direction:column;justify-content:center}
 :where(body[data-page="home"]) .hm-demo-cta .body{margin-top:calc(10*var(--s))}
 :where(body[data-page="home"]) .hm-demo-mail{align-self:center;font-size:max(12px,calc(14*var(--s)));color:var(--muted)}
+:where(body[data-page="home"]) .hm-demo-mail a{font-weight:600;color:var(--blue);text-decoration:none}
+:where(body[data-page="home"]) .hm-demo-mail a:hover{text-decoration:underline;text-underline-offset:3px}
 :where(body[data-page="home"]) .hm-demo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border:1px solid var(--line);border-radius:calc(20*var(--s));overflow:hidden;background:#fff}
 :where(body[data-page="home"]) .hm-demo-side{background:var(--blue-deep);color:#fff;padding:clamp(calc(22*var(--s)),3vw,calc(40*var(--s)));display:flex;flex-direction:column;justify-content:space-between;gap:calc(28*var(--s))}
 :where(body[data-page="home"]) .hm-demo-side h2,:where(body[data-page="home"]) .hm-demo-side .eyebrow{color:#fff}
@@ -570,7 +572,9 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 }
 /* the contact line stays on one line wherever the strip has the room (it wraps on narrow screens) */
 :where(body[data-page="home"]) .hm-co-foot>div:nth-child(2){max-width:none}
-@media (min-width:1024.02px){:where(body[data-page="home"]) .hm-co-foot>div:nth-child(2)>span{white-space:nowrap}}
+:where(body[data-page="home"]) .hm-co-mail{align-self:flex-start;color:var(--blue);font-weight:600;text-decoration:none}
+:where(body[data-page="home"]) .hm-co-mail:hover{text-decoration:underline;text-underline-offset:3px}
+:where(body[data-page="home"]) .hm-co-ask{margin-top:calc(4*var(--s));color:var(--muted)}
 /* MCP card row: Agent <-> MCP (scoped access) <-> the products; two-way connectors with an arrowhead at each end */
 :where(body[data-page="home"]) .hm-mcp-line.two{overflow:visible;background:var(--blue-soft)}
 :where(body[data-page="home"]) .hm-mcp-line.two::before,:where(body[data-page="home"]) .hm-mcp-line.two::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3.5px;border:solid var(--blue-soft);border-width:2px 2px 0 0}
