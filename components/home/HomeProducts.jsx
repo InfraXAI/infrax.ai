@@ -57,10 +57,10 @@ export default function HomeProducts() {
             <div className="hm-pc-vis"><img decoding="async" src="/img/toll-lane-sm.webp" srcSet="/img/toll-lane-sm.webp 768w, /img/toll-lane.webp 1536w" sizes="(min-width:1024.02px) 33vw, (min-width:768.02px) 50vw, 100vw" alt="A toll lane with a barrier lifting for a car" loading="lazy" width="768" height="432" /><span className="ov-box r" style={{ 'left': '51.8%', 'top': '45.1%', 'width': '22.4%', 'height': '27.8%' }}><span>Car<em>98%</em></span></span><span className="ov-box b" style={{ 'left': '57.9%', 'top': '56.2%', 'width': '6.2%', 'height': '3%' }}><span>XX 07 CD 5521</span></span><span className="ov-tag dk" style={{ 'left': '4%', 'top': '8%' }}>Lane ↔ cloud · synced</span><span className="hm-ill">Illustrative</span><span className="ov-time" data-clock="" aria-hidden="true">--:--:--</span></div>
             <div className="hm-pc-body">
               <p className="hm-pc-k"><span className="ix" data-ix="toll" data-size="16" aria-hidden="true"></span>Toll plazas</p>
-              <h3>TollCloud</h3>
+              <h3><ProductBrand slug="tollcloud" /></h3>
               <p className="d">FASTag, ANPR, UPI and RFID lanes that keep running when the link drops.</p>
               <div className="hm-chips"><span className="st st-live">FASTag</span><span className="st st-live">ANPR</span><span className="st st-live">UPI</span><span className="st st-live">RFID</span></div>
-              <a className="link-arrow" href="/products#tollcloud" aria-label="Explore TollCloud">Explore</a>
+              <a className="link-arrow" href="/products#tollcloud" aria-label="Explore Naka">Explore</a>
             </div>
           </article>
           <article className="hm-pc">

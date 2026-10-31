@@ -3,7 +3,7 @@
 export default function DeploymentSecurity() {
   return (
     <>
-    <section className="scene tight" aria-labelledby="dp-sec-h" style={{ 'paddingTop': '0' }}>
+    <section className="scene tight" aria-labelledby="dp-sec-h">
       <div className="wrap">
         <h2 className="h-2" id="dp-sec-h">Built for public-sector data rules.</h2>
         <div className="dp-sec" id="dpSec">

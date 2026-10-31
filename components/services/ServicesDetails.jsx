@@ -20,6 +20,13 @@ const EXAMPLES = [
   ['camera', 'Connect the cameras at one site to review and reporting'],
 ];
 const FAQ = [
+  ['Can Cygnus track a vehicle that has no number plate and trace its journey?', 'Partly. Cygnus traces a journey by plate across cameras. When the plate is missing or unreadable, it suggests likely matches at other cameras from the vehicle\u2019s appearance (class, colour and shape), and an operator confirms them. Treat those as leads, not proof.'],
+  ['We only need Cygnus for the first year. Can it connect to other products later?', 'Yes. Every product runs on the same platform, so adding Plexus, Dhrishya or another product later is a licence and configuration step. Your cameras, users and recordings stay as they are.'],
+  ['What if our requirement grows to more sites or cameras?', 'You add servers and cameras to the same installation. Cygnus runs on standard CPU servers, and we size the hardware for each new site before it goes live.'],
+  ['How long does it take to integrate with our existing VMS, ATMS or other software?', 'It depends on what the other system exposes. We check its interfaces in the Discover step and give you a timeline before work starts; standard interfaces such as ONVIF, RTSP and REST APIs are the quickest. You see the integration working before handover.'],
+  ['How long does it take to onboard 1,000 cameras on Cygnus?', 'Cameras are added in bulk from a spreadsheet, not one by one. Most of the time goes into network access and camera credentials on site, so we plan the rollout in batches by site and agree the dates in the Define step.'],
+  ['What happens if the network link to a site drops?', 'Dhrishya and Naka keep working at the site and send their reads and transactions once the link returns.'],
+  ['Can we get the data into our own systems?', 'Yes. We agree the format with you in the Define step and deliver the feed as part of the scope.'],
   ['Do we have to replace our cameras?', 'No, we work with IP cameras over ONVIF or RTSP.'],
   ['Can it run on our own servers?', 'Yes.'],
   ['Who owns the work?', 'You own the configuration and integrations we build for you.'],
@@ -49,8 +56,8 @@ export default function ServicesDetails() {
 
       <section className="scene tight sv-ex" aria-labelledby="sv-ex-title"><div className="wrap">
         <div className="sv-ex-head">
-          <h2 className="h-sub" id="sv-ex-title" data-reveal="">Example first scopes</h2>
-          <p className="lead">Start with one site or one workflow, for example:</p>
+          <h2 className="h-2 sv-h" id="sv-ex-title" data-reveal="">Example first scopes</h2>
+          <p className="lead sv-tag">Start with one site or one workflow, for example:</p>
         </div>
         <ul className="sv-ex-grid">
           {EXAMPLES.map(([ix, t], i) => (
@@ -64,12 +71,12 @@ export default function ServicesDetails() {
       </div></section>
 
       <section className="scene tight sv-faq" aria-labelledby="sv-faq-title"><div className="wrap sv-faq-grid">
-        <h2 className="h-sub" id="sv-faq-title">Common questions</h2>
-        <dl className="sv-qa">
-          {FAQ.map(([q, a]) => (
-            <div key={q}><dt>{q}</dt><dd>{a}</dd></div>
+        <div className="sv-faq-head"><h2 className="h-2 sv-h" id="sv-faq-title">Common questions</h2><p className="lead sv-tag">Short answers to what teams ask first.</p></div>
+        <div className="sv-qa">
+          {FAQ.map(([q, a], i) => (
+            <details key={q} name="sv-faq" open={i === 0}><summary>{q}<i aria-hidden="true" /></summary><p>{a}</p></details>
           ))}
-        </dl>
+        </div>
       </div></section>
 
       <section className="scene tight sv-cta" aria-labelledby="sv-cta-title"><div className="wrap">

@@ -1,5 +1,7 @@
 // AI Beings: VAYU, KRITYA, NOAH, ASTRA cards with their example chats, and the full-width MCP box.
 // Markup from site/src/home.html, unchanged apart from JSX syntax.
+import McpDiagram from './McpDiagram';
+
 export default function HomeAgents() {
   return (
     <section className="scene" id="agents" aria-labelledby="hmAgT">
@@ -13,43 +15,34 @@ export default function HomeAgents() {
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In Cygnus</p>
             <h3>VAYU</h3>
             <p className="d">Ask in plain words. VAYU answers from your cameras, events and incidents, opens the right screen and proposes actions an operator confirms.</p>
-            <div className="hm-ag-chat" aria-hidden="true"><span className="q">What needs attention right now?</span><span className="a">2 incidents open · 1 camera offline · opening the dashboard</span></div>
+            <div className="hm-ag-chat" aria-hidden="true"><span className="q">Why does camera R-14 keep dropping at night?</span><span className="a">Offline after 22:00 on 9 of the last 10 nights, along with R-12 on the same switch · likely pole power · site check proposed</span></div>
           </article>
           <article className="hm-agc">
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In Ulka</p>
             <h3>KRITYA</h3>
             <p className="d">Drafts work orders, shift plans and daily digests for field teams. A person approves before anything goes out.</p>
-            <div className="hm-ag-chat" aria-hidden="true"><span className="q">Draft today's maintenance orders</span><span className="a">6 work orders drafted · waiting for approval</span></div>
+            <div className="hm-ag-chat" aria-hidden="true"><span className="q">Only two crews today. Which repairs can't wait?</span><span className="a">14 open faults ranked by traffic, deadline and repeat failures · top 5 planned for 2 crews · approve?</span></div>
           </article>
           <article className="hm-agc">
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In Plexus (ATMS / ICCC)</p>
             <h3>NOAH</h3>
             <p className="d">Summarises incidents and call-box calls, gathers the evidence and drafts the next step for the operator.</p>
-            <div className="hm-ag-chat" aria-hidden="true"><span className="q">Incident #4471 · stopped vehicle</span><span className="a">Summary ready · patrol suggested · confirm?</span></div>
+            <div className="hm-ag-chat" aria-hidden="true"><span className="q">Car stopped at km 41.2. Breakdown, or just a driver taking a break?</span><span className="a">Stopped 6 min, hazards on, in lane 1 · 3rd breakdown at this spot this week · Patrol 3 is 4 km away · send?</span></div>
           </article>
           <article className="hm-agc">
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In AstraAlert</p>
             <h3>ASTRA</h3>
             <p className="d">Answers every call-box press, asks what happened and opens the incident with the box's location. An operator takes over at any time.</p>
-            <div className="hm-ag-chat" aria-hidden="true"><span className="q">Call box ECB-07 · car broken down</span><span className="a">Incident opened · location sent · patrol alerted</span></div>
+            <div className="hm-ag-chat" aria-hidden="true"><span className="q">ECB-07: “Smoke is coming from my bonnet”</span><span className="a">Fire risk, not a breakdown · priority incident opened · fire unit and Patrol 3 alerted · upstream sign warns drivers</span></div>
           </article>
         </div>
         <article className="hm-mcp">
           <div className="hm-mcp-t">
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>For your own Beings</p>
             <h3>MCP</h3>
-            <p className="d">Connect your own AI Beings to Ulka through MCP (Model Context Protocol). Beings call Ulka features as tools, using only the access you grant them.</p>
+            <p className="d">Bring any model. Every call goes through one gateway that checks the token, the scope and the tenant before it reaches Ulka.</p>
           </div>
-          <div className="hm-mcp-flow" aria-hidden="true">
-            {/* a Being, scoped MCP access, Ulka (both ways); MCP runs for Ops only today */}
-            <span className="hm-mcp-node">Being</span>
-            <span className="hm-mcp-line two"></span>
-            <span className="hm-mcp-node hub">MCP<small>scoped access</small></span>
-            <span className="hm-mcp-line two"></span>
-            <span className="hm-mcp-node">Ulka</span>
-            <span className="hm-mcp-back">↩ Result goes back to your Being</span>
-          </div>
-          <div className="hm-ag-chat" aria-hidden="true"><span className="q">Being → get today's ops digest</span><span className="a">Daily digest returned from Ulka</span></div>
+          <McpDiagram />
         </article>
         <p className="hm-ag-note">Example exchanges, illustrative data.</p>
       </div>

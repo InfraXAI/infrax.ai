@@ -11,7 +11,6 @@ html[data-theme="dark"] .st-pilot{color:var(--blue-text)}
 html[data-theme="dark"] .site-nav.scrolled{background:rgba(17,31,47,.94)}
 html[data-theme="dark"] .nav-links a[aria-current="page"],html[data-theme="dark"] .nav-links button.is-current{color:var(--blue-text)}
 html[data-theme="dark"] .menu{background:var(--surface)}
-html[data-theme="dark"] .menu-products a i{background:color-mix(in srgb,var(--pc) 11%,var(--surface))}
 html[data-theme="dark"] .menu-products .pm-all{color:var(--blue-text)}
 html[data-theme="dark"] .nav-toggle{background:var(--surface)}
 @media (max-width:1024px){html[data-theme="dark"] .sheet{background:var(--surface)}}

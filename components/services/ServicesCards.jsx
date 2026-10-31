@@ -3,8 +3,8 @@
 export default function ServicesCards() {
   return (
     <section className="scene tight" aria-labelledby="sv-svc-title" style={{ 'overflowX': 'clip' }}><div className="wrap">
-      <h2 className="h-sub" id="sv-svc-title" data-reveal="">Built around your systems, to your acceptance tests.</h2>
-      <p className="lead">Built to your interfaces. You own the configuration and integrations we build for you.</p>
+      <h2 className="h-2 sv-h" id="sv-svc-title" data-reveal="">Built around your systems, to your acceptance tests.</h2>
+      <p className="lead sv-tag">Built to your interfaces. You own the configuration and integrations we build for you.</p>
       <div className="sv-cards" id="svCards">
         <article className="sv-card" data-k="api">
           <div className="sv-miniwrap"><svg className="sv-mini" viewBox="0 0 300 96" aria-hidden="true">
