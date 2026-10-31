@@ -1,51 +1,52 @@
+/* PORT: every selector is wrapped as :where(body[data-page="services"]) <selector> (no added specificity), so these rules never reach other pages after client-side navigation. */
 /* Services page styles: the inline <style> of site/src/services.html, verbatim. */
 /* Services — prefix sv-. Hero · 4 service cards · engagement rail. Last page: no next-band. Straight connectors only. */
-.sv-hero{position:relative;padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) clamp(calc(28*var(--s)),4vw,calc(48*var(--s)));overflow-x:clip}
-.sv-hero .h-hero{max-width:11.5em}
-.sv-for{display:flex;flex-wrap:wrap;gap:calc(10*var(--s));margin-top:calc(40*var(--s));list-style:none;padding:0}
-.sv-for li{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.04em;color:var(--blue-mid);background:var(--mist);border:1px solid var(--line);padding:calc(8*var(--s)) calc(10*var(--s));border-radius:calc(6*var(--s))}
+:where(body[data-page="services"]) .sv-hero{position:relative;padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) clamp(calc(28*var(--s)),4vw,calc(48*var(--s)));overflow-x:clip}
+:where(body[data-page="services"]) .sv-hero .h-hero{max-width:11.5em}
+:where(body[data-page="services"]) .sv-for{display:flex;flex-wrap:wrap;gap:calc(10*var(--s));margin-top:calc(40*var(--s));list-style:none;padding:0}
+:where(body[data-page="services"]) .sv-for li{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.04em;color:var(--blue-mid);background:var(--mist);border:1px solid var(--line);padding:calc(8*var(--s)) calc(10*var(--s));border-radius:calc(6*var(--s))}
 
 /* service cards */
-.sv-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
-.sv-card{position:relative;border:1px solid var(--line);border-radius:14px;background:#fff;padding:16px var(--pad-card) 18px;display:flex;flex-direction:column;gap:calc(10*var(--s));transition:border-color .25s,transform .3s var(--ease),box-shadow .3s var(--ease);min-width:0}
-.sv-card:focus-within{border-color:var(--blue)}
-.sv-card svg.sv-mini{display:block;width:100%;height:auto;border-radius:calc(12*var(--s));background:#fff;border:1px solid var(--line)}
-.sv-card .n{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;color:var(--blue)}
-.sv-card h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em}
-.sv-card p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
-.sv-card ul{margin:2px 0 0;padding:0;list-style:none;display:grid;gap:calc(4*var(--s))}
-.sv-card li{font:500 var(--fs-small)/1.45 var(--f-mono);color:var(--blue-mid);display:flex;gap:calc(8*var(--s))}
-.sv-card li::before{content:"";width:calc(10*var(--s));height:1px;background:var(--blue-soft);margin-top:.7em;flex:none}
-.sv-card .sv-ico{display:flex;width:calc(44*var(--s));height:calc(44*var(--s));align-items:center;justify-content:center;border-radius:calc(12*var(--s));background:var(--wash);color:var(--blue);margin:10px 0 2px}
+:where(body[data-page="services"]) .sv-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
+:where(body[data-page="services"]) .sv-card{position:relative;border:1px solid var(--line);border-radius:14px;background:#fff;padding:16px var(--pad-card) 18px;display:flex;flex-direction:column;gap:calc(10*var(--s));transition:border-color .25s,transform .3s var(--ease),box-shadow .3s var(--ease);min-width:0}
+:where(body[data-page="services"]) .sv-card:focus-within{border-color:var(--blue)}
+:where(body[data-page="services"]) .sv-card svg.sv-mini{display:block;width:100%;height:auto;border-radius:calc(12*var(--s));background:#fff;border:1px solid var(--line)}
+:where(body[data-page="services"]) .sv-card .n{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;color:var(--blue)}
+:where(body[data-page="services"]) .sv-card h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em}
+:where(body[data-page="services"]) .sv-card p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+:where(body[data-page="services"]) .sv-card ul{margin:2px 0 0;padding:0;list-style:none;display:grid;gap:calc(4*var(--s))}
+:where(body[data-page="services"]) .sv-card li{font:500 var(--fs-small)/1.45 var(--f-mono);color:var(--blue-mid);display:flex;gap:calc(8*var(--s))}
+:where(body[data-page="services"]) .sv-card li::before{content:"";width:calc(10*var(--s));height:1px;background:var(--blue-soft);margin-top:.7em;flex:none}
+:where(body[data-page="services"]) .sv-card .sv-ico{display:flex;width:calc(44*var(--s));height:calc(44*var(--s));align-items:center;justify-content:center;border-radius:calc(12*var(--s));background:var(--wash);color:var(--blue);margin:10px 0 2px}
 
 /* engagement path */
-.sv-path{position:relative;overflow-x:clip}
-.sv-path-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(calc(20*var(--s)),4vw,calc(56*var(--s)));align-items:end}
-.sv-rail{position:relative;margin-top:var(--gap-c)}
-.sv-rail-track{position:relative;height:calc(40*var(--s))}
-.sv-rail-track::before{content:"";position:absolute;left:12.5%;right:12.5%;top:50%;height:2px;margin-top:-1px;background:var(--line);border-radius:2px}
-.sv-rail-fill{position:absolute;left:12.5%;top:50%;height:calc(3*var(--s));margin-top:-1.5px;width:75%;background:var(--blue);border-radius:2px;transform:scaleX(0);transform-origin:0 50%}
-.sv-rail-dot{position:absolute;top:50%;width:calc(30*var(--s));height:calc(30*var(--s));margin:calc(-15*var(--s)) 0 0 calc(-15*var(--s));border-radius:50%;background:#fff;border:2px solid var(--line-2);display:grid;place-items:center;font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);transition:background .25s,border-color .25s,color .25s}
-.sv-rail-dot.on{background:var(--blue);border-color:var(--blue);color:#fff}
-.sv-phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g);margin:calc(12*var(--s)) 0 0;padding:0;list-style:none}
-.sv-phases li{padding-top:calc(4*var(--s));text-align:left;transition:opacity .25s}
-.sv-phases h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em;margin:0 0 calc(6*var(--s));color:var(--ink-2);transition:color .25s}
-.sv-phases li.on h3{color:var(--ink)}
-.sv-phases p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+:where(body[data-page="services"]) .sv-path{position:relative;overflow-x:clip}
+:where(body[data-page="services"]) .sv-path-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(calc(20*var(--s)),4vw,calc(56*var(--s)));align-items:end}
+:where(body[data-page="services"]) .sv-rail{position:relative;margin-top:var(--gap-c)}
+:where(body[data-page="services"]) .sv-rail-track{position:relative;height:calc(40*var(--s))}
+:where(body[data-page="services"]) .sv-rail-track::before{content:"";position:absolute;left:12.5%;right:12.5%;top:50%;height:2px;margin-top:-1px;background:var(--line);border-radius:2px}
+:where(body[data-page="services"]) .sv-rail-fill{position:absolute;left:12.5%;top:50%;height:calc(3*var(--s));margin-top:-1.5px;width:75%;background:var(--blue);border-radius:2px;transform:scaleX(0);transform-origin:0 50%}
+:where(body[data-page="services"]) .sv-rail-dot{position:absolute;top:50%;width:calc(30*var(--s));height:calc(30*var(--s));margin:calc(-15*var(--s)) 0 0 calc(-15*var(--s));border-radius:50%;background:#fff;border:2px solid var(--line-2);display:grid;place-items:center;font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);transition:background .25s,border-color .25s,color .25s}
+:where(body[data-page="services"]) .sv-rail-dot.on{background:var(--blue);border-color:var(--blue);color:#fff}
+:where(body[data-page="services"]) .sv-phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g);margin:calc(12*var(--s)) 0 0;padding:0;list-style:none}
+:where(body[data-page="services"]) .sv-phases li{padding-top:calc(4*var(--s));text-align:left;transition:opacity .25s}
+:where(body[data-page="services"]) .sv-phases h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em;margin:0 0 calc(6*var(--s));color:var(--ink-2);transition:color .25s}
+:where(body[data-page="services"]) .sv-phases li.on h3{color:var(--ink)}
+:where(body[data-page="services"]) .sv-phases p{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
 /* cards: four across, two on small laptops, one on tablets and phones; the phase rail hides below tablet width */
-@media (max-width:1024px){ .sv-cards{grid-template-columns:repeat(2,minmax(0,1fr))} .sv-path-head{grid-template-columns:1fr} }
+@media (max-width:1024px){ :where(body[data-page="services"]) .sv-cards{grid-template-columns:repeat(2,minmax(0,1fr))} :where(body[data-page="services"]) .sv-path-head{grid-template-columns:1fr} }
 @media (max-width:768px){
-  .sv-cards{grid-template-columns:1fr}
-  .sv-rail-track{display:none}
-  .sv-phases{grid-template-columns:1fr;row-gap:calc(18*var(--s));counter-reset:ph;position:relative}
-  .sv-phases::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:var(--line)}
-  .sv-phases li{position:relative;padding-left:44px;counter-increment:ph}
-  .sv-phases li::before{content:counter(ph,decimal-leading-zero);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--blue);display:grid;place-items:center;font:600 11px/1 var(--f-mono);color:var(--blue)}
+  :where(body[data-page="services"]) .sv-cards{grid-template-columns:1fr}
+  :where(body[data-page="services"]) .sv-rail-track{display:none}
+  :where(body[data-page="services"]) .sv-phases{grid-template-columns:1fr;row-gap:calc(18*var(--s));counter-reset:ph;position:relative}
+  :where(body[data-page="services"]) .sv-phases::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:var(--line)}
+  :where(body[data-page="services"]) .sv-phases li{position:relative;padding-left:44px;counter-increment:ph}
+  :where(body[data-page="services"]) .sv-phases li::before{content:counter(ph,decimal-leading-zero);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--blue);display:grid;place-items:center;font:600 11px/1 var(--f-mono);color:var(--blue)}
 }
 
-.sv-rail-dot{width:calc(40*var(--s));height:calc(40*var(--s));margin:calc(-20*var(--s)) 0 0 calc(-20*var(--s));color:var(--muted)}
-.sv-rail-dot.on{color:#fff}
-.sv-rail-dot .ix{color:inherit}
-.sv-card{position:relative}
-.sv-miniwrap{position:relative}
-.sv-mi{position:absolute;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;color:var(--blue);pointer-events:none}
+:where(body[data-page="services"]) .sv-rail-dot{width:calc(40*var(--s));height:calc(40*var(--s));margin:calc(-20*var(--s)) 0 0 calc(-20*var(--s));color:var(--muted)}
+:where(body[data-page="services"]) .sv-rail-dot.on{color:#fff}
+:where(body[data-page="services"]) .sv-rail-dot .ix{color:inherit}
+:where(body[data-page="services"]) .sv-card{position:relative}
+:where(body[data-page="services"]) .sv-miniwrap{position:relative}
+:where(body[data-page="services"]) .sv-mi{position:absolute;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;color:var(--blue);pointer-events:none}

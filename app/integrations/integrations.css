@@ -1,0 +1,115 @@
+/* PORT: every selector is wrapped as :where(body[data-page="integrations"]) <selector> (no added specificity), so these rules never reach other pages after client-side navigation. */
+/* Integrations page styles: the inline <style> of site/src/integrations.html, verbatim (every selector is page-prefixed: in-, hm-x/hm-ex/hm-node/hm-pk/hm-det, used only on this page, so nothing needs scoping). */
+/* Integrations — prefix in-. Hero, interactive hub (SVG), platform row. */
+:where(body[data-page="integrations"]) .in-hero{padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) clamp(calc(24*var(--s)),4vw,calc(40*var(--s)));overflow-x:clip}
+:where(body[data-page="integrations"]) .in-hero .h-hero{max-width:12.5em}
+:where(body[data-page="integrations"]) .in-hub{overflow-x:clip;padding-top:clamp(24px,2.4vw,32px);padding-bottom:var(--sec-t)}
+:where(body[data-page="integrations"]) .in-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(calc(20*var(--s)),3vw,calc(44*var(--s)));align-items:start}
+:where(body[data-page="integrations"]) .in-svgbox{position:relative;border:1px solid var(--line);border-radius:calc(20*var(--s));background:rgba(255,255,255,.72);overflow:hidden}
+:where(body[data-page="integrations"]) .in-svgbox svg{display:block;width:100%;height:auto;max-height:min(78svh,640px)}
+:where(body[data-page="integrations"]) .in-node{cursor:pointer;outline:none}
+:where(body[data-page="integrations"]) .in-node .hit{fill:transparent;stroke:none}
+:where(body[data-page="integrations"]) .in-node .ring{fill:#fff;stroke:var(--line-2);stroke-width:1.5;transition:stroke .25s,fill .25s}
+:where(body[data-page="integrations"]) .in-node .ico{fill:none;stroke:var(--blue);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .25s}
+:where(body[data-page="integrations"]) .in-node text{font:600 15px var(--f-body);fill:var(--ink);transition:fill .25s}
+:where(body[data-page="integrations"]) .in-node text.sm{font:500 16px var(--f-mono);fill:var(--muted);letter-spacing:.02em}
+:where(body[data-page="integrations"]) .in-node:hover .ring,:where(body[data-page="integrations"]) .in-node:focus-visible .ring{stroke:var(--blue)}
+:where(body[data-page="integrations"]) .in-node.on .ring{fill:var(--blue);stroke:var(--blue)}
+:where(body[data-page="integrations"]) .in-node.on .ico{stroke:#fff}
+:where(body[data-page="integrations"]) .in-node.on text{fill:var(--blue)}
+:where(body[data-page="integrations"]) .in-node:focus-visible .ring{stroke-width:3}
+:where(body[data-page="integrations"]) .in-lane{fill:none;stroke:var(--line-2);stroke-width:1.4;transition:stroke .3s}
+:where(body[data-page="integrations"]) .in-lane.on{stroke:var(--blue);stroke-width:2.4}
+:where(body[data-page="integrations"]) .in-lane.plan{stroke-dasharray:4 6}
+:where(body[data-page="integrations"]) .in-node.planned .ring{stroke-dasharray:4 4}
+:where(body[data-page="integrations"]) .in-node.prototype .ring{stroke-dasharray:2 3}
+:where(body[data-page="integrations"]) .in-node text.st-t{font:600 16px var(--f-mono);letter-spacing:.06em;fill:var(--blue)}
+:where(body[data-page="integrations"]) .in-node.planned text.st-t{fill:var(--muted)}
+:where(body[data-page="integrations"]) .in-card .stline{display:flex;align-items:center;gap:calc(10*var(--s));margin-top:calc(10*var(--s))}
+:where(body[data-page="integrations"]) .in-card .stline small{font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
+:where(body[data-page="integrations"]) .in-stats{display:flex;flex-wrap:wrap;gap:calc(8*var(--s)) calc(16*var(--s));padding:calc(10*var(--s)) calc(16*var(--s)) 0;font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted);align-items:center}
+:where(body[data-page="integrations"]) .in-chips button .d{width:calc(7*var(--s));height:calc(7*var(--s));border-radius:50%;margin-right:calc(8*var(--s));background:var(--blue)}
+:where(body[data-page="integrations"]) .in-chips button .d.req{background:none;border:1.5px dashed currentColor}
+:where(body[data-page="integrations"]) .in-dir{font:500 12px var(--f-mono);fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+:where(body[data-page="integrations"]) .in-dir.on{fill:var(--blue)}
+:where(body[data-page="integrations"]) .in-core text{font:700 20px var(--f-display);fill:#fff;letter-spacing:-.01em}
+:where(body[data-page="integrations"]) .in-core text.sm{font:500 14px var(--f-mono);fill:#DCEBF7;letter-spacing:.03em}
+:where(body[data-page="integrations"]) .in-legend{display:flex;flex-wrap:wrap;gap:calc(8*var(--s)) calc(20*var(--s));padding:calc(12*var(--s)) calc(16*var(--s));border-top:1px solid var(--line);font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
+:where(body[data-page="integrations"]) .in-legend span{display:flex;align-items:center;gap:calc(8*var(--s))}
+:where(body[data-page="integrations"]) .in-legend i{width:calc(20*var(--s));height:2px;border-radius:2px;display:block}
+:where(body[data-page="integrations"]) .in-legend .o{background:var(--blue)} :where(body[data-page="integrations"]) .in-legend .n{background:repeating-linear-gradient(90deg,var(--blue) 0 calc(5*var(--s)),transparent calc(5*var(--s)) calc(9*var(--s)))}
+:where(body[data-page="integrations"]) .in-note{margin-left:auto;color:var(--ink-2)}
+:where(body[data-page="integrations"]) .in-chips{display:flex;flex-wrap:wrap;gap:calc(8*var(--s));list-style:none;margin:0 0 calc(14*var(--s));padding:0}
+:where(body[data-page="integrations"]) .in-chips button{all:unset;box-sizing:border-box;cursor:pointer;min-height:max(44px,calc(44*var(--s)));display:inline-flex;align-items:center;padding:0 calc(14*var(--s));border:1px solid var(--line);border-radius:calc(999*var(--s));background:#fff;font:500 max(12px,calc(14*var(--s)))/1 var(--f-body);color:var(--ink-2);transition:border-color var(--dur-2) var(--ease-out),background-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+:where(body[data-page="integrations"]) .in-chips button:hover{border-color:var(--blue-soft)}
+:where(body[data-page="integrations"]) .in-chips button:active{scale:.96}
+:where(body[data-page="integrations"]) .in-chips button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+:where(body[data-page="integrations"]) .in-chips button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+:where(body[data-page="integrations"]) .in-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:var(--pad-card)}
+:where(body[data-page="integrations"]) .in-card h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+:where(body[data-page="integrations"]) .in-card .proto{display:flex;flex-wrap:wrap;gap:calc(6*var(--s));margin-top:calc(12*var(--s))}
+:where(body[data-page="integrations"]) .in-card .proto span{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;color:var(--blue-mid);background:var(--mist);padding:calc(6*var(--s)) calc(8*var(--s));border-radius:calc(5*var(--s))}
+:where(body[data-page="integrations"]) .in-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(12*var(--s));margin-top:calc(18*var(--s))}
+:where(body[data-page="integrations"]) .in-flow div{border:1px solid var(--line);border-radius:calc(12*var(--s));padding:calc(12*var(--s)) calc(14*var(--s))}
+:where(body[data-page="integrations"]) .in-flow h4{display:flex;align-items:center;gap:calc(8*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin:0 0 calc(8*var(--s))}
+:where(body[data-page="integrations"]) .in-flow h4 i{width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;display:block}
+:where(body[data-page="integrations"]) .in-flow .fin i{border:1.5px solid var(--blue)} :where(body[data-page="integrations"]) .in-flow .fout i{background:var(--blue)}
+:where(body[data-page="integrations"]) .in-flow p{margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
+:where(body[data-page="integrations"]) .in-card h5{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:calc(20*var(--s)) 0 calc(6*var(--s))}
+:where(body[data-page="integrations"]) .in-card .via{margin:calc(10*var(--s)) 0 0;font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--blue-mid)}
+:where(body[data-page="integrations"]) .in-card dl{margin:0;display:grid;gap:0}
+:where(body[data-page="integrations"]) .in-card dl div{display:grid;grid-template-columns:calc(118*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));padding:calc(9*var(--s)) 0;border-top:1px solid var(--line)}
+:where(body[data-page="integrations"]) .in-card dt{font:600 var(--fs-small)/1.45 var(--f-body);color:var(--ink)}
+:where(body[data-page="integrations"]) .in-card dd{margin:0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+
+
+/* product exchange: product boxes drift between slots; labelled data boxes travel the links */
+
+@media (max-width:1024px){ :where(body[data-page="integrations"]) .in-grid{grid-template-columns:1fr} }
+@media (max-width:768px){
+  :where(body[data-page="integrations"]) .in-node text{display:none}
+  :where(body[data-page="integrations"]) .in-dir{display:none}
+  :where(body[data-page="integrations"]) .in-flow{grid-template-columns:1fr}
+  :where(body[data-page="integrations"]) .in-card dl div{grid-template-columns:1fr;gap:2px}
+  :where(body[data-page="integrations"]) .in-note{margin-left:0}
+}
+/* products exchange */
+:where(body[data-page="integrations"]) .hm-xwrap{margin-top:calc(16*var(--s));border:1px solid var(--line);border-radius:calc(18*var(--s));background:#fff;padding:clamp(calc(18*var(--s)),2.6vw,calc(28*var(--s)))}
+:where(body[data-page="integrations"]) .hm-xhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:calc(8*var(--s)) calc(24*var(--s))}
+:where(body[data-page="integrations"]) .hm-xhead h3{font-size:var(--fs-h3);line-height:var(--lh-h3);font-weight:650;letter-spacing:-.015em}
+:where(body[data-page="integrations"]) .hm-xhead p{margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
+:where(body[data-page="integrations"]) .hm-ex{position:relative;height:clamp(calc(340*var(--s)),36vw,calc(420*var(--s)));margin-top:calc(14*var(--s));border-radius:calc(14*var(--s));background:#fff;border:1px solid var(--line);overflow:hidden}
+:where(body[data-page="integrations"]) .hm-ex svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+:where(body[data-page="integrations"]) .hm-ex .ln{stroke:#C5D4E2;stroke-width:1.5;fill:none}
+:where(body[data-page="integrations"]) .hm-ex .ln.main{stroke:#2673B5;stroke-width:3}
+:where(body[data-page="integrations"]) .hm-node{position:absolute;left:0;top:0;z-index:3;transform:translate(-50%,-50%);display:flex;align-items:center;gap:calc(8*var(--s));background:#fff;border:1px solid var(--line-2);border-radius:calc(12*var(--s));padding:calc(9*var(--s)) calc(12*var(--s));box-shadow:0 calc(12*var(--s)) calc(26*var(--s)) calc(-20*var(--s)) rgba(10,26,43,.5);white-space:nowrap;will-change:transform}
+:where(body[data-page="integrations"]) .hm-node .mk{flex:none;width:calc(10*var(--s));height:calc(10*var(--s));border-radius:calc(3*var(--s));background:var(--blue)}
+:where(body[data-page="integrations"]) .hm-node b{display:block;font:650 max(12px,calc(14.5*var(--s)))/1.15 var(--f-display);color:var(--ink)}
+:where(body[data-page="integrations"]) .hm-node small{display:block;font:500 max(12px,calc(12*var(--s)))/1.2 var(--f-mono);color:var(--muted)}
+:where(body[data-page="integrations"]) .hm-pk{position:absolute;left:0;top:0;z-index:2;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:calc(5*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--blue-deep);background:#fff;border:1.5px solid var(--blue);border-radius:calc(5*var(--s));padding:calc(4*var(--s)) calc(6*var(--s));white-space:nowrap;pointer-events:none}
+:where(body[data-page="integrations"]) .hm-pk::before{content:"";width:calc(7*var(--s));height:calc(7*var(--s));border-radius:1.5px;background:var(--blue)}
+:where(body[data-page="integrations"]) .hm-pk.back{border-color:var(--blue-soft);color:var(--muted)}
+:where(body[data-page="integrations"]) .hm-pk.back::before{background:var(--blue-soft)}
+
+/* exchange v11: the centre slot rotates; centre node shows its outputs */
+:where(body[data-page="integrations"]) .hm-node ul{display:none;list-style:none;margin:calc(6*var(--s)) 0 0;padding:0;gap:calc(4*var(--s))}
+:where(body[data-page="integrations"]) .hm-node li{font:500 max(12px,calc(12*var(--s)))/1.2 var(--f-mono);color:var(--ink-2);background:var(--mist);border-radius:calc(6*var(--s));padding:calc(5*var(--s)) calc(7*var(--s));display:flex;align-items:center;gap:calc(6*var(--s))}
+:where(body[data-page="integrations"]) .hm-node li::before{content:"";width:calc(6*var(--s));height:calc(6*var(--s));border-radius:50%;background:var(--blue);flex:none}
+:where(body[data-page="integrations"]) .hm-node li.hot{background:var(--wash);color:var(--ink)}
+:where(body[data-page="integrations"]) .hm-node .ctrk{display:none;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--blue);letter-spacing:.04em;text-transform:uppercase}
+
+/* integrations: exchange layout tweaks */
+:where(body[data-page="integrations"]) .in-tog{padding-block:var(--sec-t)}
+
+/* v13 smooth exchange: compact cards, detail panel fades in under the centre; transforms only */
+:where(body[data-page="integrations"]) .hm-ex .ln{transition:stroke .6s,stroke-width .6s}
+:where(body[data-page="integrations"]) .hm-node{flex-direction:row;align-items:center;gap:calc(8*var(--s));min-width:0;padding:calc(9*var(--s)) calc(12*var(--s));border:1px solid var(--line-2);transform-origin:50% 50%;will-change:transform;transition:box-shadow .5s,border-color .5s}
+:where(body[data-page="integrations"]) .hm-node.is-c{border-color:var(--blue);box-shadow:0 0 0 1.5px var(--blue),0 calc(16*var(--s)) calc(30*var(--s)) calc(-20*var(--s)) rgba(10,26,43,.55);z-index:4}
+:where(body[data-page="integrations"]) .hm-det{position:absolute;left:50%;top:calc(100% + calc(8*var(--s)));width:max-content;min-width:100%;opacity:0;pointer-events:none;background:#fff;border:1px solid var(--line);border-radius:calc(10*var(--s));padding:calc(8*var(--s));display:grid;gap:calc(4*var(--s));transform-origin:50% 0;will-change:transform,opacity;max-width:280px;white-space:normal}
+:where(body[data-page="integrations"]) .hm-det .ctrk{display:block}
+:where(body[data-page="integrations"]) .hm-node .hm-det ul{display:grid;gap:calc(4*var(--s));margin:0}
+:where(body[data-page="integrations"]) .hm-pk{will-change:transform,opacity;opacity:0}
+@media (max-width:768px){:where(body[data-page="integrations"]) .hm-ex{height:calc(600*var(--s))}:where(body[data-page="integrations"]) .hm-node{padding:calc(7*var(--s)) calc(8*var(--s));gap:calc(6*var(--s))}:where(body[data-page="integrations"]) .hm-node small{display:none}:where(body[data-page="integrations"]) .hm-node .mk{width:calc(8*var(--s));height:calc(8*var(--s))}:where(body[data-page="integrations"]) .hm-node b{font-size:calc(13*var(--s))}:where(body[data-page="integrations"]) .hm-det{padding:calc(6*var(--s))}:where(body[data-page="integrations"]) .hm-pk{font-size:calc(12*var(--s));padding:calc(3*var(--s)) calc(5*var(--s))}}
+@media (max-width:480px){:where(body[data-page="integrations"]) .hm-node{white-space:normal;max-width:9em}}
+/* v17 calmer visuals */
+@media (min-width:480.02px){:where(body[data-page="integrations"]) .in-svgbox svg{max-height:min(58svh,560px)}}

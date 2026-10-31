@@ -156,9 +156,11 @@ the `infrax:cover` event, `pausePlexus`, `makeNet`, `anchorY`, `split`, `reveal`
 | route | source | status |
 |---|---|---|
 | `/services` | site/src/services.html | **done** |
-| `/` | site/src/home.html | TODO (placeholder) — gsap + three |
-| `/products` | site/src/products.html | TODO (placeholder) — gsap + three, loads /assets/domains/*.js |
-| `/how-it-works` | site/src/how-it-works.html | TODO (placeholder) — gsap + three |
-| `/analytics` | site/src/analytics.html | TODO (placeholder) |
-| `/deployment` | site/src/deployment.html | TODO (placeholder) |
-| `/integrations` | site/src/integrations.html | TODO (placeholder) |
+| `/` | site/src/home.html | done — gsap + three |
+| `/products` | site/src/products.html | done — gsap + three, loads /assets/domains/*.js |
+| `/how-it-works` | site/src/how-it-works.html | done — gsap + three |
+| `/analytics` | site/src/analytics.html | done |
+| `/deployment` | site/src/deployment.html | done |
+| `/integrations` | site/src/integrations.html | done |
+
+All page CSS is scoped as `:where(body[data-page="<page>"]) <selector>` (no added specificity), because page CSS stays loaded after client-side navigation and several pages share class prefixes (Home uses `.hw-*`, Integrations uses `hm-*`).

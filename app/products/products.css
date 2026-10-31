@@ -1,0 +1,388 @@
+/* PORT: every selector is wrapped as :where(body[data-page="products"]) <selector> (no added specificity), so these rules never reach other pages after client-side navigation. */
+/* Products page styles: the inline <style> of site/src/products.html, verbatim (every selector is cy-/rw- prefixed, so none needs scoping). */
+/* Products page: a short intro, one pinned 3D tunnel with 6 product stations (roadside → toll plaza →
+   control room → field), then a compact product index. Prefix: cy- */
+/* heading screen: one full screen under the nav; the heading on the left, its line on the right, the domain picker under both; the tunnel starts below it */
+:where(body[data-page="products"]) .cy-intro{display:flex;align-items:center;min-height:calc(100svh - var(--nav-h));padding-block:clamp(32px,5vh,72px);overflow-x:clip}
+:where(body[data-page="products"]) .cy-intro .cy-lead{max-width:24em;margin:0;align-self:center;font-size:clamp(1.125rem,.85rem + .85vw,1.75rem);line-height:1.45;letter-spacing:-.01em;color:var(--ink-2)}
+/* the description sits beside the heading, centred on its three lines; the domains sit well below both */
+:where(body[data-page="products"]) .cy-intro{--cy-h1:clamp(3rem,1.5rem + 5vw,7.5rem)} /* Products keeps its big heading (client's choice) */
+:where(body[data-page="products"]) .cy-intro .cy-intro-grid{grid-template-columns:auto minmax(0,1fr);gap:clamp(40px,6vw,120px);align-items:end}
+:where(body[data-page="products"]) .cy-intro .cy-dgrid{margin-top:clamp(48px,9vh,104px)}
+:where(body[data-page="products"]) .cy-intro .h-hero{font-size:var(--cy-h1)}
+@media (max-width:1024px){:where(body[data-page="products"]) .cy-intro .cy-intro-grid{grid-template-columns:minmax(0,1fr);gap:calc(18*var(--s))}:where(body[data-page="products"]) .cy-intro .cy-lead{margin:0}}
+:where(body[data-page="products"]) .cy-intro .wrap{width:100%}
+:where(body[data-page="products"]) .cy-intro .cy-cue{margin-top:clamp(24px,3vh,40px)}
+:where(body[data-page="products"]) .cy-intro .wrap{position:relative}
+:where(body[data-page="products"]) .cy-intro-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:clamp(calc(24*var(--s)),5vw,calc(72*var(--s)));align-items:end;position:relative}
+:where(body[data-page="products"]) .cy-intro .h-hero{margin:0;letter-spacing:-.04em;line-height:1.02}
+:where(body[data-page="products"]) .cy-intro .h-hero em{font-style:normal;color:var(--blue)}
+:where(body[data-page="products"]) .cy-cue{display:flex;align-items:center;gap:calc(14*var(--s));margin-top:calc(32*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+:where(body[data-page="products"]) .cy-cue i{position:relative;width:1px;height:calc(46*var(--s));background:var(--line-2);overflow:hidden}
+:where(body[data-page="products"]) .cy-cue i::after{content:"";position:absolute;left:0;top:0;width:1px;height:40%;background:var(--blue);transform:translateY(-100%);animation:cyCue 1.8s var(--ease) infinite}
+@keyframes cyCue{to{transform:translateY(250%)}}
+
+/* tunnel */
+:where(body[data-page="products"]) .cy-tunnel{position:relative;height:var(--cy-len,1450svh)}
+:where(body[data-page="products"]) .cy-stage{--in:max(var(--gut),env(safe-area-inset-left,0px),calc((100% - var(--col))/2 + var(--gut)));position:sticky;top:calc(var(--nav-h) + env(safe-area-inset-top,0px));height:calc(100svh - var(--nav-h) - env(safe-area-inset-top,0px));min-height:calc(520*var(--s));overflow:hidden;background:linear-gradient(180deg,rgba(242,247,252,.55),rgba(255,255,255,0) 40%)}
+:where(body[data-page="products"]) .cy-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
+:where(body[data-page="products"]) .cy-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+:where(body[data-page="products"]) .cy-det{position:absolute;left:0;top:0;border:1.5px solid var(--blue);border-radius:2px;will-change:transform;opacity:0}
+:where(body[data-page="products"]) .cy-det b,:where(body[data-page="products"]) .cy-det span{position:absolute;left:-1.5px;font:500 max(10.5px,calc(10.5*var(--s)))/1 var(--f-mono);white-space:nowrap;padding:calc(2.5*var(--s)) calc(4*var(--s))}
+:where(body[data-page="products"]) .cy-det.r b,:where(body[data-page="products"]) .cy-det.r span{left:auto;right:-1.5px}
+:where(body[data-page="products"]) .cy-det b{bottom:100%;margin-bottom:calc(14.5*var(--s));background:var(--blue-deep);color:#fff;font-weight:600}
+:where(body[data-page="products"]) .cy-det span{bottom:100%;background:var(--blue);color:#fff}
+:where(body[data-page="products"]) .cy-det.ww{border-color:var(--alert)}
+:where(body[data-page="products"]) .cy-det.ww span{background:var(--alert)}
+:where(body[data-page="products"]) .cy-det.ww b{background:#7A1E19}
+:where(body[data-page="products"]) .cy-tag.yield{opacity:0!important;transition:none}
+:where(body[data-page="products"]) .cy-tag{position:absolute;left:0;top:0;transform:translate(-50%,-100%);font:500 max(10.5px,calc(10.5*var(--s)))/1.2 var(--f-mono);letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .35s}
+:where(body[data-page="products"]) .cy-tag.dev{background:#fff;border:1px solid var(--blue);color:var(--blue-deep);padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(4*var(--s));text-transform:uppercase}
+:where(body[data-page="products"]) .cy-tag.dev::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:calc(14*var(--s));background:var(--blue)}
+:where(body[data-page="products"]) .cy-tag.dev{font-size:max(10.5px,calc(10.5*var(--s)));padding:calc(4*var(--s)) calc(7*var(--s))}
+:where(body[data-page="products"]) .cy-tag.state{background:var(--blue-deep);color:#fff;padding:calc(4*var(--s)) calc(7*var(--s));border-radius:calc(4*var(--s));text-transform:uppercase}
+:where(body[data-page="products"]) .cy-tag.state.down{background:#fff;color:var(--alert);border:1px solid var(--alert)}
+:where(body[data-page="products"]) .cy-tag.count{background:var(--blue-deep);color:#fff;padding:calc(4*var(--s)) calc(7*var(--s));border-radius:calc(3*var(--s))}
+
+:where(body[data-page="products"]) .cy-hud-l{position:absolute;left:var(--in);top:calc(22*var(--s));z-index:2;pointer-events:none}
+:where(body[data-page="products"]) .cy-hud-l .eyebrow{margin-bottom:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-bignum{font:700 clamp(36px,3vw,48px)/.9 var(--f-display);letter-spacing:-.05em;color:var(--ink);display:flex;gap:.02em;overflow:hidden;height:.92em}
+:where(body[data-page="products"]) .cy-bignum span{display:inline-block}
+:where(body[data-page="products"]) .cy-bignum small{font:500 max(12px,calc(13*var(--s)))/1 var(--f-mono);letter-spacing:.06em;color:var(--muted);align-self:flex-end;margin:0 0 .5em .6em}
+:where(body[data-page="products"]) .cy-hud-name{font:600 calc(15*var(--s))/1.2 var(--f-display);color:var(--blue);margin-top:calc(6*var(--s));letter-spacing:-.01em}
+:where(body[data-page="products"]) .cy-hud-r{position:absolute;right:var(--in);top:calc(24*var(--s));z-index:2;text-align:right;font:500 max(12px,calc(12*var(--s)))/1.7 var(--f-mono);letter-spacing:.06em;color:var(--ink-2);pointer-events:none}
+:where(body[data-page="products"]) .cy-hud-r b{display:inline-flex;align-items:center;gap:calc(6*var(--s));color:var(--ink)}
+:where(body[data-page="products"]) .cy-hud-r b::before{content:"";width:calc(7*var(--s));height:calc(7*var(--s));border-radius:50%;background:var(--alert);animation:cyBlink 1.2s steps(2) infinite}
+@keyframes cyBlink{50%{opacity:.2}}
+
+:where(body[data-page="products"]) .cy-panel{position:absolute;right:var(--in);top:50%;transform:translateY(-50%);width:min(calc(390*var(--s)),34vw);z-index:3;background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:calc(14*var(--s));padding:calc(22*var(--s)) calc(22*var(--s)) calc(16*var(--s));box-shadow:0 calc(22*var(--s)) calc(44*var(--s)) calc(-34*var(--s)) rgba(10,26,43,.45);max-height:calc(100% - calc(150*var(--s)));overflow:auto;contain:layout paint}
+/* station card and product popup: a thin scrollbar, shown only when the content is taller than the card */
+:where(body[data-page="products"]) .cy-panel,:where(body[data-page="products"]) .cy-pd-in{scrollbar-width:thin;scrollbar-color:rgba(38,115,181,.45) transparent}
+:where(body[data-page="products"]) .cy-panel::-webkit-scrollbar,:where(body[data-page="products"]) .cy-pd-in::-webkit-scrollbar{display:block;width:6px}
+:where(body[data-page="products"]) .cy-panel::-webkit-scrollbar-thumb,:where(body[data-page="products"]) .cy-pd-in::-webkit-scrollbar-thumb{background:rgba(38,115,181,.45);border-radius:3px}
+:where(body[data-page="products"]) .cy-panel::-webkit-scrollbar-track,:where(body[data-page="products"]) .cy-pd-in::-webkit-scrollbar-track{background:transparent}
+:where(body[data-page="products"]) .cy-p-head{display:flex;justify-content:space-between;align-items:center;gap:calc(10*var(--s));font:500 max(12px,calc(12*var(--s)))/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-bottom:calc(14*var(--s));border-bottom:1px solid var(--line);margin-bottom:calc(16*var(--s))}
+:where(body[data-page="products"]) .cy-p-head #cyPTag{color:var(--blue)}
+:where(body[data-page="products"]) .cy-p-name{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin:0 0 calc(8*var(--s))}
+:where(body[data-page="products"]) .cy-p-title{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.018em;margin:0 0 calc(10*var(--s))}
+:where(body[data-page="products"]) .cy-p-desc{margin:0;color:var(--ink-2);font-size:var(--fs-body);line-height:var(--lh-body)}
+:where(body[data-page="products"]) .cy-tag.mlff-read{background:#2E9E5B;color:#fff;border-color:#2E9E5B}
+:where(body[data-page="products"]) .cy-p-extra{margin-top:calc(14*var(--s));display:flex;flex-wrap:wrap;gap:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-p-extra .st{font-size:max(12px,calc(12*var(--s)))}
+:where(body[data-page="products"]) .cy-p-more{margin:calc(10*var(--s)) 0 0;font:500 max(12px,calc(13*var(--s)))/1.45 var(--f-body);color:var(--ink-2)}
+:where(body[data-page="products"]) .cy-p-more b{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-readout{margin:calc(16*var(--s)) 0 0;padding:calc(12*var(--s)) 0 0;border-top:1px dashed var(--line-2);display:grid;grid-template-columns:auto 1fr;gap:calc(6*var(--s)) calc(14*var(--s));font:500 max(12px,calc(12.5*var(--s)))/1.35 var(--f-mono)}
+/* short desktop windows: the sample readout rows give way so the station panel clears the domain switcher (mobile already hides them) */
+@media (min-width:768.02px) and (max-height:820px){:where(body[data-page="products"]) .cy-readout,:where(body[data-page="products"]) .cy-sample{display:none}}
+:where(body[data-page="products"]) .cy-readout dt{color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+:where(body[data-page="products"]) .cy-readout dd{margin:0;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+:where(body[data-page="products"]) .cy-readout dd.ok{color:var(--blue)}
+:where(body[data-page="products"]) .cy-readout dd.bad{color:var(--alert)}
+:where(body[data-page="products"]) .cy-sample{display:block;margin-top:calc(10*var(--s));font:400 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);letter-spacing:.04em}
+
+:where(body[data-page="products"]) .cy-req{display:inline-block;font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue);border:1px dashed var(--blue);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(4*var(--s))}
+
+/* fewer cards in the tunnel: the station panel stays (photo, title, chips); the side cards, readouts and timeline give way to "Show more detail" */
+:where(body[data-page="products"]) .cy-stage .cy-card,:where(body[data-page="products"]) .cy-stage .cy-timeline,:where(body[data-page="products"]) .cy-panel .cy-readout,:where(body[data-page="products"]) .cy-panel .cy-ev,:where(body[data-page="products"]) .cy-panel .cy-sample{display:none!important}
+
+/* "Show more detail": bottom centre of the tunnel, above the rail; opens the product's glass popup */
+:where(body[data-page="products"]) .cy-fs{all:unset;box-sizing:border-box;position:absolute;left:var(--in);bottom:calc(104*var(--s));z-index:4;cursor:pointer;display:inline-flex;align-items:center;gap:calc(8*var(--s));min-height:max(44px,calc(46*var(--s)));padding:0 calc(16*var(--s));border-radius:999px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1px solid rgba(255,255,255,.9);box-shadow:0 calc(10*var(--s)) calc(26*var(--s)) calc(-14*var(--s)) rgba(10,26,43,.4);font:600 max(12px,calc(13*var(--s)))/1 var(--f-body);color:var(--ink);transition:color var(--dur-2) var(--ease-out),background-color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+:where(body[data-page="products"]) .cy-fs:active,:where(body[data-page="products"]) .cy-more:active{scale:.97}
+:where(body[data-page="products"]) .cy-fs:hover{color:var(--blue)}
+:where(body[data-page="products"]) .cy-fs:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+:where(body[data-page="products"]) .cy-fs .fs-off,:where(body[data-page="products"]) .cy-fs[aria-pressed="true"] .fs-on{display:none}
+:where(body[data-page="products"]) .cy-fs[aria-pressed="true"] .fs-off{display:inline}
+/* full screen: the stage fills the screen; the wheel steps through the stations */
+:where(body[data-page="products"]) .cy-stage:fullscreen{top:0;width:100vw;height:100vh;background:#F4F7FA}
+@media (max-width:768px){:where(body[data-page="products"]) .cy-fs{display:none}}
+:where(body[data-page="products"]) .cy-static .cy-fs{display:none}
+:where(body[data-page="products"]) .cy-more{all:unset;box-sizing:border-box;position:absolute;left:50%;bottom:calc(104*var(--s));transform:translateX(-50%);z-index:4;cursor:pointer;display:inline-flex;align-items:center;gap:calc(10*var(--s));min-height:max(44px,calc(46*var(--s)));padding:0 calc(8*var(--s)) 0 calc(20*var(--s));border-radius:999px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);border:1px solid rgba(255,255,255,.85);box-shadow:0 calc(16*var(--s)) calc(36*var(--s)) calc(-22*var(--s)) rgba(10,26,43,.55),inset 0 1px 0 rgba(255,255,255,.9);font:600 max(14px,calc(15*var(--s)))/1 var(--f-body);color:var(--ink);white-space:nowrap;transition:box-shadow .25s var(--ease-out),color .25s var(--ease-out),scale var(--dur-1) var(--ease-out)}
+:where(body[data-page="products"]) .cy-more i{display:grid;place-items:center;width:calc(30*var(--s));height:calc(30*var(--s));min-width:30px;min-height:30px;border-radius:50%;background:var(--blue);color:#fff;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+:where(body[data-page="products"]) .cy-more:hover{color:var(--blue)}
+:where(body[data-page="products"]) .cy-more:hover i{transform:rotate(90deg)}
+:where(body[data-page="products"]) .cy-more:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+:where(body[data-page="products"]) .cy-static .cy-more{position:relative;left:auto;bottom:auto;transform:none;display:flex;width:max-content;margin:calc(18*var(--s)) auto 0}
+/* phones: domain switcher on top, "Show more detail" bottom centre, station number bottom right above it */
+@media (max-width:768px){
+  :where(body[data-page="products"]) .cy-tunnel:not(.cy-static) .cy-more{bottom:calc(92*var(--s))}
+  :where(body[data-page="products"]) .cy-tunnel:not(.cy-static) .cy-hud-l{top:auto;left:auto;right:var(--in);bottom:calc(150*var(--s));text-align:right}
+  :where(body[data-page="products"]) .cy-tunnel:not(.cy-static) .cy-bignum{justify-content:flex-end}
+  :where(body[data-page="products"]) .cy-tunnel:not(.cy-static) .cy-hud-r{top:calc(72*var(--s))}
+}
+
+/* product detail: frosted glass popup */
+:where(body[data-page="products"]) .cy-pd{padding:0;border:0;background:transparent;max-width:min(960px,calc(100% - 32px));width:100%;max-height:min(86dvh,760px);overflow:visible;color:var(--ink)}
+:where(body[data-page="products"]) .cy-pd::backdrop{background:rgba(10,26,43,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+:where(body[data-page="products"]) .cy-pd-in{position:relative;max-height:min(86dvh,760px);overflow:auto;overscroll-behavior:contain;padding:calc(40*var(--s)) calc(44*var(--s)) calc(32*var(--s));border-radius:calc(22*var(--s));background:linear-gradient(150deg,rgba(255,255,255,.78),rgba(240,246,252,.6));-webkit-backdrop-filter:blur(26px) saturate(1.5);backdrop-filter:blur(26px) saturate(1.5);border:1px solid rgba(255,255,255,.9);box-shadow:0 40px 90px -40px rgba(10,26,43,.6),inset 0 1px 0 rgba(255,255,255,.95)}
+:where(body[data-page="products"]) .cy-pd[open] .cy-pd-in{animation:cyPdIn .45s cubic-bezier(.2,.8,.2,1)}
+:where(body[data-page="products"]) .cy-pd[open]::backdrop{animation:cyPdFade .3s ease}
+@keyframes cyPdIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes cyPdFade{from{opacity:0}to{opacity:1}}
+:where(body[data-page="products"]) .cy-pd-in::after{content:"";position:absolute;right:-12%;top:-30%;width:70%;height:90%;background:radial-gradient(closest-side,rgba(90,159,212,.28),rgba(90,159,212,0));pointer-events:none;z-index:0}
+:where(body[data-page="products"]) .cy-pd-in>*{position:relative;z-index:1}
+:where(body[data-page="products"]) .cy-pd-in>.cy-pd-net{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.55;-webkit-mask-image:linear-gradient(200deg,#000 0,rgba(0,0,0,.6) 45%,transparent 85%);mask-image:linear-gradient(200deg,#000 0,rgba(0,0,0,.6) 45%,transparent 85%)}
+:where(body[data-page="products"]) .cy-pd-logo{display:block;height:calc(26*var(--s));min-height:22px;width:auto;margin:0 0 calc(18*var(--s))}
+:where(body[data-page="products"]) .cy-pd-x{all:unset;box-sizing:border-box;position:absolute!important;top:calc(14*var(--s));right:calc(14*var(--s));width:44px;height:44px;display:grid;place-items:center;border-radius:50%;cursor:pointer;color:var(--ink-2);background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.9)}
+:where(body[data-page="products"]) .cy-pd-x:hover{color:var(--blue)}
+:where(body[data-page="products"]) .cy-pd-x:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+:where(body[data-page="products"]) .cy-pd-tag{margin:0 0 calc(8*var(--s));font:500 var(--fs-small,14px)/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+:where(body[data-page="products"]) .cy-pd-name{margin:0;padding-right:48px;font:700 clamp(1.75rem,1.3rem + 1.4vw,2.4rem)/1.1 var(--f-display);letter-spacing:-.02em;color:var(--ink)}
+:where(body[data-page="products"]) .cy-pd-line{margin:calc(10*var(--s)) 0 0;font:600 var(--fs-h3,20px)/1.35 var(--f-body);color:var(--blue-deep)}
+:where(body[data-page="products"]) .cy-pd-desc{margin:calc(14*var(--s)) 0 0;font-size:var(--fs-body);line-height:var(--lh-body,1.6);color:var(--ink-2)}
+:where(body[data-page="products"]) .cy-pd-h{margin:calc(24*var(--s)) 0 calc(10*var(--s));font:600 var(--fs-small,14px)/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+:where(body[data-page="products"]) .cy-pd-caps{list-style:none;margin:0;padding:0;display:grid;gap:calc(8*var(--s))}
+:where(body[data-page="products"]) .cy-pd-caps{grid-template-columns:repeat(auto-fit,minmax(min(100%,max(280px,calc((100% - 8px)/2))),1fr))}:where(body[data-page="products"]) .cy-pd-desc{max-width:62em} /* at most 2 columns */
+:where(body[data-page="products"]) .cy-pd-caps li{position:relative;padding:calc(11*var(--s)) calc(14*var(--s)) calc(11*var(--s)) calc(38*var(--s));border-radius:calc(12*var(--s));background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.95);font-size:var(--fs-body);line-height:1.45;color:var(--ink)}
+:where(body[data-page="products"]) .cy-pd-caps li::before{content:"";position:absolute;left:calc(15*var(--s));top:calc(18*var(--s));width:calc(9*var(--s));height:calc(9*var(--s));min-width:8px;min-height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 calc(4*var(--s)) rgba(38,115,181,.14)}
+:where(body[data-page="products"]) .cy-pd[open] .cy-pd-caps li{animation:cyPdIn .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.12s + var(--k) * .05s)}
+:where(body[data-page="products"]) .cy-pd-cta{margin-top:calc(22*var(--s));display:flex;justify-content:flex-end}
+/* the popup fits the screen without scrolling: padding, type and spacing scale with the viewport height */
+:where(body[data-page="products"]) .cy-pd{max-height:calc(100dvh - 24px)}
+:where(body[data-page="products"]) .cy-pd:focus,:where(body[data-page="products"]) .cy-pd:focus-visible{outline:none}
+:where(body[data-page="products"]) .cy-pd-in{max-height:calc(100dvh - 24px);padding:clamp(18px,3.6vh,40px) clamp(20px,3.2vw,44px) clamp(16px,3vh,32px)}
+:where(body[data-page="products"]) .cy-pd-logo{height:clamp(18px,2.6vh,26px);min-height:0;margin-bottom:clamp(8px,1.8vh,18px)}
+:where(body[data-page="products"]) .cy-pd-tag{margin-bottom:clamp(4px,.8vh,8px)}
+:where(body[data-page="products"]) .cy-pd-name{font-size:clamp(1.4rem,.7rem + 2.4vh,2.4rem)}
+:where(body[data-page="products"]) .cy-pd-line{margin-top:clamp(4px,1vh,10px);font-size:clamp(15px,2vh,20px)}
+:where(body[data-page="products"]) .cy-pd-desc{margin-top:clamp(6px,1.4vh,14px);font-size:clamp(14px,1.8vh,17px);line-height:1.5}
+:where(body[data-page="products"]) .cy-pd-h{margin:clamp(10px,2.2vh,24px) 0 clamp(6px,1vh,10px)}
+:where(body[data-page="products"]) .cy-pd-caps{gap:clamp(5px,.8vh,8px)}
+:where(body[data-page="products"]) .cy-pd-caps li{padding:clamp(7px,1.1vh,11px) 14px clamp(7px,1.1vh,11px) 36px;font-size:clamp(13px,1.7vh,16px);line-height:1.4}
+:where(body[data-page="products"]) .cy-pd-caps li::before{top:calc(50% - 4.5px)}
+:where(body[data-page="products"]) .cy-pd-cta{margin-top:clamp(10px,2vh,22px)}
+:where(body[data-page="products"]) .cy-pd-cta .btn{min-height:clamp(40px,5vh,48px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){:where(body[data-page="products"]) .cy-pd-in,:where(body[data-page="products"]) .cy-more{background:rgba(255,255,255,.97)}}
+@media (prefers-reduced-motion:reduce){:where(body[data-page="products"]) .cy-pd[open] .cy-pd-in,:where(body[data-page="products"]) .cy-pd[open]::backdrop,:where(body[data-page="products"]) .cy-pd[open] .cy-pd-caps li{animation:none}}
+
+/* rail: 7 stations grouped Roadside / Toll plaza / Free flow / Control room / Field operations */
+:where(body[data-page="products"]) .cy-rail{position:absolute;left:0;right:0;bottom:0;z-index:4;background:linear-gradient(0deg,rgba(255,255,255,.97) 60%,rgba(255,255,255,0));padding-top:calc(16*var(--s))}
+:where(body[data-page="products"]) .cy-rail ol{list-style:none;margin:0 auto;padding:0 max(var(--gut),env(safe-area-inset-right,0px)) calc(14*var(--s)) max(var(--gut),env(safe-area-inset-left,0px));max-width:var(--col);display:grid;grid-template-columns:repeat(var(--cy-n,5),minmax(0,1fr));gap:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-rail li{position:relative}
+:where(body[data-page="products"]) .cy-rail li.first::before{white-space:nowrap;content:attr(data-grp);position:absolute;left:0;top:calc(-4*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+:where(body[data-page="products"]) .cy-rail li.first:not(:first-child){border-left:1px solid var(--line-2);padding-left:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-rail button{all:unset;box-sizing:border-box;cursor:pointer;display:block;width:100%;padding:calc(14*var(--s)) 0 calc(4*var(--s));min-height:max(44px,calc(44*var(--s)));font:500 max(12px,calc(12*var(--s)))/1.2 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);transition:color .25s var(--ease-out)}
+:where(body[data-page="products"]) .cy-rail button .bar{display:block;height:2px;background:var(--line);margin-bottom:calc(8*var(--s));position:relative;overflow:hidden}
+:where(body[data-page="products"]) .cy-rail button .bar i{position:absolute;inset:0;background:var(--blue);transform-origin:left;transform:scaleX(0)}
+:where(body[data-page="products"]) .cy-rail button .lbl{display:block;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(body[data-page="products"]) .cy-rail button.on{color:var(--ink)}
+:where(body[data-page="products"]) .cy-rail button.on .n{color:var(--blue)}
+:where(body[data-page="products"]) .cy-rail button:hover{color:var(--ink)}
+:where(body[data-page="products"]) .cy-rail button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* static (reduced motion / no WebGL) */
+:where(body[data-page="products"]) .cy-tunnel.cy-static{height:auto}
+:where(body[data-page="products"]) .cy-static .cy-stage{position:relative;top:0;height:auto;min-height:0;padding:calc(28*var(--s)) 0 0;background:var(--mist)}
+:where(body[data-page="products"]) .cy-static .cy-gl,:where(body[data-page="products"]) .cy-static .cy-labels,:where(body[data-page="products"]) .cy-static .cy-hud-r{display:none}
+:where(body[data-page="products"]) .cy-static .cy-hud-l{position:relative;left:auto;top:auto;padding:0 max(var(--gut),env(safe-area-inset-left,0px));max-width:var(--col);margin:0 auto}
+:where(body[data-page="products"]) .cy-static .cy-panel{position:relative;right:auto;top:auto;transform:none;width:auto;max-width:calc(620*var(--s));max-height:none;margin:calc(18*var(--s)) max(var(--gut),env(safe-area-inset-left,0px)) 0}
+:where(body[data-page="products"]) .cy-static .cy-panel{margin-left:max(var(--gut),env(safe-area-inset-left,0px),calc((100% - var(--col))/2 + var(--gut)))}
+:where(body[data-page="products"]) .cy-static .cy-rail{position:relative;background:none;margin-top:calc(18*var(--s))}
+
+/* product index */
+:where(body[data-page="products"]) .cy-index{overflow-x:clip}
+:where(body[data-page="products"]) .cy-item{display:grid;grid-template-columns:1fr auto;gap:2px calc(10*var(--s));align-items:start;padding:calc(14*var(--s)) calc(14*var(--s)) calc(13*var(--s));border:1px solid var(--line);border-radius:calc(10*var(--s));background:#fff;text-decoration:none;color:inherit;min-height:max(44px,calc(44*var(--s)));transition:border-color .25s var(--ease-out),transform .35s var(--ease),box-shadow .35s var(--ease)}
+:where(body[data-page="products"]) .cy-item b{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);color:var(--ink);letter-spacing:-.01em}
+:where(body[data-page="products"]) .cy-item span{grid-column:1;font-size:max(12px,calc(13*var(--s)));line-height:1.4;color:var(--muted)}
+:where(body[data-page="products"]) .cy-item i{grid-row:1;grid-column:2;font-style:normal;color:var(--blue);transition:transform .3s var(--ease)}
+@media (hover:hover){:where(body[data-page="products"]) .cy-item:hover,:where(body[data-page="products"]) .cy-dbtn:hover{transform:translateY(-2px)}}
+:where(body[data-page="products"]) .cy-item:active,:where(body[data-page="products"]) .cy-dbtn:active{transform:translateY(0) scale(.985);transition-duration:var(--dur-1)}
+:where(body[data-page="products"]) .cy-item:hover{border-color:var(--blue);box-shadow:0 calc(18*var(--s)) calc(40*var(--s)) calc(-30*var(--s)) rgba(14,59,102,.5)}
+:where(body[data-page="products"]) .cy-item:hover i{transform:translateX(calc(3*var(--s)))}
+:where(body[data-page="products"]) .cy-item.req{border-style:dashed}
+:where(body[data-page="products"]) .cy-item .cy-req{grid-column:1;justify-self:start;margin-top:calc(6*var(--s))}
+
+@media (max-width:768px){
+  :where(body[data-page="products"]) .cy-tunnel{--cy-len:1200svh}
+  :where(body[data-page="products"]) .cy-hud-l{top:calc(14*var(--s))}
+  :where(body[data-page="products"]) .cy-bignum{font-size:36px}
+  :where(body[data-page="products"]) .cy-hud-name{font-size:calc(13*var(--s))}
+  :where(body[data-page="products"]) .cy-hud-r{top:calc(16*var(--s));font-size:calc(12*var(--s))}
+  :where(body[data-page="products"]) .cy-panel{left:calc(12*var(--s));right:calc(12*var(--s));top:auto;bottom:calc(70*var(--s));transform:none;width:auto;padding:calc(14*var(--s)) calc(14*var(--s)) calc(12*var(--s));max-height:44%;overflow:auto}
+
+  :where(body[data-page="products"]) .cy-readout,:where(body[data-page="products"]) .cy-sample{display:none}
+  :where(body[data-page="products"]) .cy-rail ol{display:flex;gap:calc(4*var(--s));overflow-x:auto;scrollbar-width:none;padding-bottom:calc(8*var(--s))}
+  :where(body[data-page="products"]) .cy-rail ol::-webkit-scrollbar{display:none}
+  :where(body[data-page="products"]) .cy-rail li{flex:1 1 0}
+  :where(body[data-page="products"]) .cy-rail li.first::before{display:none}
+  :where(body[data-page="products"]) .cy-hud-l .eyebrow{display:none}
+  :where(body[data-page="products"]) .cy-tag.dev{display:none}
+  :where(body[data-page="products"]) .cy-rail button{text-align:center;padding-top:calc(14*var(--s))}
+  :where(body[data-page="products"]) .cy-rail button .lbl{display:none}
+  :where(body[data-page="products"]) .cy-static .cy-panel{max-height:none}
+  :where(body[data-page="products"]) .cy-static .cy-readout{display:grid}
+  :where(body[data-page="products"]) .cy-tunnel:not(.cy-static) .cy-panel{display:none} /* phones and small tablets: the tunnel runs without the station card; "Show more detail" carries the copy */
+}
+
+/* realism layer: lens vignette over the 3D, and a photo "real-world view" per station */
+:where(body[data-page="products"]) .cy-stage::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(125% 95% at 50% 42%,rgba(10,26,43,0) 58%,rgba(10,26,43,.14) 100%)}
+:where(body[data-page="products"]) .cy-lowfx .cy-hud-r b::before,:where(body[data-page="products"]) .cy-lowfx .cy-rw-live::before,:where(body[data-page="products"]) .cy-lowfx .rw-box::after,:where(body[data-page="products"]) .cy-lowfx .rw-dot::after,:where(body[data-page="products"]) .cy-lowfx .rw-bar b,:where(body[data-page="products"]) .cy-lowfx .cy-ev i{animation-play-state:paused}
+:where(body[data-page="products"]) .cy-static .cy-stage::after{display:none}
+@media (min-width:768.02px){:where(body[data-page="products"]) .cy-panel{max-height:calc(100% - calc(128*var(--s)))}}
+:where(body[data-page="products"]) .cy-rw{position:relative;margin:0 0 calc(14*var(--s));border-radius:calc(9*var(--s));overflow:hidden;aspect-ratio:16/7.6;background:#0A1A2B;isolation:isolate}
+:where(body[data-page="products"]) .cy-rw-layer{position:absolute;inset:0;background:#0A1A2B center/cover no-repeat}
+:where(body[data-page="products"]) .cy-rw-layer.real{background-color:#F4F7FA}
+:where(body[data-page="products"]) .cy-rw-ov{position:absolute;inset:0;z-index:2;font:500 max(10px,calc(10.5*var(--s)))/1.15 var(--f-mono);letter-spacing:0}
+:where(body[data-page="products"]) .cy-rw-cap{position:absolute;left:calc(7*var(--s));bottom:calc(6*var(--s));z-index:3;font:500 max(10px,calc(10*var(--s)))/1 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:#fff;background:rgba(10,26,43,.66);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s))}
+:where(body[data-page="products"]) .cy-rw-live{position:absolute;right:calc(7*var(--s));top:calc(6*var(--s));z-index:3;font:600 max(10px,calc(10*var(--s)))/1 var(--f-mono);letter-spacing:.07em;color:#fff;background:rgba(214,69,61,.92);padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s));display:flex;gap:calc(5*var(--s));align-items:center}
+:where(body[data-page="products"]) .cy-rw-live::before{content:"";width:calc(5*var(--s));height:calc(5*var(--s));border-radius:50%;background:#fff;animation:cyBlink 1.2s steps(2) infinite}
+:where(body[data-page="products"]) .rw-box{position:absolute;border:1.5px solid #fff;border-radius:2px;box-shadow:0 0 0 1px rgba(10,26,43,.3)}
+:where(body[data-page="products"]) .rw-box::after{content:"";position:absolute;inset:-1.5px;border-radius:2px;box-shadow:0 0 0 calc(4*var(--s)) rgba(108,180,242,.28);opacity:0;animation:rwPulse 2.6s ease-in-out infinite;animation-delay:calc(var(--k,0) * .22s)}
+:where(body[data-page="products"]) .rw-box.b{border-color:#6CB4F2}
+:where(body[data-page="products"]) .rw-box.r{border-color:#FF6A5E}
+:where(body[data-page="products"]) .rw-box i{position:absolute;left:-1.5px;bottom:100%;margin-bottom:2px;white-space:nowrap;font-style:normal;background:#2673B5;color:#fff;padding:1px calc(4*var(--s));border-radius:2px}
+:where(body[data-page="products"]) .rw-box.r i{background:#D6453D}
+:where(body[data-page="products"]) .rw-box.below i{bottom:auto;top:100%;margin:2px 0 0}
+@keyframes rwPulse{50%{opacity:1}}
+:where(body[data-page="products"]) .rw-chip{position:absolute;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;background:rgba(255,255,255,.95);color:#0A1A2B;padding:calc(3*var(--s)) calc(6*var(--s));border-radius:calc(3*var(--s));border-left:2px solid #2673B5;box-shadow:0 calc(6*var(--s)) calc(14*var(--s)) calc(-8*var(--s)) rgba(10,26,43,.6)}
+:where(body[data-page="products"]) .rw-chip.top{max-width:72%} /* the top row stops short of the LIVE badge */
+:where(body[data-page="products"]) .rw-chip.r{border-left-color:#D6453D;color:#7A1E19}
+:where(body[data-page="products"]) .rw-chip.d{background:rgba(14,59,102,.94);color:#fff;border-left-color:#6CB4F2}
+:where(body[data-page="products"]) .rw-chip.ok::after{content:" ✓";color:#2673B5;font-weight:700}
+:where(body[data-page="products"]) .rw-dot{position:absolute;width:calc(8*var(--s));height:calc(8*var(--s));margin:calc(-4*var(--s)) 0 0 calc(-4*var(--s));border-radius:50%;background:#6CB4F2;box-shadow:0 0 0 calc(3*var(--s)) rgba(108,180,242,.35)}
+:where(body[data-page="products"]) .rw-dot::after{content:"";position:absolute;inset:calc(-7*var(--s));border-radius:50%;border:2px solid rgba(108,180,242,.5);animation:rwDot 1.8s ease-in-out infinite;animation-delay:calc(var(--k,0) * .25s)}
+@keyframes rwDot{from{transform:scale(.4);opacity:1}to{transform:scale(1);opacity:0}}
+:where(body[data-page="products"]) .rw-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+:where(body[data-page="products"]) .rw-bar{position:absolute;left:8%;right:8%;bottom:calc(26*var(--s));height:calc(3*var(--s));background:rgba(255,255,255,.35);border-radius:calc(3*var(--s))}
+/* the playhead box spans the bar and slides by its own width (transform only); the dot sits at its left edge */
+:where(body[data-page="products"]) .rw-bar b{position:absolute;top:calc(-3*var(--s));left:0;width:100%;height:calc(9*var(--s));margin-left:calc(-4.5*var(--s));animation:rwHead 8s linear infinite}
+:where(body[data-page="products"]) .rw-bar b::before{content:"";position:absolute;left:0;top:0;width:calc(9*var(--s));height:100%;border-radius:50%;background:#fff}
+:where(body[data-page="products"]) .rw-bar i{position:absolute;top:-2px;width:2px;height:calc(7*var(--s));background:#FF6A5E}
+@keyframes rwHead{from{transform:translateX(0)}to{transform:translateX(100%)}}
+@media (max-width:768px){:where(body[data-page="products"]) .cy-rw{aspect-ratio:16/6.2;margin-bottom:calc(10*var(--s))}:where(body[data-page="products"]) .rw-chip,:where(body[data-page="products"]) .rw-box i{display:none}}
+@media (prefers-reduced-motion:reduce){:where(body[data-page="products"]) .rw-box::after,:where(body[data-page="products"]) .rw-dot::after,:where(body[data-page="products"]) .rw-bar b{animation:none}}
+
+/* ---------- v8: domain selector, in-stage switcher, module host, swap mask, "work together", index ---------- */
+:where(body[data-page="products"]) .cy-dgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:calc(10*var(--s))}
+:where(body[data-page="products"]) .cy-dbtn{all:unset;box-sizing:border-box;cursor:pointer;display:flex;flex-direction:column;gap:calc(10*var(--s));min-height:calc(96*var(--s));padding:calc(14*var(--s)) calc(14*var(--s)) calc(12*var(--s));border:1px solid var(--line);border-radius:calc(12*var(--s));background:#fff;transition:border-color .2s var(--ease-out),box-shadow .3s var(--ease),transform .3s var(--ease)}
+:where(body[data-page="products"]) .cy-dbtn svg{width:calc(30*var(--s));height:calc(30*var(--s));color:var(--blue);flex:none}
+:where(body[data-page="products"]) .cy-dbtn b{font:650 calc(16*var(--s))/1.15 var(--f-display);color:var(--ink);letter-spacing:-.01em}
+:where(body[data-page="products"]) .cy-dbtn span{font-size:max(12px,calc(13*var(--s)));line-height:1.35;color:var(--muted)}
+:where(body[data-page="products"]) .cy-dbtn:hover{border-color:var(--blue);box-shadow:0 calc(16*var(--s)) calc(36*var(--s)) calc(-28*var(--s)) rgba(14,59,102,.5)}
+:where(body[data-page="products"]) .cy-dbtn:focus-visible{outline:2px solid var(--blue);outline-offset:calc(3*var(--s))}
+:where(body[data-page="products"]) .cy-dbtn[aria-pressed="true"]{border-color:var(--blue);background:var(--blue);box-shadow:0 calc(18*var(--s)) calc(40*var(--s)) calc(-26*var(--s)) rgba(14,59,102,.65)}
+:where(body[data-page="products"]) .cy-dbtn[aria-pressed="true"] b,:where(body[data-page="products"]) .cy-dbtn[aria-pressed="true"] span,:where(body[data-page="products"]) .cy-dbtn[aria-pressed="true"] svg{color:#fff}
+@media (max-width:1024px){:where(body[data-page="products"]) .cy-dgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:480px){:where(body[data-page="products"]) .cy-dgrid{grid-template-columns:repeat(2,minmax(0,1fr))}:where(body[data-page="products"]) .cy-dbtn{min-height:calc(84*var(--s))}:where(body[data-page="products"]) .cy-dbtn span{display:none}}
+
+:where(body[data-page="products"]) .cy-dsw{position:absolute;left:50%;top:calc(18*var(--s));transform:translateX(-50%);z-index:4;display:flex;gap:calc(4*var(--s));padding:calc(4*var(--s));border:1px solid var(--line);border-radius:calc(999*var(--s));background:rgba(255,255,255,.94);box-shadow:0 calc(14*var(--s)) calc(34*var(--s)) calc(-26*var(--s)) rgba(10,26,43,.5);max-width:calc(100% - calc(40*var(--s)));overflow-x:auto;scrollbar-width:none}
+:where(body[data-page="products"]) .cy-dsw::-webkit-scrollbar{display:none}
+:where(body[data-page="products"]) .cy-dsw button{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;min-height:calc(36*var(--s));padding:0 calc(13*var(--s));border-radius:calc(999*var(--s));font:600 max(12px,calc(13.5*var(--s)))/1.3 var(--f-body);font-feature-settings:normal;text-transform:none;color:var(--ink-2);white-space:nowrap;transition:background-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+:where(body[data-page="products"]) .cy-dsw button:active{scale:.96}
+:where(body[data-page="products"]) .cy-dsw button:hover{color:var(--blue)}
+:where(body[data-page="products"]) .cy-dsw button[aria-pressed="true"]{background:var(--blue);color:#fff}
+:where(body[data-page="products"]) .cy-dsw button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+/* the fps readout shows on wide screens only; tablets: the domain switcher stays at the top, under the HUDs */
+:where(body[data-page="products"]) .cy-hud-r .fps{display:none}
+@media (min-width:1440px){:where(body[data-page="products"]) .cy-hud-r .fps{display:inline}}
+@media (min-width:768.02px) and (max-width:1024px){:where(body[data-page="products"]) .cy-dsw button{padding:0 10px}}
+/* the station panel hangs from just under the HUD and always ends above the station rail (never centred into it) */
+@media (min-width:1024.02px){:where(body[data-page="products"]) .cy-panel{top:calc(72*var(--s));transform:none;max-height:calc(100% - calc(72*var(--s)) - calc(104*var(--s)))}}
+/* laptops and desktops: the explanation panel hugs the screen edge and stays narrow, so the 3D journey in the middle is never covered */
+@media (min-width:1024.02px){
+  :where(body[data-page="products"]) .cy-stage{--edge:clamp(12px,1.6vw,calc(28*var(--s)));--pw:clamp(280px,22vw,calc(370*var(--s)))}
+  :where(body[data-page="products"]) .cy-panel{right:var(--edge);width:var(--pw);padding:calc(16*var(--s)) calc(16*var(--s)) calc(12*var(--s))}
+}
+@media (min-width:768.02px) and (max-width:1024px){:where(body[data-page="products"]) .cy-dsw{top:136px}:where(body[data-page="products"]) .cy-panel{top:196px;transform:none;max-height:calc(100% - 196px - 96px)}}
+/* landscape phones and other very short landscape windows (≤500px tall): the stage fits the viewport;
+   only the station number, domain switcher, panel and rail stay — the photo and HUD give way */
+@media (orientation:landscape) and (max-height:500px){
+  :where(body[data-page="products"]) .cy-stage{min-height:0}
+  :where(body[data-page="products"]) .cy-stage :is(.cy-rw,.cy-readout,.cy-sample,.cy-tag.dev,.cy-hud-r,.cy-hud-l .eyebrow,.cy-p-extra,.cy-p-more,.cy-ev,.cy-p-name){display:none}
+  :where(body[data-page="products"]) .cy-hud-l{top:10px}
+  :where(body[data-page="products"]) .cy-bignum{font-size:32px}
+  :where(body[data-page="products"]) .cy-dsw{top:10px;left:auto;right:var(--in);transform:none;max-width:calc(100% - 2*var(--in) - 150px)}
+  :where(body[data-page="products"]) .cy-dsw button{min-height:40px}
+  :where(body[data-page="products"]) .cy-panel{top:72px;bottom:auto;transform:none;max-height:calc(100% - 72px - 76px);width:min(420px,52vw);padding:12px 14px}
+  :where(body[data-page="products"]) .cy-p-head{padding-bottom:8px;margin-bottom:8px}
+  :where(body[data-page="products"]) .cy-rail{padding-top:6px}
+  :where(body[data-page="products"]) .cy-rail li.first::before,:where(body[data-page="products"]) .cy-rail button .lbl{display:none}
+  :where(body[data-page="products"]) .cy-rail button{padding-top:10px}
+}
+/* short tablet/laptop windows: the station photo gives way so the panel fits without scrolling */
+@media (min-width:768.02px) and (max-height:820px){:where(body[data-page="products"]) .cy-rw{display:none}}
+/* phones and small tablets: all six domains visible at once, two rows of three (no sideways scrolling) */
+@media (max-width:768px){
+  :where(body[data-page="products"]) .cy-dsw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px;top:calc(12*var(--s));left:calc(12*var(--s));right:calc(12*var(--s));transform:none;max-width:none;overflow:visible;border-radius:18px;background:rgba(255,255,255,.97)}
+  :where(body[data-page="products"]) .cy-dsw button{justify-content:center;min-height:36px;line-height:36px;padding:0 6px;border-radius:999px;border:1px solid var(--line);background:linear-gradient(180deg,#fff,var(--mist));color:var(--blue-deep);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;transition:background-color var(--dur-2) var(--ease-out),border-color var(--dur-2) var(--ease-out),box-shadow var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+  :where(body[data-page="products"]) .cy-dsw button:hover{border-color:var(--blue-soft)}
+  :where(body[data-page="products"]) .cy-dsw button[aria-pressed="true"]{background:linear-gradient(135deg,var(--blue),var(--blue-deep));border-color:transparent;color:#fff;box-shadow:0 8px 18px -10px rgba(14,59,102,.7),inset 0 1px 0 rgba(255,255,255,.2)}
+}
+
+:where(body[data-page="products"]) .cy-dom{position:absolute;inset:0;z-index:0;overflow:hidden}
+:where(body[data-page="products"]) .cy-dom[hidden]{display:none}
+:where(body[data-page="products"]) .cy-dom canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+:where(body[data-page="products"]) .cy-dom-l{position:absolute;inset:0}:where(body[data-page="products"]) .cy-dom-l[hidden]{display:none}
+:where(body[data-page="products"]) .cy-swap::after{content:"";position:absolute;left:0;top:50%;width:30%;height:2px;margin-top:-1px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transform:translateX(-100%)}
+:where(body[data-page="products"]) .cy-swap.is-busy::after{opacity:.55;animation:cySwapBusy 1s linear infinite}
+@keyframes cySwapBusy{to{transform:translateX(340%)}}
+:where(body[data-page="products"]) .cy-stage.is-mod .cy-gl,:where(body[data-page="products"]) .cy-stage.is-mod .cy-labels{display:none}
+:where(body[data-page="products"]) .cy-swap{position:absolute;inset:0;z-index:6;background:#fff;pointer-events:none;clip-path:inset(0 0 100% 0)}
+:where(body[data-page="products"]) .cy-soon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:min(calc(420*var(--s)),calc(100% - calc(40*var(--s))));text-align:center;padding:calc(24*var(--s)) calc(26*var(--s));border:1px dashed var(--line-2);border-radius:calc(14*var(--s));background:rgba(255,255,255,.95)}
+:where(body[data-page="products"]) .cy-soon[hidden]{display:none}
+:where(body[data-page="products"]) .cy-soon b{display:block;font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);margin-bottom:calc(6*var(--s))}
+:where(body[data-page="products"]) .cy-soon p{margin:0;color:var(--ink-2);font-size:var(--fs-body);line-height:var(--lh-body)}
+
+
+:where(body[data-page="products"]) .cy-idx6{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g);margin-top:var(--gap-c)}
+:where(body[data-page="products"]) .cy-idx6 .st,:where(body[data-page="products"]) .cy-idx6 .cy-req{grid-column:1;justify-self:start;margin-top:calc(8*var(--s))}
+:where(body[data-page="products"]) .cy-idx6 .cy-item{position:relative}
+:where(body[data-page="products"]) .cy-go{grid-column:1;color:inherit;text-decoration:none}
+:where(body[data-page="products"]) .cy-go::after{content:"";position:absolute;inset:0;border-radius:inherit}
+:where(body[data-page="products"]) .cy-go:focus-visible{outline:none}
+:where(body[data-page="products"]) .cy-item:has(.cy-go:focus-visible){outline:2px solid var(--blue);outline-offset:3px}
+:where(body[data-page="products"]) .cy-item .cy-meta{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:calc(10*var(--s));margin-top:calc(12*var(--s));padding-top:calc(11*var(--s));border-top:1px solid var(--line)}
+/* status: a quiet pulsing dot and a mono label, no filled box */
+:where(body[data-page="products"]) .cy-item .cy-live{display:inline-flex;align-items:center;gap:calc(7*var(--s));font:500 max(11px,calc(11.5*var(--s)))/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep)}
+:where(body[data-page="products"]) .cy-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 0 rgba(38,115,181,.45);animation:cyLive 2s ease-out infinite}
+@keyframes cyLive{0%{box-shadow:0 0 0 0 rgba(38,115,181,.45)}70%,100%{box-shadow:0 0 0 7px rgba(38,115,181,0)}}
+/* demo video: a round play button with a soft halo, label and "coming soon" stacked */
+:where(body[data-page="products"]) .cy-yt{position:relative;z-index:1;display:inline-flex;align-items:center;gap:calc(9*var(--s));text-decoration:none;color:var(--ink);border-radius:999px;padding:2px 4px 2px 2px}
+:where(body[data-page="products"]) .cy-item .cy-play{flex:none;display:grid;place-items:center;width:calc(28*var(--s));height:calc(28*var(--s));min-width:26px;min-height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-deep));box-shadow:0 6px 14px -6px rgba(14,59,102,.6),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+:where(body[data-page="products"]) .cy-play svg{width:42%;height:42%;fill:#fff;margin-left:1px}
+:where(body[data-page="products"]) .cy-item .cy-yt-t{font:500 max(11px,calc(11.5*var(--s)))/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--blue-deep)}
+:where(body[data-page="products"]) .cy-yt:active .cy-play{scale:.92}
+:where(body[data-page="products"]) .cy-yt:hover .cy-play{transform:scale(1.08);box-shadow:0 0 0 5px rgba(38,115,181,.14),0 8px 18px -6px rgba(14,59,102,.6)}
+:where(body[data-page="products"]) .cy-yt:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){:where(body[data-page="products"]) .cy-live::before{animation:none}:where(body[data-page="products"]) .cy-play{transition:none}}
+:where(body[data-page="products"]) .cy-item.plain{cursor:default}
+:where(body[data-page="products"]) .cy-item.plain:hover,:where(body[data-page="products"]) .cy-item.plain:active{transform:none;box-shadow:none;border-color:var(--line)}
+@media (max-width:1024px){:where(body[data-page="products"]) .cy-idx6{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){:where(body[data-page="products"]) .cy-idx6{grid-template-columns:1fr}}
+
+:where(body[data-page="products"]) #cyHudEye{max-width:min(28vw,calc(320*var(--s)));white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(body[data-page="products"]) .cy-ev{display:grid;grid-template-columns:auto 1fr;gap:2px calc(9*var(--s));align-items:center;margin:calc(14*var(--s)) 0 0;padding:calc(9*var(--s)) calc(10*var(--s));border:1px solid #F1C9C5;border-left:calc(3*var(--s)) solid var(--alert);border-radius:calc(7*var(--s));background:#FDF3F2}
+:where(body[data-page="products"]) .cy-ev i{grid-row:1/3;width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;background:var(--alert);animation:cyBlink 1.2s steps(2) infinite}
+:where(body[data-page="products"]) .cy-ev b{font:600 max(12px,calc(12.5*var(--s)))/1.25 var(--f-body);color:#7A1E19}
+:where(body[data-page="products"]) .cy-ev span{font:500 max(12px,calc(12*var(--s)))/1.35 var(--f-mono);color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){:where(body[data-page="products"]) .cy-ev i{animation:none}}
+/* animated icons: strokes draw in on hover or when a domain is picked, and the picked one breathes */
+:where(body[data-page="products"]) .cy-dbtn svg path{stroke-dasharray:90;stroke-dashoffset:0}
+:where(body[data-page="products"]) .cy-dbtn:hover svg path,:where(body[data-page="products"]) .cy-dbtn[aria-pressed="true"] svg path{animation:cyDraw .9s var(--ease) both}
+:where(body[data-page="products"]) .cy-dbtn[aria-pressed="true"] svg{animation:cyBreathe 2.4s ease-in-out .9s infinite}
+@keyframes cyDraw{from{stroke-dashoffset:90}to{stroke-dashoffset:0}}
+@keyframes cyBreathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+:where(body[data-page="products"]) .cy-item b::before{content:"";display:inline-block;width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;background:var(--blue);margin-right:calc(8*var(--s));vertical-align:2px}
+/* the ping ring: a disc over the dot that scales and fades (transform + opacity), under the text */
+:where(body[data-page="products"]) .cy-item b{position:relative;isolation:isolate}
+:where(body[data-page="products"]) .cy-item b::after{content:"";position:absolute;z-index:-1;left:0;top:calc(1em - 2px - 8*var(--s));width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;background:var(--blue);opacity:0;pointer-events:none;animation:cyPing 2.2s ease-out infinite}
+@keyframes cyPing{0%{transform:scale(1);opacity:.45}70%,100%{transform:scale(2.75);opacity:0}}
+:where(body[data-page="products"]) .cy-idx6 .st,:where(body[data-page="products"]) .cy-item .st{color:#fff}
+@media (prefers-reduced-motion:reduce){:where(body[data-page="products"]) .cy-dbtn svg path,:where(body[data-page="products"]) .cy-dbtn svg,:where(body[data-page="products"]) .cy-item b::before,:where(body[data-page="products"]) .cy-item b::after{animation:none!important}}
+:where(body[data-page="products"]) .cy-item .ix{grid-column:1;grid-row:1;color:var(--blue);display:block;width:calc(26*var(--s));height:calc(26*var(--s));margin-bottom:calc(4*var(--s))}
+/* phones: fixed bands so overlays never stack: HUD + domain switcher on top, the station panel above the rail;
+   the station photo gives way (the 3D scene already shows the place), so the panel text fits unclipped */
+@media (max-width:768px){
+  :where(body[data-page="products"]) .cy-rw{display:none}
+  :where(body[data-page="products"]) .cy-rail ol{gap:2px}
+  :where(body[data-page="products"]) .cy-rail li.first:not(:first-child){padding-left:0}
+  :where(body[data-page="products"]) .cy-rail button{min-width:44px}
+}
+/* the smallest phones: seven 44px slots don't fit, so they share the width evenly (no sideways scrolling) */
+@media (max-width:360px){:where(body[data-page="products"]) .cy-rail button{min-width:0;letter-spacing:0}:where(body[data-page="products"]) .cy-rail li{min-width:0}}
+/* short phones: the panel gets the room */
+@media (max-width:768px) and (max-height:700px){
+  :where(body[data-page="products"]) .cy-panel{max-height:calc(100% - 150px - 70px)}
+}
+:where(body[data-page="products"]) .cy-lead{margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2);max-width:34em}
+/* touch: 44px tap targets */
+@media (pointer:coarse),(max-width:1024px){:where(body[data-page="products"]) .cy-dsw button{min-height:44px}}

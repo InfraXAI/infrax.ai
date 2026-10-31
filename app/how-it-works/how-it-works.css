@@ -1,0 +1,116 @@
+/* PORT: every selector is wrapped as :where(body[data-page="how-it-works"]) <selector> (no added specificity), so these rules never reach other pages after client-side navigation: Home also uses .hw-* classes. */
+/* How it works page styles: the inline <style> of site/src/how-it-works.html, verbatim apart from the scoping above. */
+/* How it works — prefix hw-. Three scenes: hero, pinned layer stack, federation ring, alert rail. */
+:where(body[data-page="how-it-works"]) .hw-hero{padding-block:clamp(calc(56*var(--s)),8vw,calc(104*var(--s))) 0;overflow-x:clip}
+:where(body[data-page="how-it-works"]) .hw-hero .h-hero{max-width:13em}
+
+/* pinned stack */
+:where(body[data-page="how-it-works"]) .hw-pin{position:relative;overflow-x:clip}
+/* desktop: the stack holds still while 220svh of scroll drives it - CSS sticky, not a ScrollTrigger pin (a pin moves the section
+   into a spacer and back, which jumped the layout) */
+@media (min-width:1024.02px){:where(body[data-page="how-it-works"]) .hw-pin .wrap{position:sticky;top:var(--nav-h)}:where(body[data-page="how-it-works"]) .hw-pin::after{content:"";display:block;height:110svh}}
+/* the pin starts under the nav (see JS), so the stage is one screen minus the nav, content top-aligned: the subheading sits one
+   section gap below the hero line instead of floating in a centred 100vh band */
+:where(body[data-page="how-it-works"]) .hw-pin .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),4vw,calc(64*var(--s)));align-items:start;min-height:calc(100svh - var(--nav-h));padding-block:clamp(48px,6svh,64px) 24px}
+:where(body[data-page="how-it-works"]) .hw-steps{list-style:none;margin:calc(22*var(--s)) 0 0;padding:0;display:grid;gap:calc(10*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step{position:relative;display:grid;grid-template-columns:calc(40*var(--s)) minmax(0,1fr);gap:calc(14*var(--s));padding:calc(13*var(--s)) calc(14*var(--s)) calc(13*var(--s)) calc(12*var(--s));border:1px solid var(--line);border-radius:calc(14*var(--s));background:rgba(255,255,255,.86);transition:border-color .4s var(--ease-out),background-color .4s var(--ease-out),box-shadow .4s var(--ease-out)}
+:where(body[data-page="how-it-works"]) .hw-step .ix{width:calc(40*var(--s));height:calc(40*var(--s));border-radius:calc(10*var(--s));display:grid;place-items:center;background:var(--mist);color:var(--blue);transition:background .4s,color .4s}
+:where(body[data-page="how-it-works"]) .hw-step .ix svg{width:calc(20*var(--s));height:calc(20*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step h3{font:600 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.01em}
+:where(body[data-page="how-it-works"]) .hw-step p{margin:4px 0 0;font-size:var(--fs-card);line-height:1.5;color:var(--ink-2)}
+:where(body[data-page="how-it-works"]) .hw-step .tags{display:flex;flex-wrap:wrap;gap:calc(6*var(--s));margin-top:calc(8*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step .tags .lab{background:none;color:var(--muted);padding-left:0}
+:where(body[data-page="how-it-works"]) .hw-step .tags span{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;color:var(--blue-mid);background:var(--mist);padding:calc(6*var(--s)) calc(8*var(--s));border-radius:calc(5*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step .photo{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(12*var(--s));align-items:center;margin-top:calc(9*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step .photo img{width:100%;max-width:320px;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:calc(8*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step .photo small{font-size:max(12px,calc(12.5*var(--s)));line-height:1.45;color:var(--muted)}
+:where(body[data-page="how-it-works"]) .hw-step[role="button"]{cursor:pointer}
+:where(body[data-page="how-it-works"]) .hw-step:not(.on):hover{border-color:var(--blue-soft);background:#fff}
+:where(body[data-page="how-it-works"]) .hw-step:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+:where(body[data-page="how-it-works"]) .hw-step.on{border-color:var(--blue);background:#fff;box-shadow:0 calc(18*var(--s)) calc(40*var(--s)) calc(-28*var(--s)) rgba(14,59,102,.5)}
+:where(body[data-page="how-it-works"]) .hw-step.on .ix{background:var(--blue);color:#fff}
+:where(body[data-page="how-it-works"]) .hw-stage{position:relative;height:min(72svh,calc(100svh - var(--nav-h) - 88px),calc(640*var(--s)));min-height:calc(420*var(--s));overflow:hidden;border-radius:calc(20*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+:where(body[data-page="how-it-works"]) .hw-lbl{position:absolute;left:0;top:0;pointer-events:none;white-space:nowrap;font:500 max(12px,calc(12*var(--s)))/1.2 var(--f-mono);letter-spacing:.03em;color:var(--ink);background:rgba(255,255,255,.94);border:1px solid var(--line);padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(6*var(--s));opacity:0;transition:opacity .35s;will-change:transform}
+:where(body[data-page="how-it-works"]) .hw-lbl b{color:var(--blue);font-weight:500;margin-right:calc(6*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-lbl.layer{font:600 max(12px,calc(13*var(--s)))/1.2 var(--f-body);letter-spacing:0;padding:calc(8*var(--s)) calc(11*var(--s));border-color:var(--blue)}
+:where(body[data-page="how-it-works"]) .hw-lbl.layer small{display:block;font:500 max(12px,calc(12*var(--s)))/1.3 var(--f-mono);color:var(--muted);margin-top:calc(3*var(--s));letter-spacing:.02em}
+:where(body[data-page="how-it-works"]) .hw-progress{position:absolute;left:calc(16*var(--s));bottom:calc(14*var(--s));display:flex;align-items:center;gap:calc(10*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:var(--muted);letter-spacing:.04em}
+:where(body[data-page="how-it-works"]) .hw-progress i{display:block;width:calc(120*var(--s));height:2px;background:var(--line);position:relative;overflow:hidden}
+:where(body[data-page="how-it-works"]) .hw-progress i::after{content:"";position:absolute;inset:0;background:var(--blue);transform:scaleX(var(--p,0));transform-origin:left}
+:where(body[data-page="how-it-works"]) .hw-nogl{display:none;position:absolute;inset:0;place-items:center}
+:where(body[data-page="how-it-works"]) .no-gl .hw-nogl{display:grid}
+:where(body[data-page="how-it-works"]) .no-gl .hw-stage canvas{display:none}
+
+/* federation */
+:where(body[data-page="how-it-works"]) .hw-fed{overflow-x:clip}
+:where(body[data-page="how-it-works"]) .hw-fed-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:calc(24*var(--s));align-items:end}
+:where(body[data-page="how-it-works"]) .hw-fed-grid{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:clamp(calc(20*var(--s)),3vw,calc(40*var(--s)));margin-top:var(--gap-c);align-items:stretch}
+:where(body[data-page="how-it-works"]) .hw-fed-stage{height:min(64svh,calc(560*var(--s)));min-height:calc(380*var(--s));background:#fff}
+:where(body[data-page="how-it-works"]) .hw-fed-side{display:flex;flex-direction:column;gap:calc(14*var(--s));min-width:0}
+:where(body[data-page="how-it-works"]) .hw-fed-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(8*var(--s));list-style:none;margin:0;padding:0}
+:where(body[data-page="how-it-works"]) .hw-fed-list button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:calc(10*var(--s));width:100%;min-height:calc(46*var(--s));padding:calc(10*var(--s)) calc(12*var(--s));border:1px solid var(--line);border-radius:calc(10*var(--s));font:500 max(12px,calc(14*var(--s)))/1.2 var(--f-body);color:var(--ink-2);background:#fff;transition:border-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),background-color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+:where(body[data-page="how-it-works"]) .hw-fed-list button i{width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;border:1.5px solid var(--blue);flex:none;transition:background .25s}
+:where(body[data-page="how-it-works"]) .hw-fed-list button:hover{border-color:var(--blue-soft)}
+:where(body[data-page="how-it-works"]) .hw-fed-list button:active{scale:.98}
+:where(body[data-page="how-it-works"]) .hw-fed-list button[aria-pressed="true"]{border-color:var(--blue);color:var(--ink);background:var(--mist)}
+:where(body[data-page="how-it-works"]) .hw-fed-list button[aria-pressed="true"] i{background:var(--blue)}
+:where(body[data-page="how-it-works"]) .hw-fed-list button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+:where(body[data-page="how-it-works"]) .hw-card{flex:1;border:1px solid var(--line);border-radius:14px;background:#fff;padding:var(--pad-card);min-height:240px}
+:where(body[data-page="how-it-works"]) .hw-card h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em}
+:where(body[data-page="how-it-works"]) .hw-card .sub{font:500 var(--fs-small)/1.45 var(--f-mono);color:var(--muted);margin-top:calc(6*var(--s));letter-spacing:.03em}
+:where(body[data-page="how-it-works"]) .hw-card h4{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:calc(18*var(--s)) 0 calc(10*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-card ul{list-style:none;margin:0;padding:0;display:grid;gap:calc(8*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-card li{display:flex;justify-content:space-between;gap:calc(10*var(--s));align-items:flex-start;font-size:max(12px,calc(14*var(--s)));line-height:1.45;color:var(--ink-2);padding-top:calc(8*var(--s));border-top:1px solid var(--line)}
+:where(body[data-page="how-it-works"]) .hw-card li .st{margin-top:1px}
+:where(body[data-page="how-it-works"]) .hw-flbl{position:absolute;left:0;top:0;pointer-events:none;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);color:var(--ink);background:rgba(255,255,255,.92);padding:calc(6*var(--s)) calc(9*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line);white-space:nowrap;transition:border-color .25s,color .25s;will-change:transform}
+:where(body[data-page="how-it-works"]) .hw-flbl.on{border-color:var(--blue);color:var(--blue)}
+:where(body[data-page="how-it-works"]) .hw-flbl.hub{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+:where(body[data-page="how-it-works"]) .hw-link{position:absolute;right:calc(14*var(--s));top:calc(14*var(--s));display:inline-flex;align-items:center;gap:calc(8*var(--s));font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;color:var(--blue-mid);background:#fff;border:1px solid var(--line);padding:calc(8*var(--s)) calc(10*var(--s));border-radius:calc(999*var(--s));opacity:0;transition:opacity .35s,border-color .3s,color .3s}
+:where(body[data-page="how-it-works"]) .hw-link::before{content:"";width:calc(8*var(--s));height:calc(8*var(--s));border-radius:50%;background:var(--blue)}
+:where(body[data-page="how-it-works"]) .hw-link.down{color:var(--ink);border-color:var(--line-2)}
+:where(body[data-page="how-it-works"]) .hw-link.down::before{background:#fff;border:1.5px dashed var(--muted)}
+:where(body[data-page="how-it-works"]) .hw-link.sync::before{background:var(--blue);box-shadow:0 0 0 calc(5*var(--s)) rgba(38,115,181,.18)}
+:where(body[data-page="how-it-works"]) .no-gl .hw-link{display:none}
+
+@media (max-width:1024px){
+  :where(body[data-page="how-it-works"]) .hw-pin .wrap{grid-template-columns:1fr;min-height:0;padding-block:calc(24*var(--s)) calc(48*var(--s))}
+  :where(body[data-page="how-it-works"]) .hw-stage{height:calc(400*var(--s));min-height:0;order:-1}
+  :where(body[data-page="how-it-works"]) .hw-fed-head,:where(body[data-page="how-it-works"]) .hw-fed-grid{grid-template-columns:1fr}
+  :where(body[data-page="how-it-works"]) .hw-fed-stage{height:calc(380*var(--s));min-height:0}
+  :where(body[data-page="how-it-works"]) .hw-card{min-height:0}
+}
+@media (max-width:768px){
+  :where(body[data-page="how-it-works"]) .hw-lbl{font-size:calc(12*var(--s));padding:calc(5*var(--s)) calc(7*var(--s))}
+  :where(body[data-page="how-it-works"]) .hw-lbl.layer{font-size:calc(12*var(--s))}
+}
+/* small phones: the step labels wrap rather than run past the screen edge */
+@media (max-width:480px){:where(body[data-page="how-it-works"]) .hw-lbl.layer{white-space:normal;max-width:calc(100vw - 2*var(--gut) - 16px)}}
+:where(body[data-page="how-it-works"]) .hw-card .mods{font:500 max(12px,calc(12*var(--s)))/1.45 var(--f-mono);color:var(--blue-mid);margin:calc(6*var(--s)) 0 calc(4*var(--s))}
+/* distributed analytics */
+:where(body[data-page="how-it-works"]) .hw-dist{overflow-x:clip}
+:where(body[data-page="how-it-works"]) .hw-dist-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),4vw,calc(56*var(--s)));align-items:center}
+:where(body[data-page="how-it-works"]) .hw-dist ul.pts{list-style:none;margin:calc(22*var(--s)) 0 0;padding:0;display:grid;gap:calc(12*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-dist ul.pts li{display:grid;grid-template-columns:calc(28*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
+:where(body[data-page="how-it-works"]) .hw-dist ul.pts li i{width:calc(28*var(--s));height:calc(28*var(--s));border-radius:calc(8*var(--s));background:var(--mist);display:grid;place-items:center;color:var(--blue);font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);font-style:normal}
+:where(body[data-page="how-it-works"]) .hw-dist ul.pts b{color:var(--ink);font-weight:600}
+:where(body[data-page="how-it-works"]) .hw-dist-fig{max-width:780px;margin-inline:auto;position:relative;border:1px solid var(--line);border-radius:calc(20*var(--s));background:#fff;padding:calc(12*var(--s));min-width:0}
+:where(body[data-page="how-it-works"]) .hw-dist-fig svg{display:block;width:100%;height:auto}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(10*var(--s));padding:calc(8*var(--s)) calc(6*var(--s)) 2px}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl small{font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;gap:calc(8*var(--s));min-height:calc(40*var(--s));padding:0 calc(14*var(--s));border-radius:calc(999*var(--s));border:1px solid var(--line-2);font:600 max(12px,calc(13*var(--s)))/1 var(--f-body);color:var(--ink)}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl .btns{display:flex;flex-wrap:wrap;gap:calc(8*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button[disabled]{opacity:.45;cursor:default;pointer-events:none}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button[hidden]{display:none}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button{transition:border-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button:hover{border-color:var(--blue);color:var(--blue)}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button:active{scale:.96}
+:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media (max-width:1024px){ :where(body[data-page="how-it-works"]) .hw-dist-grid{grid-template-columns:1fr} }
+/* touch: 44px tap targets */
+@media (pointer:coarse),(max-width:1024px){:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button,:where(body[data-page="how-it-works"]) .hw-fed-list button{min-height:44px}}
+/* v17 calmer visuals */
+@media (min-width:480.02px){:where(body[data-page="how-it-works"]) .hw-stage{height:min(58svh,calc(100svh - var(--nav-h) - 120px),540px);min-height:380px}:where(body[data-page="how-it-works"]) .hw-fed-stage{height:min(52svh,460px);min-height:420px}}
+/* two columns: the federation diagram fills the full height of the site list and card beside it (no empty band under it) */
+@media (min-width:1024.02px){:where(body[data-page="how-it-works"]) .hw-fed-grid .hw-fed-stage{height:auto;min-height:520px;align-self:stretch}}

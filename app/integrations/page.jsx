@@ -1,8 +1,13 @@
-// TODO(page agent): port site/src/integrations.html here, following the Services pattern (see README.md).
-// Placeholder: renders the shared shell plus a heading so the route builds.
+// /integrations: port of site/src/integrations.html. Markup in components/integrations/*, page CSS in ./integrations.css,
+// page script in lib/pages/integrations.js (run by IntegrationsScript).
+import './integrations.css';
 import { pageMetadata } from '@/lib/seo';
 import JsonLd from '@/components/site/JsonLd';
-import PageRuntime from '@/components/site/PageRuntime';
+import IntegrationsHero from '@/components/integrations/IntegrationsHero';
+import IntegrationsHub from '@/components/integrations/IntegrationsHub';
+import IntegrationsExchange from '@/components/integrations/IntegrationsExchange';
+import IntegrationsNext from '@/components/integrations/IntegrationsNext';
+import IntegrationsScript from '@/components/integrations/IntegrationsScript';
 
 export const metadata = pageMetadata('integrations');
 
@@ -10,8 +15,11 @@ export default function IntegrationsPage() {
   return (
     <>
       <JsonLd page="integrations" />
-      <section className="scene"><div className="wrap"><h1 className="h-hero">Integrations</h1></div></section>
-      <PageRuntime page="integrations" />
+      <IntegrationsHero />
+      <IntegrationsHub />
+      <IntegrationsExchange />
+      <IntegrationsNext />
+      <IntegrationsScript />
     </>
   );
 }

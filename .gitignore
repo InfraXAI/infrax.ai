@@ -4,3 +4,6 @@ node_modules/
 .env.local
 .env*.local
 *.log
+
+# per-page build dirs (NEXT_DIST_DIR)
+/.next-*/
