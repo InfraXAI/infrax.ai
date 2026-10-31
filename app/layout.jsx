@@ -19,7 +19,7 @@ const WAVE_IN = 'try{if(sessionStorage.getItem("infrax-wave")==="1"&&!matchMedia
   + 'document.documentElement.classList.add("wave-in")}catch(e){}';
 // body[data-page] drives page-level CSS (inner pages use a calmer type scale): set it before first paint.
 // The runtime keeps it in sync on client-side navigation.
-const DATA_PAGE = `(function(){var m=${JSON.stringify(PAGES)},p=location.pathname;while(p.length>1&&p.slice(-1)==="/")p=p.slice(0,-1);if(m[p])document.body.setAttribute("data-page",m[p])})()`;
+const DATA_PAGE =`(function(){var m=${JSON.stringify(PAGES)},p=location.pathname;while(p.length>1&&p.slice(-1)==="/")p=p.slice(0,-1);if(m[p])document.body.setAttribute("data-page",m[p])})()`;
 
 export default function RootLayout({ children }) {
   return (

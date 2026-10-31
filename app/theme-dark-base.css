@@ -1,0 +1,67 @@
+/* Dark theme, hand-written part: html[data-theme="dark"] is set before first paint (app/layout.jsx THEME) and by the
+   nav's theme button (lib/site-runtime.js). app/theme-dark.css (generated) maps the hard-coded light surfaces. */
+
+/* ---------- tokens ---------- */
+html[data-theme="dark"]{color-scheme:dark;
+  --paper:#0F1B29; --surface:#101D2C; --surface-2:#152538; --mist:#13243A; --wash:#163049;
+  --ink:#E6EEF7; --ink-2:#B5C4D4; --muted:#8FA1B4; --line:#213347; --line-2:#2C4259;
+  /* brand blue a step lighter so it reads as text on dark; navy and mid-blue become light accents for text */
+  --blue:#2A76B8; --blue-text:#7DB8EA; --blue-mid:#7DB8EA; --blue-deep:#A9D0F2; --blue-soft:#5A9FD4;
+  /* --blue fills (white text on it: 4.8:1); --blue-text is the blue for text on navy (the generated rules switch to it) */
+  --sh-1:0 1px 2px rgba(0,0,0,.35); --sh-2:0 1px 2px rgba(0,0,0,.3),0 14px 30px -16px rgba(0,0,0,.6); --sh-3:0 2px 6px rgba(0,0,0,.3),0 28px 60px -24px rgba(0,0,0,.7);
+  --sh-card:0 0 0 1px rgba(140,180,220,.08),0 1px 2px rgba(0,0,0,.3),0 16px 34px -20px rgba(0,0,0,.6);
+  --sh-card-h:0 0 0 1px rgba(140,180,220,.16),0 2px 4px rgba(0,0,0,.3),0 26px 52px -24px rgba(0,0,0,.7);
+  --sh-rest:0 1px 2px rgba(0,0,0,.3),0 18px 36px -24px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.04)}
+/* surfaces that are navy by design keep the original navy and blues (their text is already light) */
+html[data-theme="dark"] :is(.skip,.dp-hot.on,.dm-side,.hx-lb.cc,.hm-demo-side,.cy-det b,.cy-tag.state,.cy-tag.count,.cy-dsw button[aria-pressed="true"],.cy-item .cy-play,.btn-primary){
+  --blue-deep:#0E3B66; --blue-mid:#1B5A94; --blue:#2673B5; --ink:#0A1A2B}
+html[data-theme="dark"] .skip{color:#fff}
+
+/* ---------- the page: deep navy, lit from above, a fine grid ---------- */
+html[data-theme="dark"]{background:linear-gradient(180deg,#0A1521 0,#0C1926 45%,#09131D 100%) #0B1724}
+html[data-theme="dark"] body::before{background:#0B1724}
+html[data-theme="dark"] .site-grid::before{background:
+  radial-gradient(62vw 46vh at 50% -12vh,rgba(58,139,210,.26),rgba(58,139,210,0) 72%),
+  radial-gradient(46vw 60vh at 104% 8vh,rgba(90,180,234,.14),rgba(90,180,234,0) 70%),
+  radial-gradient(40vw 60vh at -6% 30vh,rgba(38,115,181,.12),rgba(38,115,181,0) 70%),
+  radial-gradient(54vw 50vh at 96% 108vh,rgba(90,180,234,.08),rgba(90,180,234,0) 70%)}
+html[data-theme="dark"] .site-grid::after{background-image:linear-gradient(rgba(150,195,240,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(150,195,240,.06) 1px,transparent 1px)}
+
+/* ---------- logo: navy wordmark turns light, the blue X keeps its hue ---------- */
+html[data-theme="dark"] :is(.brand,.foot-brand) img{filter:invert(1) hue-rotate(180deg) brightness(1.1)}
+
+/* ---------- photographs: a light hairline instead of a dark one ---------- */
+html[data-theme="dark"] :where(main) img:not([src$=".svg"]){outline-color:rgba(255,255,255,.08)}
+
+/* ---------- screens that draw dark text on their own light canvas stay light (a lit monitor on a dark desk) ---------- */
+html[data-theme="dark"] :where(body[data-page="analytics"]) .an-viz{background:#EEF3F8}
+html[data-theme="dark"] :where(body[data-page="how-it-works"]) .hw-dist-fig{background:#fff;color:#0A1A2B}
+/* inside that light screen the light-theme tokens apply again */
+html[data-theme="dark"] :where(body[data-page="how-it-works"]) .hw-dist-fig{--ink:#0A1A2B;--ink-2:#2B3E52;--muted:#5B6E82;--line:#DCE5EE;--line-2:#C5D4E2;--paper:#fff;--surface:#fff;--surface-2:#F2F7FC;--mist:#F2F7FC;--blue:#2673B5;--blue-text:#2673B5;--blue-mid:#1B5A94;--blue-deep:#0E3B66}
+
+/* ---------- small light dots on dark chips keep their contrast ---------- */
+html[data-theme="dark"] .st-live::before{background:currentColor}
+
+/* ---------- theme button (nav) ---------- */
+.theme-toggle{all:unset;box-sizing:border-box;cursor:pointer;display:inline-grid;place-items:center;width:44px;height:44px;border-radius:50%;color:var(--ink-2);
+  border:1px solid var(--line-2);background:rgba(255,255,255,.7);transition:color .15s ease-out,border-color .15s ease-out,background-color .15s ease-out,transform .15s ease-out;flex:none}
+.theme-toggle:hover{color:var(--blue);border-color:var(--blue)}
+.theme-toggle:active{transform:scale(.94)}
+.theme-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.theme-toggle svg{width:18px;height:18px;grid-area:1/1;transition:opacity .2s ease-out,transform .25s cubic-bezier(.2,.8,.2,1)}
+.theme-toggle .tt-moon{opacity:1}
+.theme-toggle .tt-sun{opacity:0;transform:rotate(-60deg) scale(.6)}
+html[data-theme="dark"] .theme-toggle{background:rgba(17,31,47,.7)}
+html[data-theme="dark"] .theme-toggle .tt-moon{opacity:0;transform:rotate(60deg) scale(.6)}
+html[data-theme="dark"] .theme-toggle .tt-sun{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.theme-toggle svg{transition:none}}
+/* the button sits in the nav's call-to-action group, just before "Book a demo"; on tablets and phones, where that group
+   gives way to the menu button, the theme button stays (beside the menu button) */
+.nav-cta{display:flex;align-items:center;gap:calc(10*var(--s))}
+@media (max-width:1024px){.site-nav .nav-cta{display:flex;margin-left:auto}.site-nav .nav-cta>.btn{display:none}}
+/* the home intro draws the logo (navy wordmark) and blue particles on one canvas: same recolour as the nav logo */
+html[data-theme="dark"] #hxPt{filter:invert(1) hue-rotate(180deg)}
+/* two text colours the generator cannot reach (a shared alert token; a rule scoped to the light diagram's section) */
+html[data-theme="dark"] :where(body[data-page="deployment"]) .dp-on.off{color:#F08A82}
+/* products tunnel: the station readout floats over the light 3D road, so in dark it sits on the same dark glass as the panel */
+html[data-theme="dark"] :where(body[data-page="products"]) .cy-tunnel:not(.cy-static) .cy-hud-l{background:rgba(11,23,36,.78);border:1px solid rgba(140,180,220,.14);border-radius:calc(12*var(--s));padding:calc(10*var(--s)) calc(14*var(--s));box-shadow:0 12px 28px -18px rgba(0,0,0,.6)}

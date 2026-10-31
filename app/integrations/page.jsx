@@ -5,6 +5,7 @@ import { pageMetadata } from '@/lib/seo';
 import JsonLd from '@/components/site/JsonLd';
 import IntegrationsHero from '@/components/integrations/IntegrationsHero';
 import IntegrationsHub from '@/components/integrations/IntegrationsHub';
+import IntegrationsCatalogue from '@/components/integrations/IntegrationsCatalogue';
 import IntegrationsExchange from '@/components/integrations/IntegrationsExchange';
 import IntegrationsNext from '@/components/integrations/IntegrationsNext';
 import IntegrationsScript from '@/components/integrations/IntegrationsScript';
@@ -17,6 +18,7 @@ export default function IntegrationsPage() {
       <JsonLd page="integrations" />
       <IntegrationsHero />
       <IntegrationsHub />
+      <IntegrationsCatalogue />
       <IntegrationsExchange />
       <IntegrationsNext />
       <IntegrationsScript />

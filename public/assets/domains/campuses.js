@@ -27,7 +27,7 @@
     host.appendChild(cv);
 
     var scene = new T.Scene();
-    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .0055 : .0042);
+    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .003 : .0023);
     var camera = new T.PerspectiveCamera(MOB ? 62 : 50, 1, .4, 900);
 
     (function env() {

@@ -11,7 +11,7 @@ NEXT_DIST_DIR=.next-products npm run build   # build into your own folder (paral
 npx next start -p 3101                       # start uses the same NEXT_DIST_DIR, so set it there too
 ```
 
-Demo form email: copy `.env.example` to `.env.local` and fill in the SMTP settings.
+Demo form email: copy `.env.example` to `.env.local` and fill in the five Microsoft Graph settings (all required). Tests: `npm test` (mock Graph, no real mail).
 
 ## Layout
 
@@ -23,7 +23,7 @@ app/
   services/page.jsx     /services    (DONE: the reference port)
   services/services.css the page's inline <style>, verbatim
   products|analytics|deployment|how-it-works|integrations/page.jsx   (placeholders, TODO)
-  api/leads/route.js    demo form backend (nodemailer SMTP), template.js = the email
+  api/leads/route.js    demo form backend: lead.js sends two mails via Microsoft Graph, template.js = the mails, route.test.js = tests
 components/
   site/                 SiteNav (client, active state from usePathname), SiteFooter, DemoModal, SiteRuntime,
                         PageRuntime (pages without a script), JsonLd, Arrow

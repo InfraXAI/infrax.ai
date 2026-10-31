@@ -13,8 +13,8 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
    headline and CTAs, so the whole hero fits one screen below the nav (capped at 1000px); on short screens it keeps a
    340px floor and the page scrolls a little instead. Labels and ring text size from the visual (container units). */
 :where(body[data-page="home"]) .hm-hero{--hx-pad:clamp(16px,2.2vw,40px);--hx-fs:var(--fs-display);
-  --hx-copy:calc(2 * 1.06 * var(--hx-fs) + var(--hx-subl,2) * 1.5 * var(--fs-body) + max(44px,calc(48*var(--s))) + clamp(78px,7svh,104px));
-  --hx-vh:clamp(340px,calc(min(100svh - var(--nav-h),calc(1000*var(--s))) - 2 * var(--hx-pad) - var(--hx-copy)),calc(780*var(--s)));
+  --hx-copy:calc(2 * 1.06 * var(--hx-fs) + var(--hx-subl,2) * 1.5 * var(--fs-body) + max(44px,calc(48*var(--s))) + clamp(78px,7svh,calc(104*var(--s))));
+  --hx-vh:clamp(calc(340*var(--s)),calc(min(100svh - var(--nav-h),calc(1000*var(--s))) - 2 * var(--hx-pad) - var(--hx-copy)),calc(780*var(--s)));
   position:relative;overflow-x:clip;padding-block:var(--hx-pad)}
 :where(body[data-page="home"]) .hx{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(min(100svh - var(--nav-h),calc(1000*var(--s))) - 2 * var(--hx-pad))}
 :where(body[data-page="home"]) .hx-vis{position:relative;width:min(100%,calc(var(--hx-vh) * 1.5));aspect-ratio:1.5/1;flex:none;container-type:inline-size}
@@ -72,7 +72,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
   :where(body[data-page="home"]) .hm-h1{max-width:12em}
 }
 @media (max-width:480px){
-  :where(body[data-page="home"]) .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,320px)}
+  :where(body[data-page="home"]) .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,calc(320*var(--s)))}
   :where(body[data-page="home"]) .hx-copy .btn{justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){:where(body[data-page="home"]) .hx-copy>*,:where(body[data-page="home"]) .hx-rings,:where(body[data-page="home"]) .hx-rc{transition:none!important}}
@@ -159,14 +159,15 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .hw-cam{position:absolute;left:calc(8*var(--s));top:calc(8*var(--s));z-index:3;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#fff;padding:calc(4*var(--s)) calc(6*var(--s));border-radius:calc(4*var(--s));background:rgba(5,14,24,.62)}
 :where(body[data-page="home"]) .hw-bx{position:absolute;border:1.5px solid var(--c);border-radius:2px;opacity:0;transform:scale(1.25);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.9,.25,1.15)}
 :where(body[data-page="home"]) .hw-bx.on{opacity:1;transform:scale(1)}
+:where(body[data-page="home"]) .hw-bx.nolbl span{display:none} /* no free spot for this label at this size (home.js labels()) */
 :where(body[data-page="home"]) .hw-bx span{position:absolute;left:-1.5px;bottom:100%;margin-bottom:2px;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#06121d;background:var(--c);padding:2px calc(4*var(--s));border-radius:2px;white-space:nowrap}
 :where(body[data-page="home"]) .hw-bx.rt span{left:auto;right:-1.5px}
 :where(body[data-page="home"]) .hw-bx.lo span{bottom:auto;top:100%;margin:2px 0 0}
 :where(body[data-page="home"]) .hw-bx.al{border-color:#FF4D55;border-width:2px}
-:where(body[data-page="home"]) .hw-bx.al span{background:#FF4D55;color:#fff}
+:where(body[data-page="home"]) .hw-bx.al span{background:#C8323A;color:#fff} /* 5.3:1 with white; the box outline stays bright red */
 :where(body[data-page="home"]) .hw-bx.hid{display:none}
 :where(body[data-page="home"]) .hw-t.alarm{transform:scale(1.1);z-index:6;box-shadow:0 0 0 2px #FF4D55,0 calc(24*var(--s)) calc(48*var(--s)) calc(-12*var(--s)) rgba(0,0,0,.55)}
-:where(body[data-page="home"]) .hw-flag{position:absolute;left:calc(8*var(--s));bottom:calc(8*var(--s));z-index:3;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);color:#fff;background:#E5484D;padding:calc(5*var(--s)) calc(7*var(--s));border-radius:calc(4*var(--s));opacity:0;transform:translateY(calc(6*var(--s)));transition:opacity .3s ease .15s,transform .4s cubic-bezier(.2,.8,.2,1) .15s;white-space:nowrap}
+:where(body[data-page="home"]) .hw-flag{position:absolute;left:calc(8*var(--s));bottom:calc(8*var(--s));z-index:3;font:600 max(12px,calc(12*var(--s)))/1 var(--f-body);color:#fff;background:#C8323A;padding:calc(5*var(--s)) calc(7*var(--s));border-radius:calc(4*var(--s));opacity:0;transform:translateY(calc(6*var(--s)));transition:opacity .3s ease .15s,transform .4s cubic-bezier(.2,.8,.2,1) .15s;white-space:nowrap}
 :where(body[data-page="home"]) .hw-t.alarm .hw-flag{opacity:1;transform:none}
 :where(body[data-page="home"]) .hw-t::after{content:"";position:absolute;inset:0;background:rgba(5,12,20,.3);opacity:0;transition:opacity .4s;pointer-events:none}
 :where(body[data-page="home"]) .hw-t.dim::after{opacity:1}
@@ -187,6 +188,13 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .hm-facts div{display:grid;grid-template-columns:calc(130*var(--s)) minmax(0,1fr);gap:calc(16*var(--s));padding:calc(18*var(--s)) 0;border-bottom:1px solid var(--line)}
 :where(body[data-page="home"]) .hm-facts dt{font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 :where(body[data-page="home"]) .hm-facts dd{margin:0;font-size:var(--fs-body);color:var(--ink-2);line-height:var(--lh-body)}
+/* company copy: the paragraph, the address under it, the four lines of what we do */
+:where(body[data-page="home"]) .hm-facts dd p{margin:0}
+:where(body[data-page="home"]) .hm-facts dd p+p{margin-top:calc(10*var(--s))}
+:where(body[data-page="home"]) .hm-co-list{list-style:none;margin:0 0 calc(6*var(--s));padding:0;display:grid;gap:calc(10*var(--s))}
+:where(body[data-page="home"]) .hm-co-list li{position:relative;padding-left:calc(16*var(--s))}
+:where(body[data-page="home"]) .hm-co-list li::before{content:"";position:absolute;left:0;top:.7em;width:calc(6*var(--s));height:calc(6*var(--s));min-width:5px;min-height:5px;border-radius:50%;background:var(--blue)}
+:where(body[data-page="home"]) .hm-co-list b{font-weight:600;color:var(--ink)}
 
 /* demo: CTA that opens the shared modal (site.js) */
 :where(body[data-page="home"]) .hm-demo-cta{padding:clamp(calc(22*var(--s)),3vw,calc(40*var(--s)));display:flex;flex-direction:column;justify-content:center}
@@ -219,7 +227,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) #hmPgrid .hm-chips .st{padding:calc(5*var(--s)) calc(7*var(--s))}
 :where(body[data-page="home"]) #hmPgrid .link-arrow{margin-top:auto;padding-top:0;min-height:max(36px,calc(36*var(--s)));font-size:max(14px,calc(14.5*var(--s)))}
 :where(body[data-page="home"]) #products .hm-ops{margin-top:calc(18*var(--s));padding:calc(8*var(--s)) calc(14*var(--s));gap:calc(14*var(--s))}
-:where(body[data-page="home"]) #products .hm-ops img{width:clamp(140px,14vw,220px);height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
+:where(body[data-page="home"]) #products .hm-ops img{width:clamp(calc(140*var(--s)),14vw,calc(220*var(--s)));height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:10px}
 :where(body[data-page="home"]) #products .hm-ops h3{font-size:var(--fs-h3);line-height:var(--lh-h3)}
 :where(body[data-page="home"]) #products .hm-ops p{margin-top:calc(2*var(--s));font-size:max(14px,calc(14.5*var(--s)));line-height:1.45}
 :where(body[data-page="home"]) #products .hm-ops .link-arrow{min-height:max(36px,calc(36*var(--s)));font-size:max(14px,calc(14.5*var(--s)))}
@@ -280,7 +288,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
    behind it (GIS map -> cursor opens CAM-07 -> dive to the street -> live camera tile). Scroll-driven: the stage pins for ~2 screens
    (1.3 on phones) and scroll progress drives the choreography; pills, device chips, cards and Replay are real buttons */
 :where(body[data-page="home"]) #main #twin.scene{padding-block:0}
-:where(body[data-page="home"]) .tw-g{--twx:max(var(--gut),calc((100% - var(--col)) / 2 + var(--gut)));--txw:clamp(320px,30vw,560px);position:relative;height:clamp(min(420px,calc(100svh - var(--nav-h))),calc(100svh - var(--nav-h)),980px);overflow:hidden;background:#fff;isolation:isolate;color:#0A1A2B}
+:where(body[data-page="home"]) .tw-g{--twx:max(var(--gut),calc((100% - var(--col)) / 2 + var(--gut)));--txw:clamp(calc(320*var(--s)),30vw,calc(560*var(--s)));position:relative;height:clamp(min(calc(420*var(--s)),calc(100svh - var(--nav-h))),calc(100svh - var(--nav-h)),calc(980*var(--s)));overflow:hidden;background:#fff;isolation:isolate;color:#0A1A2B}
 :where(body[data-page="home"]) .tw-vp{position:absolute;inset:0}
 :where(body[data-page="home"]) .tw-vp .gl{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
 :where(body[data-page="home"]) .tw-vp,:where(body[data-page="home"]) .tw-vp *{pointer-events:none;user-select:none;-webkit-user-select:none}
@@ -326,7 +334,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .tw-g .cur svg{width:22px;height:22px;display:block;filter:drop-shadow(0 2px 3px rgba(5,20,40,.35))}
 :where(body[data-page="home"]) .tw-g .cur.on{opacity:1}
 :where(body[data-page="home"]) .tw-g .rip{position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:2px solid #2673B5;opacity:0}
-:where(body[data-page="home"]) .tw-g .gcard{position:absolute;left:0;top:0;width:236px;padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .3s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}
+:where(body[data-page="home"]) .tw-g .gcard{position:absolute;left:0;top:0;width:calc(236*var(--s));padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .3s ease,transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .3s}
 :where(body[data-page="home"]) .tw-g .gcard.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}
 :where(body[data-page="home"]) .tw-g .gcard .r1{display:flex;align-items:center;gap:8px;font:500 12px/1 var(--f-mono);color:#5B6E82}
 :where(body[data-page="home"]) .tw-g .gcard .r1 i{width:7px;height:7px;border-radius:50%;background:#2FB47C}
@@ -336,14 +344,14 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .tw-g .go:active{scale:.98}
 :where(body[data-page="home"]) .tw-g .go svg{width:13px;height:13px}
 /* small info card for any other device pin (id, type, km, status) */
-:where(body[data-page="home"]) .tw-g .pcard{position:absolute;left:0;top:0;z-index:5;width:236px;padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .25s}
+:where(body[data-page="home"]) .tw-g .pcard{position:absolute;left:0;top:0;z-index:5;width:calc(236*var(--s));padding:14px 14px 12px;border-radius:12px;background:#fff;box-shadow:0 22px 44px -18px rgba(5,20,40,.45),0 0 0 1px rgba(14,59,102,.08);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .25s ease,transform .4s cubic-bezier(.2,.8,.2,1),visibility 0s .25s}
 :where(body[data-page="home"]) .tw-g .pcard.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}
 :where(body[data-page="home"]) .tw-g .pcard .r1{display:flex;align-items:center;gap:8px;font:500 12px/1.2 var(--f-mono);color:#5B6E82}
 :where(body[data-page="home"]) .tw-g .pcard .r1 i{width:7px;height:7px;border-radius:50%;background:#2FB47C;flex:none}
 :where(body[data-page="home"]) .tw-g .pcard.warn .r1 i{background:#F2A93B}
 :where(body[data-page="home"]) .tw-g .pcard .tt{margin:9px 0 10px;font:600 17px/1.2 var(--f-body);letter-spacing:-.015em;color:#0A1A2B}
 /* live camera tile (real footage; the box sits on the truck) */
-:where(body[data-page="home"]) .tw-g .live{position:absolute;right:24px;bottom:32px;width:clamp(200px,17vw,320px);border-radius:14px;overflow:hidden;background:#0B1824;box-shadow:0 30px 60px -24px rgba(5,20,40,.55),0 0 0 1px rgba(14,59,102,.12);opacity:0;transform:translateY(14px) scale(.97);transform-origin:right bottom;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+:where(body[data-page="home"]) .tw-g .live{position:absolute;right:24px;bottom:32px;width:clamp(calc(200*var(--s)),17vw,calc(320*var(--s)));border-radius:14px;overflow:hidden;background:#0B1824;box-shadow:0 30px 60px -24px rgba(5,20,40,.55),0 0 0 1px rgba(14,59,102,.12);opacity:0;transform:translateY(14px) scale(.97);transform-origin:right bottom;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
 :where(body[data-page="home"]) .tw-g .live.on{opacity:1;transform:none}
 @media (max-width:1700px){:where(body[data-page="home"]) .tw-g .live .hd em{display:none}}
 :where(body[data-page="home"]) .tw-g .live .hd{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;background:#fff;font:500 12px/1 var(--f-mono);color:#41566B;border-bottom:1px solid #EBF1F7;white-space:nowrap}
@@ -360,9 +368,9 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .tw-g .chrome span{width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid #DCE5EF;display:grid;place-items:center;font:500 18px/1 var(--f-body);color:#41566B;box-shadow:0 4px 12px -6px rgba(14,59,102,.3)}
 :where(body[data-page="home"]) .tw-g .scl{position:absolute;right:var(--twx);bottom:24px;display:flex;align-items:flex-end;gap:8px;font:500 12px/1 var(--f-mono);color:#5B6E82;transition:opacity .4s}
 :where(body[data-page="home"]) .tw-g .scl i{width:64px;height:6px;border:1.5px solid #5B6E82;border-top:0}
-@media (min-width:768.02px) and (max-width:1024px){:where(body[data-page="home"]) .tw-g .tx{width:min(380px,50%)}:where(body[data-page="home"]) .tw-g .tx h2{font-size:clamp(28px,4vw,36px)}:where(body[data-page="home"]) .tw-g .tx p{font-size:16px;max-width:360px}:where(body[data-page="home"]) .tw-g .live{width:clamp(190px,24vw,240px)}:where(body[data-page="home"]) .tw-g .live .hd em{display:none}}
+@media (min-width:768.02px) and (max-width:1024px){:where(body[data-page="home"]) .tw-g .tx{width:min(calc(380*var(--s)),50%)}:where(body[data-page="home"]) .tw-g .tx h2{font-size:clamp(28px,4vw,36px)}:where(body[data-page="home"]) .tw-g .tx p{font-size:16px;max-width:calc(360*var(--s))}:where(body[data-page="home"]) .tw-g .live{width:clamp(calc(190*var(--s)),24vw,calc(240*var(--s)))}:where(body[data-page="home"]) .tw-g .live .hd em{display:none}}
 /* short desktop windows (768px laptops, 1080p at 125-150%): copy higher and smaller, a smaller live tile */
-@media (min-width:768.02px) and (max-height:700px){:where(body[data-page="home"]) .tw-g .tx{top:18%}:where(body[data-page="home"]) .tw-g .tx h2{font-size:clamp(28px,4.6svh,40px)}:where(body[data-page="home"]) .tw-g .tx p{margin-top:14px}:where(body[data-page="home"]) .tw-g .lyr{margin-top:20px}:where(body[data-page="home"]) .tw-g .live{width:clamp(200px,17vw,260px);bottom:20px}:where(body[data-page="home"]) .tw-g .chrome{top:20px}}
+@media (min-width:768.02px) and (max-height:700px){:where(body[data-page="home"]) .tw-g .tx{top:18%}:where(body[data-page="home"]) .tw-g .tx h2{font-size:clamp(28px,4.6svh,40px)}:where(body[data-page="home"]) .tw-g .tx p{margin-top:14px}:where(body[data-page="home"]) .tw-g .lyr{margin-top:20px}:where(body[data-page="home"]) .tw-g .live{width:clamp(calc(200*var(--s)),17vw,calc(260*var(--s)));bottom:20px}:where(body[data-page="home"]) .tw-g .chrome{top:20px}}
 /* phones: the copy above, then a taller stage with a fixed street camera */
 @media (max-width:768px){
   :where(body[data-page="home"]) .tw-g{height:auto;max-height:none;display:flex;flex-direction:column;padding-top:calc(48*var(--s))}
@@ -372,17 +380,17 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
   :where(body[data-page="home"]) .tw-g .lyr{display:flex;margin-top:18px}
   :where(body[data-page="home"]) .tw-g .lyr button{flex:1 1 0;justify-content:center;min-width:0;height:44px;padding:0 6px;font-size:13px}
   :where(body[data-page="home"]) .tw-g .tw-rp{position:absolute;right:var(--gut);top:-6px;margin:0}
-  :where(body[data-page="home"]) .tw-g .pcard{width:200px;padding:11px}
+  :where(body[data-page="home"]) .tw-g .pcard{width:calc(200*var(--s));padding:11px}
   :where(body[data-page="home"]) .tw-g .fadeL,:where(body[data-page="home"]) .tw-g .chrome,:where(body[data-page="home"]) .tw-g .scl{display:none}
-  :where(body[data-page="home"]) .tw-vp{position:relative;inset:auto;height:clamp(470px,128vw,560px);margin-top:8px}
-  :where(body[data-page="home"]) .tw-g .live{right:10px;bottom:12px;width:170px;border-radius:10px}
+  :where(body[data-page="home"]) .tw-vp{position:relative;inset:auto;height:clamp(calc(470*var(--s)),128vw,calc(560*var(--s)));margin-top:8px}
+  :where(body[data-page="home"]) .tw-g .live{right:10px;bottom:12px;width:calc(170*var(--s));border-radius:10px}
   :where(body[data-page="home"]) .tw-g .live .hd{height:30px;padding:0 9px}
   :where(body[data-page="home"]) .tw-g .live .hd em{display:none}
-  :where(body[data-page="home"]) .tw-g .gcard{width:190px;padding:11px}
+  :where(body[data-page="home"]) .tw-g .gcard{width:calc(190*var(--s));padding:11px}
   :where(body[data-page="home"]) .tw-g .gcard .tt{font-size:15px}
 }
 /* badge on the map */
-:where(body[data-page="home"]) .tw-g .tw-badge{position:absolute;top:16px;left:var(--twx);z-index:4;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.92);box-shadow:0 0 0 1px #DCE5EF;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#0A1A2B}
+:where(body[data-page="home"]) .tw-g .tw-badge{position:absolute;top:16px;left:var(--twx);z-index:4;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:calc(999*var(--s));background:rgba(255,255,255,.92);box-shadow:0 0 0 1px #DCE5EF;font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);color:#0A1A2B}
 :where(body[data-page="home"]) .tw-g .tw-badge i{width:7px;height:7px;border-radius:50%;background:#2FB47C}
 @media (max-width:768px){:where(body[data-page="home"]) .tw-g .tw-badge{left:16px;top:12px}}
 @media (prefers-reduced-motion:reduce){:where(body[data-page="home"]) .tw-g .gcard,:where(body[data-page="home"]) .tw-g .live,:where(body[data-page="home"]) .tw-g .live .bx,:where(body[data-page="home"]) .tw-g .lyr button,:where(body[data-page="home"]) .tw-g .pcard,:where(body[data-page="home"]) .tw-g .tw-rp{transition:none}}
@@ -419,12 +427,12 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .hm-mcp .d{margin:calc(8*var(--s)) 0 0;font-size:var(--fs-card,16px);line-height:1.5;color:var(--ink-2)}
 :where(body[data-page="home"]) .hm-mcp .hm-ag-chat{margin:0;padding:0}
 :where(body[data-page="home"]) .hm-mcp-flow{display:flex;align-items:center;gap:10px;min-width:0}
-:where(body[data-page="home"]) .hm-mcp-node{flex:none;padding:9px 14px;border:1px solid var(--line-2);border-radius:999px;background:#fff;font:600 max(13px,calc(14*var(--s)))/1 var(--f-body);color:var(--ink)}
+:where(body[data-page="home"]) .hm-mcp-node{flex:none;padding:9px 14px;border:1px solid var(--line-2);border-radius:calc(999*var(--s));background:#fff;font:600 max(13px,calc(14*var(--s)))/1 var(--f-body);color:var(--ink)}
 :where(body[data-page="home"]) .hm-mcp-node.hub{background:var(--blue);border-color:var(--blue);color:#fff}
 :where(body[data-page="home"]) .hm-mcp-line{position:relative;flex:1 1 18px;min-width:18px;height:2px;background:var(--line-2);overflow:hidden}
 :where(body[data-page="home"]) .hm-mcp-line i{position:absolute;inset:0;width:40%;background:var(--blue);animation:hmMcp 2.2s linear infinite}
 @keyframes hmMcp{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
-:where(body[data-page="home"]) .hm-mcp-node.hub small{display:block;margin-top:3px;font:500 max(11px,calc(11*var(--s)))/1 var(--f-mono);letter-spacing:.04em;opacity:.85}
+:where(body[data-page="home"]) .hm-mcp-node.hub small{display:block;margin-top:3px;font:500 max(12px,calc(11*var(--s)))/1 var(--f-mono);letter-spacing:.04em;opacity:.85}
 :where(body[data-page="home"]) .hm-mcp-flow{flex-wrap:wrap;row-gap:8px}
 :where(body[data-page="home"]) .hm-mcp-back{flex-basis:100%;text-align:right;font:500 max(12px,calc(12.5*var(--s)))/1.3 var(--f-body);color:var(--muted)}
 @media (max-width:1024px){:where(body[data-page="home"]) .hm-mcp{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}:where(body[data-page="home"]) .hm-mcp-t{grid-column:1/-1}}
@@ -485,7 +493,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
   :where(body[data-page="home"]) #hmTiles .hm-cap{padding:10px 11px 12px}
   :where(body[data-page="home"]) #hmTiles .hm-cap h3{font-size:clamp(14px,4.3vw,16px)}
   :where(body[data-page="home"]) #hmTiles .hm-cap p{font-size:13px;line-height:1.4}
-  :where(body[data-page="home"]) #hmTiles .hm-cap .runs,:where(body[data-page="home"]) #hmTiles .hm-proofline{font-size:11px}
+  :where(body[data-page="home"]) #hmTiles .hm-cap .runs,:where(body[data-page="home"]) #hmTiles .hm-proofline{font-size:12px}
   :where(body[data-page="home"]) #hmTiles .hm-go{width:24px;height:24px}
   :where(body[data-page="home"]) #hmTiles .hm-dbox span{display:none}
 }
@@ -496,7 +504,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 /* live on national highways: head on top, the wall centred under it */
 :where(body[data-page="home"]) #proof .hw{align-items:center}
 :where(body[data-page="home"]) #proof .hw-fig{max-width:none;margin:0}
-:where(body[data-page="home"]) #proof .hw-card{max-width:320px}
+:where(body[data-page="home"]) #proof .hw-card{max-width:calc(320*var(--s))}
 :where(body[data-page="home"]) #proof .hm-head{margin-bottom:0}
 /* the proof heading sits beside the wall at page-hero size */
 :where(body[data-page="home"]) #proof .hm-head .h-1{font-size:var(--fs-h2);line-height:var(--lh-h2)}
@@ -528,3 +536,51 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 /* type review: map chips get a bigger touch target; domain tile rows share one height */
 @media (pointer:coarse){:where(body[data-page="home"]) .tpin .ch::after{content:"";position:absolute;inset:-6px}}
 :where(body[data-page="home"]) .hm-tiles{grid-auto-rows:1fr}
+/* company: the left column carries who we are, the office and the contact under the heading */
+:where(body[data-page="home"]) .hm-co-who{margin-top:calc(28*var(--s));padding-top:calc(22*var(--s));border-top:1px solid var(--line)}
+:where(body[data-page="home"]) .hm-co-k{margin:0 0 calc(10*var(--s));font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+:where(body[data-page="home"]) .hm-co-who p:not(.hm-co-k){margin:0;font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2);max-width:36em}
+:where(body[data-page="home"]) .hm-co-meta{margin:calc(24*var(--s)) 0 0;display:grid;grid-template-columns:minmax(0,1fr);gap:calc(20*var(--s)) calc(28*var(--s))}
+:where(body[data-page="home"]) .hm-co-meta dt{font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:calc(6*var(--s))}
+:where(body[data-page="home"]) .hm-co-meta dd{margin:0;font-size:var(--fs-card);line-height:1.55;color:var(--ink-2)}
+@media (max-width:600px){:where(body[data-page="home"]) .hm-co-meta{grid-template-columns:1fr}}
+/* company, three layers: heading + who we are · what we do (four cards) · office and contact strip */
+:where(body[data-page="home"]) .hm-co-top{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),5vw,calc(80*var(--s)));align-items:start}
+:where(body[data-page="home"]) .hm-co-top .lead{margin-top:calc(16*var(--s))}
+:where(body[data-page="home"]) .hm-co-who{margin:0;padding:calc(6*var(--s)) 0 0;border:0}
+:where(body[data-page="home"]) .hm-co-k{display:block;margin:0 0 calc(10*var(--s));font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+:where(body[data-page="home"]) .hm-co-who .hm-co-intro{margin:0;max-width:none;font-size:clamp(calc(17*var(--s)),1.35vw,calc(20*var(--s)));line-height:1.6;color:var(--ink-2);text-wrap:pretty}
+:where(body[data-page="home"]) .hm-co-k2{margin-top:clamp(calc(40*var(--s)),5vw,calc(64*var(--s)))}
+:where(body[data-page="home"]) .hm-co-cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap-g)}
+:where(body[data-page="home"]) .hm-co-cards li{display:flex;flex-direction:column;gap:calc(10*var(--s));padding:calc(22*var(--s)) calc(22*var(--s)) calc(24*var(--s));border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--sh-rest)}
+:where(body[data-page="home"]) .hm-co-ic{width:40px;height:40px;margin-bottom:calc(6*var(--s));border-radius:11px;background:var(--wash);color:var(--blue);display:grid;place-items:center}
+:where(body[data-page="home"]) .hm-co-cards b{font:650 calc(17*var(--s))/1.3 var(--f-display);letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+:where(body[data-page="home"]) .hm-co-cards p{margin:0;font-size:var(--fs-card);line-height:1.55;color:var(--ink-2);text-wrap:pretty}
+:where(body[data-page="home"]) .hm-co-foot{margin-top:calc(28*var(--s));padding-top:calc(22*var(--s));border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:flex-start;gap:calc(18*var(--s)) clamp(calc(28*var(--s)),4vw,calc(64*var(--s)))}
+:where(body[data-page="home"]) .hm-co-foot>div{display:flex;flex-direction:column;font-size:var(--fs-card);line-height:1.55;color:var(--ink-2);max-width:32em}
+:where(body[data-page="home"]) .hm-co-foot .hm-co-k{margin-bottom:calc(4*var(--s))}
+:where(body[data-page="home"]) .hm-co-more{margin-left:auto;align-self:center}
+@media (max-width:1024px){
+  :where(body[data-page="home"]) .hm-co-top{grid-template-columns:minmax(0,1fr)}
+  :where(body[data-page="home"]) .hm-co-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+  :where(body[data-page="home"]) .hm-co-cards{grid-template-columns:minmax(0,1fr)}
+  :where(body[data-page="home"]) .hm-co-more{margin-left:0}
+}
+/* the contact line stays on one line wherever the strip has the room (it wraps on narrow screens) */
+:where(body[data-page="home"]) .hm-co-foot>div:nth-child(2){max-width:none}
+@media (min-width:1024.02px){:where(body[data-page="home"]) .hm-co-foot>div:nth-child(2)>span{white-space:nowrap}}
+/* MCP card row: Agent <-> MCP (scoped access) <-> the products; two-way connectors with an arrowhead at each end */
+:where(body[data-page="home"]) .hm-mcp-line.two{overflow:visible;background:var(--blue-soft)}
+:where(body[data-page="home"]) .hm-mcp-line.two::before,:where(body[data-page="home"]) .hm-mcp-line.two::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3.5px;border:solid var(--blue-soft);border-width:2px 2px 0 0}
+:where(body[data-page="home"]) .hm-mcp-line.two::before{left:0;transform:rotate(-135deg)}
+:where(body[data-page="home"]) .hm-mcp-line.two::after{right:0;transform:rotate(45deg)}
+:where(body[data-page="home"]) .hm-mcp-prods{flex:none;display:flex;flex-direction:column;gap:6px}
+:where(body[data-page="home"]) .hm-mcp-prods span{padding:6px 12px;border:1px solid var(--line-2);border-radius:8px;background:#fff;font:600 max(12px,calc(13*var(--s)))/1.1 var(--f-body);color:var(--ink);white-space:nowrap}
+@media (max-width:640px){
+  :where(body[data-page="home"]) .hm-mcp-line.two{width:2px;height:22px;flex:none;min-width:0}
+  :where(body[data-page="home"]) .hm-mcp-line.two::before{left:50%;top:0;margin:0 0 0 -3.5px;transform:rotate(-45deg)}
+  :where(body[data-page="home"]) .hm-mcp-line.two::after{left:50%;right:auto;top:auto;bottom:0;margin:0 0 0 -3.5px;transform:rotate(135deg)}
+  :where(body[data-page="home"]) .hm-mcp-prods{align-items:center}
+}

@@ -41,7 +41,7 @@
   :where(body[data-page="services"]) .sv-phases{grid-template-columns:1fr;row-gap:calc(18*var(--s));counter-reset:ph;position:relative}
   :where(body[data-page="services"]) .sv-phases::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:var(--line)}
   :where(body[data-page="services"]) .sv-phases li{position:relative;padding-left:44px;counter-increment:ph}
-  :where(body[data-page="services"]) .sv-phases li::before{content:counter(ph,decimal-leading-zero);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--blue);display:grid;place-items:center;font:600 11px/1 var(--f-mono);color:var(--blue)}
+  :where(body[data-page="services"]) .sv-phases li::before{content:counter(ph,decimal-leading-zero);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--blue);display:grid;place-items:center;font:600 12px/1 var(--f-mono);color:var(--blue)}
 }
 
 :where(body[data-page="services"]) .sv-rail-dot{width:calc(40*var(--s));height:calc(40*var(--s));margin:calc(-20*var(--s)) 0 0 calc(-20*var(--s));color:var(--muted)}
@@ -50,3 +50,68 @@
 :where(body[data-page="services"]) .sv-card{position:relative}
 :where(body[data-page="services"]) .sv-miniwrap{position:relative}
 :where(body[data-page="services"]) .sv-mi{position:absolute;top:50%;transform:translate(-50%,-50%);display:grid;place-items:center;color:var(--blue);pointer-events:none}
+
+/* five service cards: three across, then two wider ones (a six-column grid), so no row ends with a gap;
+   the wider cards' diagrams keep the first row's height. Tablets: two across with the fifth full width; phones: one. */
+:where(body[data-page="services"]) .sv-cards{grid-template-columns:repeat(6,minmax(0,1fr))}
+:where(body[data-page="services"]) .sv-card{grid-column:span 2}
+:where(body[data-page="services"]) .sv-card:nth-child(n+4){grid-column:span 3}
+:where(body[data-page="services"]) .sv-card:nth-child(n+4) svg.sv-mini{aspect-ratio:300/64}
+@media (max-width:1024px){
+  :where(body[data-page="services"]) .sv-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  :where(body[data-page="services"]) .sv-card,:where(body[data-page="services"]) .sv-card:nth-child(n+4){grid-column:auto}
+  :where(body[data-page="services"]) .sv-card:nth-child(n+4) svg.sv-mini{aspect-ratio:auto}
+  :where(body[data-page="services"]) .sv-card:last-child{grid-column:1/-1}
+  :where(body[data-page="services"]) .sv-card:last-child svg.sv-mini{aspect-ratio:300/64}
+}
+@media (max-width:768px){
+  :where(body[data-page="services"]) .sv-cards{grid-template-columns:1fr}
+  :where(body[data-page="services"]) .sv-card:last-child{grid-column:auto}
+  :where(body[data-page="services"]) .sv-card:last-child svg.sv-mini{aspect-ratio:auto}
+}
+
+/* what you receive / what we need: two panels */
+:where(body[data-page="services"]) .sv-terms-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap-g)}
+:where(body[data-page="services"]) .sv-panel{border:1px solid var(--line);border-radius:14px;background:#fff;padding:calc(28*var(--s)) var(--pad-card) calc(20*var(--s));box-shadow:var(--sh-rest)}
+:where(body[data-page="services"]) .sv-panel-h{margin:0 0 calc(16*var(--s));font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em;color:var(--ink);text-wrap:balance}
+:where(body[data-page="services"]) :is(.sv-checks,.sv-needs){list-style:none;margin:0;padding:0}
+:where(body[data-page="services"]) :is(.sv-checks,.sv-needs) li{display:flex;align-items:flex-start;gap:calc(12*var(--s));padding:calc(14*var(--s)) 0;border-top:1px solid var(--line);font-size:var(--fs-body);line-height:1.5;color:var(--ink-2)}
+:where(body[data-page="services"]) :is(.sv-checks,.sv-needs) li:first-child{border-top:0;padding-top:calc(4*var(--s))}
+:where(body[data-page="services"]) .sv-tick{flex:none;width:22px;height:22px;margin-top:2px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center}
+:where(body[data-page="services"]) .sv-tick svg{width:12px;height:12px}
+:where(body[data-page="services"]) .sv-need-ic{flex:none;width:32px;height:32px;margin-top:-3px;border-radius:9px;background:var(--wash);color:var(--blue);display:grid;place-items:center}
+
+/* example first scopes: dashed cards (examples, not case studies) */
+:where(body[data-page="services"]) .sv-ex-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(calc(20*var(--s)),4vw,calc(56*var(--s)));align-items:end}
+:where(body[data-page="services"]) .sv-ex-head .lead{margin:0}
+:where(body[data-page="services"]) .sv-ex-grid{list-style:none;margin:var(--gap-c) 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap-g)}
+:where(body[data-page="services"]) .sv-ex-card{display:flex;flex-direction:column;gap:calc(16*var(--s));padding:calc(22*var(--s)) var(--pad-card) calc(24*var(--s));border:1.5px dashed var(--line-2);border-radius:14px;background:rgba(255,255,255,.72)}
+:where(body[data-page="services"]) .sv-ex-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+:where(body[data-page="services"]) .sv-ex-ic{width:40px;height:40px;border-radius:11px;background:var(--wash);color:var(--blue);display:grid;place-items:center}
+:where(body[data-page="services"]) .sv-ex-tag{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 10px;background:#fff}
+:where(body[data-page="services"]) .sv-ex-card p{margin:0;font:600 calc(18*var(--s))/1.4 var(--f-display);letter-spacing:-.01em;color:var(--ink);text-wrap:pretty}
+:where(body[data-page="services"]) .sv-ex-note{margin:calc(16*var(--s)) 0 0;font:500 max(12px,calc(12.5*var(--s)))/1.5 var(--f-mono);color:var(--muted)}
+
+/* short FAQ */
+:where(body[data-page="services"]) .sv-faq-grid{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(calc(20*var(--s)),4vw,calc(56*var(--s)));align-items:start}
+:where(body[data-page="services"]) .sv-qa{margin:0;border-top:1px solid var(--line)}
+:where(body[data-page="services"]) .sv-qa div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:calc(24*var(--s));padding:calc(18*var(--s)) 0;border-bottom:1px solid var(--line)}
+:where(body[data-page="services"]) .sv-qa dt{font:600 var(--fs-body)/1.45 var(--f-display);color:var(--ink)}
+:where(body[data-page="services"]) .sv-qa dd{margin:0;font-size:var(--fs-body);line-height:1.5;color:var(--ink-2)}
+
+/* closing call to action: a navy band with the site's blueprint grid inside it */
+:where(body[data-page="services"]) .sv-cta-band{position:relative;overflow:hidden;isolation:isolate;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:calc(20*var(--s)) calc(32*var(--s));padding:calc(40*var(--s)) calc(44*var(--s));border-radius:20px;background:linear-gradient(135deg,#0B2F52 0%,#0E3B66 45%,#1B5A94 100%);box-shadow:0 30px 60px -36px rgba(14,59,102,.7)}
+:where(body[data-page="services"]) .sv-cta-band::before{content:"";position:absolute;inset:0;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:calc(40*var(--s)) calc(40*var(--s));-webkit-mask-image:linear-gradient(90deg,transparent,#000 60%);mask-image:linear-gradient(90deg,transparent,#000 60%)}
+:where(body[data-page="services"]) .sv-cta-h{margin:0;max-width:16em;font:700 clamp(calc(24*var(--s)),2.4vw,calc(34*var(--s)))/1.15 var(--f-display);letter-spacing:-.02em;color:#fff;text-wrap:balance}
+:where(body[data-page="services"]) .sv-cta-band .btn-primary{background:#fff;color:#0E3B66;box-shadow:0 1px 2px rgba(0,0,0,.2),0 10px 24px -12px rgba(0,0,0,.5)}
+:where(body[data-page="services"]) .sv-cta-band .btn-primary:hover{background:#EAF3FB;color:#0E3B66}
+
+@media (max-width:1024px){
+  :where(body[data-page="services"]) .sv-ex-grid{grid-template-columns:1fr}
+  :where(body[data-page="services"]) .sv-faq-grid{grid-template-columns:1fr}
+}
+@media (max-width:768px){
+  :where(body[data-page="services"]) .sv-terms-grid,:where(body[data-page="services"]) .sv-ex-head{grid-template-columns:1fr}
+  :where(body[data-page="services"]) .sv-qa div{grid-template-columns:1fr;gap:6px}
+  :where(body[data-page="services"]) .sv-cta-band{padding:calc(28*var(--s)) calc(22*var(--s))}
+}

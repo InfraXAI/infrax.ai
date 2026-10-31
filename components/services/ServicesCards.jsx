@@ -1,4 +1,4 @@
-// The four service cards. Each card's mini SVG is animated by lib/pages/services.js (data-k picks the animation).
+// The five service cards (three, then two wider). Each card's mini SVG is animated by lib/pages/services.js (data-k picks the animation).
 // Markup from site/src/services.html, unchanged apart from JSX syntax.
 export default function ServicesCards() {
   return (
@@ -46,6 +46,19 @@ export default function ServicesCards() {
           <span className="ix sv-ico" data-ix="server" data-size="28" aria-hidden="true"></span><span className="n">04</span><h3>Deployment &amp; handover</h3>
           <p>Target environment, tests, documentation and ownership agreed up front.</p>
           <ul><li>On your own servers</li><li>Docs and handover</li></ul>
+        </article>
+        {/* a new detection zone drawn on a camera view; the footage clips beside it tick off as it is checked */}
+        <article className="sv-card" data-k="ai">
+          <svg className="sv-mini" viewBox="0 0 300 96" aria-hidden="true">
+            <rect x="14" y="12" width="160" height="72" rx="6" fill="#fff" stroke="#C5D4E2" />
+            <path d="M70 12 L40 84 M118 12 L148 84" stroke="#DCE5EE" strokeWidth="1.2" />
+            <path className="zone" d="M58 44 L128 44 L142 74 L46 74 Z" fill="#2673B5" fillOpacity=".06" stroke="#2673B5" strokeWidth="1.5" strokeDasharray="5 4" />
+            <rect className="obj" x="86" y="16" width="16" height="11" rx="2" fill="#2673B5" />
+            <g className="clips"></g>
+            <text x="196" y="22" fontFamily="Geist Mono, monospace" fontSize="12" fill="#5B6E82">Your footage</text>
+          </svg>
+          <span className="ix sv-ico" data-ix="camera" data-size="28" aria-hidden="true"></span><span className="n">05</span><h3>Custom AI scenarios</h3>
+          <p>New detection scenarios built for your cameras and checked against your footage.</p>
         </article>
       </div>
     </div></section>

@@ -9,7 +9,7 @@ export default function HowFed() {
         <p className="body">Each site keeps working on its own; one control room sees every alert. Pick a site.</p>
       </div>
       <div className="hw-fed-grid">
-        <div className="hw-stage hw-fed-stage" id="hwFedStage" role="img" aria-label="Six site miniatures in a ring (two highway stretches, a call box network, city junctions, a campus and an industrial site) linked by flowing data to one control room in the centre.">
+        <div className="hw-stage hw-fed-stage" id="hwFedStage" role="img" aria-label="Six site miniatures in a ring (highway enforcement, highway monitoring, a call box network, city junctions, a campus and an industrial site) linked by flowing data to one control room in the centre.">
           <canvas id="hwFedGL"></canvas>
           <div className="hw-nogl"><img src="/img/control-room-sm.webp" srcSet="/img/control-room-sm.webp 768w, /img/control-room.webp 1536w" sizes="(min-width:1024.02px) 60vw, 100vw" alt="Control room with a video wall and a map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} width="768" height="432" loading="lazy" decoding="async" /></div>
         </div>

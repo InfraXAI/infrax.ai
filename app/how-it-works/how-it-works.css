@@ -22,7 +22,7 @@
 :where(body[data-page="how-it-works"]) .hw-step .tags .lab{background:none;color:var(--muted);padding-left:0}
 :where(body[data-page="how-it-works"]) .hw-step .tags span{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.03em;color:var(--blue-mid);background:var(--mist);padding:calc(6*var(--s)) calc(8*var(--s));border-radius:calc(5*var(--s))}
 :where(body[data-page="how-it-works"]) .hw-step .photo{display:grid;grid-template-columns:minmax(0,1fr);gap:calc(12*var(--s));align-items:center;margin-top:calc(9*var(--s))}
-:where(body[data-page="how-it-works"]) .hw-step .photo img{width:100%;max-width:320px;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:calc(8*var(--s))}
+:where(body[data-page="how-it-works"]) .hw-step .photo img{width:100%;max-width:calc(320*var(--s));height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:calc(8*var(--s))}
 :where(body[data-page="how-it-works"]) .hw-step .photo small{font-size:max(12px,calc(12.5*var(--s)));line-height:1.45;color:var(--muted)}
 :where(body[data-page="how-it-works"]) .hw-step[role="button"]{cursor:pointer}
 :where(body[data-page="how-it-works"]) .hw-step:not(.on):hover{border-color:var(--blue-soft);background:#fff}
@@ -46,7 +46,7 @@
 :where(body[data-page="how-it-works"]) .hw-fed{overflow-x:clip}
 :where(body[data-page="how-it-works"]) .hw-fed-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:calc(24*var(--s));align-items:end}
 :where(body[data-page="how-it-works"]) .hw-fed-grid{display:grid;grid-template-columns:minmax(0,8fr) minmax(0,4fr);gap:clamp(calc(20*var(--s)),3vw,calc(40*var(--s)));margin-top:var(--gap-c);align-items:stretch}
-:where(body[data-page="how-it-works"]) .hw-fed-stage{height:min(64svh,calc(560*var(--s)));min-height:calc(380*var(--s));background:#fff}
+:where(body[data-page="how-it-works"]) .hw-fed-stage{height:min(64svh,calc(560*var(--s)));min-height:calc(380*var(--s))}
 :where(body[data-page="how-it-works"]) .hw-fed-side{display:flex;flex-direction:column;gap:calc(14*var(--s));min-width:0}
 :where(body[data-page="how-it-works"]) .hw-fed-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(8*var(--s));list-style:none;margin:0;padding:0}
 :where(body[data-page="how-it-works"]) .hw-fed-list button{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:calc(10*var(--s));width:100%;min-height:calc(46*var(--s));padding:calc(10*var(--s)) calc(12*var(--s));border:1px solid var(--line);border-radius:calc(10*var(--s));font:500 max(12px,calc(14*var(--s)))/1.2 var(--f-body);color:var(--ink-2);background:#fff;transition:border-color var(--dur-2) var(--ease-out),color var(--dur-2) var(--ease-out),background-color var(--dur-2) var(--ease-out),scale var(--dur-1) var(--ease-out)}
@@ -56,7 +56,7 @@
 :where(body[data-page="how-it-works"]) .hw-fed-list button[aria-pressed="true"]{border-color:var(--blue);color:var(--ink);background:var(--mist)}
 :where(body[data-page="how-it-works"]) .hw-fed-list button[aria-pressed="true"] i{background:var(--blue)}
 :where(body[data-page="how-it-works"]) .hw-fed-list button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-:where(body[data-page="how-it-works"]) .hw-card{flex:1;border:1px solid var(--line);border-radius:14px;background:#fff;padding:var(--pad-card);min-height:240px}
+:where(body[data-page="how-it-works"]) .hw-card{flex:1;border:1px solid var(--line);border-radius:14px;background:#fff;padding:var(--pad-card);min-height:calc(240*var(--s))}
 :where(body[data-page="how-it-works"]) .hw-card h3{font:650 var(--fs-h3)/var(--lh-h3) var(--f-display);letter-spacing:-.015em}
 :where(body[data-page="how-it-works"]) .hw-card .sub{font:500 var(--fs-small)/1.45 var(--f-mono);color:var(--muted);margin-top:calc(6*var(--s));letter-spacing:.03em}
 :where(body[data-page="how-it-works"]) .hw-card h4{font:500 max(12px,calc(12*var(--s)))/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:calc(18*var(--s)) 0 calc(10*var(--s))}
@@ -86,16 +86,12 @@
   :where(body[data-page="how-it-works"]) .hw-lbl.layer{font-size:calc(12*var(--s))}
 }
 /* small phones: the step labels wrap rather than run past the screen edge */
-@media (max-width:480px){:where(body[data-page="how-it-works"]) .hw-lbl.layer{white-space:normal;max-width:calc(100vw - 2*var(--gut) - 16px)}}
+@media (max-width:480px){:where(body[data-page="how-it-works"]) .hw-lbl.layer{white-space:normal;max-width:calc(100vw - 2*var(--gut) - 16px);padding:5px 8px;line-height:1.15}:where(body[data-page="how-it-works"]) .hw-lbl.layer small{margin-top:1px;line-height:1.2}:where(body[data-page="how-it-works"]) .hw-pin .hw-stage{height:min(540px,calc(100svh - var(--nav-h) - 40px))}}
 :where(body[data-page="how-it-works"]) .hw-card .mods{font:500 max(12px,calc(12*var(--s)))/1.45 var(--f-mono);color:var(--blue-mid);margin:calc(6*var(--s)) 0 calc(4*var(--s))}
 /* distributed analytics */
 :where(body[data-page="how-it-works"]) .hw-dist{overflow-x:clip}
 :where(body[data-page="how-it-works"]) .hw-dist-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(calc(24*var(--s)),4vw,calc(56*var(--s)));align-items:center}
-:where(body[data-page="how-it-works"]) .hw-dist ul.pts{list-style:none;margin:calc(22*var(--s)) 0 0;padding:0;display:grid;gap:calc(12*var(--s))}
-:where(body[data-page="how-it-works"]) .hw-dist ul.pts li{display:grid;grid-template-columns:calc(28*var(--s)) minmax(0,1fr);gap:calc(12*var(--s));font-size:var(--fs-body);line-height:var(--lh-body);color:var(--ink-2)}
-:where(body[data-page="how-it-works"]) .hw-dist ul.pts li i{width:calc(28*var(--s));height:calc(28*var(--s));border-radius:calc(8*var(--s));background:var(--mist);display:grid;place-items:center;color:var(--blue);font:600 max(12px,calc(12*var(--s)))/1 var(--f-mono);font-style:normal}
-:where(body[data-page="how-it-works"]) .hw-dist ul.pts b{color:var(--ink);font-weight:600}
-:where(body[data-page="how-it-works"]) .hw-dist-fig{max-width:780px;margin-inline:auto;position:relative;border:1px solid var(--line);border-radius:calc(20*var(--s));background:#fff;padding:calc(12*var(--s));min-width:0}
+:where(body[data-page="how-it-works"]) .hw-dist-fig{max-width:calc(780*var(--s));margin-inline:auto;position:relative;border:1px solid var(--line);border-radius:calc(20*var(--s));background:#fff;padding:calc(12*var(--s));min-width:0}
 :where(body[data-page="how-it-works"]) .hw-dist-fig svg{display:block;width:100%;height:auto}
 :where(body[data-page="how-it-works"]) .hw-dist-fig .ctl{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:calc(10*var(--s));padding:calc(8*var(--s)) calc(6*var(--s)) 2px}
 :where(body[data-page="how-it-works"]) .hw-dist-fig .ctl small{font:500 max(12px,calc(12*var(--s)))/1.4 var(--f-mono);color:var(--muted)}
@@ -111,6 +107,6 @@
 /* touch: 44px tap targets */
 @media (pointer:coarse),(max-width:1024px){:where(body[data-page="how-it-works"]) .hw-dist-fig .ctl button,:where(body[data-page="how-it-works"]) .hw-fed-list button{min-height:44px}}
 /* v17 calmer visuals */
-@media (min-width:480.02px){:where(body[data-page="how-it-works"]) .hw-stage{height:min(58svh,calc(100svh - var(--nav-h) - 120px),540px);min-height:380px}:where(body[data-page="how-it-works"]) .hw-fed-stage{height:min(52svh,460px);min-height:420px}}
+@media (min-width:480.02px){:where(body[data-page="how-it-works"]) .hw-stage{height:min(58svh,calc(100svh - var(--nav-h) - calc(120*var(--s))),calc(540*var(--s)));min-height:calc(380*var(--s))}:where(body[data-page="how-it-works"]) .hw-fed-stage{height:min(52svh,calc(460*var(--s)));min-height:calc(420*var(--s))}}
 /* two columns: the federation diagram fills the full height of the site list and card beside it (no empty band under it) */
-@media (min-width:1024.02px){:where(body[data-page="how-it-works"]) .hw-fed-grid .hw-fed-stage{height:auto;min-height:520px;align-self:stretch}}
+@media (min-width:1024.02px){:where(body[data-page="how-it-works"]) .hw-fed-grid .hw-fed-stage{height:auto;min-height:calc(520*var(--s));align-self:stretch}}

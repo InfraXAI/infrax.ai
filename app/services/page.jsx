@@ -6,6 +6,7 @@ import JsonLd from '@/components/site/JsonLd';
 import ServicesHero from '@/components/services/ServicesHero';
 import ServicesCards from '@/components/services/ServicesCards';
 import ServicesPath from '@/components/services/ServicesPath';
+import ServicesDetails from '@/components/services/ServicesDetails';
 import ServicesScript from '@/components/services/ServicesScript';
 
 export const metadata = pageMetadata('services');
@@ -17,6 +18,7 @@ export default function ServicesPage() {
       <ServicesHero />
       <ServicesCards />
       <ServicesPath />
+      <ServicesDetails />
       <ServicesScript />
     </>
   );

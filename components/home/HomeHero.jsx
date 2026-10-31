@@ -4,7 +4,7 @@ import { HX_PRE } from './hero-intro';
 
 export default function HomeHero() {
   return (
-    <section className="hm-hero" aria-labelledby="hmTitle">
+    <section className="hm-hero" aria-labelledby="hmTitle" suppressHydrationWarning>
       {/* PORT: the static page's inline intro script, run during HTML parsing on a full load (see hero-intro.js) */}
       <script dangerouslySetInnerHTML={{ __html: HX_PRE }} />
       <canvas className="hx-pt" id="hxPt" aria-hidden="true"></canvas>
@@ -17,7 +17,7 @@ export default function HomeHero() {
         </div>
         <div className="hx-copy">
           <h1 className="h-hero hm-h1" id="hmTitle"><span className="hx-brand">InfraX AI</span> — where infrastructure runs itself.</h1>
-          <p className="hx-sub"><strong>The agentic OS for infrastructure.</strong> AI agents run the routine work across every camera, asset and site; your people approve what matters.</p>
+          <p className="hx-sub"><strong>The agentic OS for infrastructure.</strong> AI Beings run the routine work across every camera, asset and site; your people approve what matters.</p>
           <div className="btn-row">
             <a className="btn btn-primary" href="/#demo" data-magnetic="">Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a>
             <a className="btn btn-ghost" href="/products">See the products <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a>

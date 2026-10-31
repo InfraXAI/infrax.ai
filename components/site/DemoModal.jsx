@@ -32,7 +32,7 @@ export default function DemoModal() {
               <div className="dm-hp" aria-hidden="true"><label htmlFor="dmWebsite">Website</label><input id="dmWebsite" name="website" tabIndex="-1" autoComplete="off" /></div>
               <div className="dm-f full"><label htmlFor="dmMsg">About your sites <small>(optional)</small></label><textarea id="dmMsg" maxLength="1500" name="message" placeholder="e.g. a warehouse with two gates and existing IP cameras"></textarea></div>
               <div className="dm-submit"><button className="btn btn-primary" type="submit">Request a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></button><p><span className="req" aria-hidden="true">*</span> Required. We use your details only to arrange the demo.</p></div>
-              <p className="dm-senderr" id="dmSendErr" role="alert" tabIndex="-1" hidden>We couldn't send your request. Please try again, or email <a href="mailto:info@infrax.ai">info@infrax.ai</a>.</p>
+              <p className="dm-senderr" id="dmSendErr" role="alert" tabIndex="-1" hidden>We couldn't send your request. Please try again, or email <a href="mailto:bookdemo@infrax.ai">bookdemo@infrax.ai</a>.</p>
             </form>
             <div className="dm-ok" id="dmOk" hidden tabIndex="-1">
               <div className="tick"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>

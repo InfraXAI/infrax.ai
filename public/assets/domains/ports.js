@@ -27,7 +27,7 @@
     host.appendChild(cv);
 
     var scene = new T.Scene();
-    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .0055 : .0042);
+    scene.fog = new T.FogExp2(0xF2F6FA, MOB ? .003 : .0023);
     var camera = new T.PerspectiveCamera(MOB ? 62 : 50, 1, .4, 900);
 
     (function env() {
@@ -920,7 +920,7 @@
   function create(host, ctx) {
     var K = makeKit(host, ctx), T = K.T, scene = K.scene, M = K.M, B = K.B, box = K.box, cyl = K.cyl, MOB = K.MOB;
     var time = 0;
-    scene.fog.density = MOB ? .0042 : .0032;
+    scene.fog.density = MOB ? .0023 : .0018;
     K.sun.position.set(-30, 80, 50);
 
     /* ---------- water: swell on the mesh + a multi-octave ripple normal map (random phases, no visible tiling),

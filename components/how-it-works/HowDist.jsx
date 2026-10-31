@@ -1,4 +1,4 @@
-// Distributed analytics: the points and the camera-cost diagram (#hwDist, drawn by the page script).
+// Distributed analytics: the lead and the camera-cost diagram (#hwDist, drawn by the page script).
 // Markup from site/src/how-it-works.html, unchanged apart from JSX syntax.
 export default function HowDist() {
   return (
@@ -6,10 +6,6 @@ export default function HowDist() {
       <div>
         <h2 className="h-1" id="hw-dist-title" data-reveal="">A new scenario is cheap. A new camera is the real cost.</h2>
         <p className="lead">Each camera is decoded once and every scenario on it shares the same frames, so a new scenario costs far less than a new camera.</p>
-        <ul className="pts">
-          <li><i>01</i><span><b>Decode once per camera.</b> Every scenario shares the same frames.</span></li>
-          <li><i>02</i><span><b>Sized to your camera count.</b> Runs on standard CPU servers; more cameras means more cores and disk.</span></li>
-        </ul>
       </div>
       <figure className="hw-dist-fig" style={{ margin: '0' }}>
         <svg id="hwDist" viewBox="0 0 640 430" role="img" aria-label="One Cygnus server on standard CPUs. Each camera feeds its own decode slot once, and one shared detection pass feeds every scenario: plates, vehicles, watchlist, journeys and camera health. Adding a camera lights more CPU cores and grows recording disk and stream bandwidth; ANPR cameras add the most. Adding a scenario barely moves the meters."></svg>

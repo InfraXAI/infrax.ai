@@ -1,12 +1,12 @@
-// AI agents: VAYU, KRITYA, NOAH, ASTRA cards with their example chats, and the full-width MCP box.
+// AI Beings: VAYU, KRITYA, NOAH, ASTRA cards with their example chats, and the full-width MCP box.
 // Markup from site/src/home.html, unchanged apart from JSX syntax.
 export default function HomeAgents() {
   return (
     <section className="scene" id="agents" aria-labelledby="hmAgT">
       <div className="wrap">
         <div className="hm-head hm-c">
-          <div><h2 className="h-1" id="hmAgT" data-reveal="">AI agents that work across every product.</h2></div>
-          <p className="body">Each product has an agent for the routine work, and a person approves what matters. Your own agents can plug in too.</p>
+          <div><h2 className="h-1" id="hmAgT" data-reveal="">AI Beings that work across every product.</h2></div>
+          <p className="body">Each product has a Being for the routine work, and a person approves what matters. Your own Beings can plug in too.</p>
         </div>
         <div className="hm-ag" id="hmAg">
           <article className="hm-agc">
@@ -36,19 +36,20 @@ export default function HomeAgents() {
         </div>
         <article className="hm-mcp">
           <div className="hm-mcp-t">
-            <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>For your own agents</p>
+            <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>For your own Beings</p>
             <h3>MCP</h3>
-            <p className="d">Connect your own AI agents to InfraX AI Ops through MCP (Model Context Protocol). Agents call Ops features as tools, using only the access you grant them.</p>
+            <p className="d">Connect your own AI Beings to InfraX AI Ops through MCP (Model Context Protocol). Beings call Ops features as tools, using only the access you grant them.</p>
           </div>
           <div className="hm-mcp-flow" aria-hidden="true">
-            <span className="hm-mcp-node">Your agent</span>
-            <span className="hm-mcp-line"><i></i></span>
-            <span className="hm-mcp-node hub">MCP<small>scoped token</small></span>
-            <span className="hm-mcp-line"><i></i></span>
+            {/* a Being, scoped MCP access, InfraX AI Ops (both ways); MCP runs for Ops only today */}
+            <span className="hm-mcp-node">Being</span>
+            <span className="hm-mcp-line two"></span>
+            <span className="hm-mcp-node hub">MCP<small>scoped access</small></span>
+            <span className="hm-mcp-line two"></span>
             <span className="hm-mcp-node">InfraX AI Ops</span>
-            <span className="hm-mcp-back">↩ Result goes back to your agent</span>
+            <span className="hm-mcp-back">↩ Result goes back to your Being</span>
           </div>
-          <div className="hm-ag-chat" aria-hidden="true"><span className="q">agent → get today's ops digest</span><span className="a">Daily digest returned from Ops</span></div>
+          <div className="hm-ag-chat" aria-hidden="true"><span className="q">Being → get today's ops digest</span><span className="a">Daily digest returned from Ops</span></div>
         </article>
         <p className="hm-ag-note">Example exchanges, illustrative data.</p>
       </div>
