@@ -40,6 +40,9 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .hx-skip svg{width:14px;height:14px}
 :where(body[data-page="home"]) .hx-skip:hover{color:var(--blue);border-color:var(--blue)}
 :where(body[data-page="home"]) .hm-hero.hx-intro:not(.hx-done) .hx-skip{display:inline-flex}
+/* the buttons reach the bottom right corner here: skip moves to the top, or under the map on landscape phones */
+@media (max-width:767px) and (orientation:portrait){:where(body[data-page="home"]) .hx-skip{top:var(--hx-pad);bottom:auto}}
+@media (max-width:767px) and (orientation:landscape){:where(body[data-page="home"]) .hx-skip{left:var(--hx-pad);right:auto}}
 @keyframes hxSkipIn{from{opacity:0}to{opacity:1}}
 :where(body[data-page="home"]) .hx-rings{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:1;pointer-events:none;opacity:0;transition:opacity 1s ease}
 :where(body[data-page="home"]) .hx-rings.on{opacity:1}
@@ -645,7 +648,8 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 :where(body[data-page="home"]) .mcp-legend i{width:10px;height:10px;border-radius:50%}
 :where(body[data-page="home"]) .mcp-legend .call{background:var(--wash);border:1px solid var(--blue)}:where(body[data-page="home"]) .mcp-legend .res{background:#E3F4EC;border:1px solid #1F8A5B}:where(body[data-page="home"]) .mcp-legend .no{background:#FBE9E7;border:1px solid #C2413A}
 @media (max-width:1440px){:where(body[data-page="home"]) .hm-mcp{grid-template-columns:minmax(0,1fr)}:where(body[data-page="home"]) .hm-mcp-t .d{max-width:60ch}}
-@media (max-width:900px){
+/* the five columns need 880px inside the card, which they get from a 1024px screen */
+@media (max-width:1023px){
   :where(body[data-page="home"]) .mcp-d{grid-template-columns:minmax(0,1fr);gap:0}
   :where(body[data-page="home"]) .mcp-models{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   :where(body[data-page="home"]) .mcp-lane{height:34px;margin:0}

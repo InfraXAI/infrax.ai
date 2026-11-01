@@ -173,6 +173,8 @@ p,li,dd{text-wrap:pretty}
 @media (max-width:1440px){.foot-logo img{height:calc(46*var(--s))}.foot-grid{column-gap:calc(30*var(--s))}.foot-grid ul{column-gap:calc(20*var(--s))}}
 @media (max-width:1180px){.foot-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-logo{grid-column:1/-1;align-self:start}.foot-logo img{height:calc(44*var(--s))}}
 @media (max-width:560px){.foot-grid{grid-template-columns:minmax(0,1fr)}}
+/* product names with their tags are too wide for two columns here */
+@media (max-width:820px){.foot-products ul{grid-template-columns:minmax(0,1fr)}}
 .foot-grid a:hover{color:var(--blue)}
 .foot-base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:calc(12*var(--s));margin-top:calc(20*var(--s));padding-top:calc(14*var(--s));border-top:1px solid var(--line);font:400 max(12px,calc(12*var(--s)))/1.5 var(--f-mono);color:var(--muted)}
 .foot-base .copy{user-select:none}
