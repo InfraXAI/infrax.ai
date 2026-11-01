@@ -16,7 +16,7 @@ export default function HomeAgents() {
             <div className="hm-ag-chat" aria-hidden="true"><span className="q">What needs attention right now?</span><span className="a">2 incidents open · 1 camera offline · opening the dashboard</span></div>
           </article>
           <article className="hm-agc">
-            <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In Ulka</p>
+            <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In WayKeep</p>
             <h3>KRITYA</h3>
             <p className="d">Drafts work orders, shift plans and daily digests for field teams. A person approves before anything goes out.</p>
             <div className="hm-ag-chat" aria-hidden="true"><span className="q">Draft today's maintenance orders</span><span className="a">6 work orders drafted · waiting for approval</span></div>
@@ -38,18 +38,18 @@ export default function HomeAgents() {
           <div className="hm-mcp-t">
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>For your own Beings</p>
             <h3>MCP</h3>
-            <p className="d">Connect your own AI Beings to Ulka through MCP (Model Context Protocol). Beings call Ulka features as tools, using only the access you grant them.</p>
+            <p className="d">Connect your own AI Beings to WayKeep through MCP (Model Context Protocol). Beings call WayKeep features as tools, using only the access you grant them.</p>
           </div>
           <div className="hm-mcp-flow" aria-hidden="true">
-            {/* a Being, scoped MCP access, Ulka (both ways); MCP runs for Ops only today */}
+            {/* a Being, scoped MCP access, WayKeep (both ways); MCP runs for Ops only today */}
             <span className="hm-mcp-node">Being</span>
             <span className="hm-mcp-line two"></span>
             <span className="hm-mcp-node hub">MCP<small>scoped access</small></span>
             <span className="hm-mcp-line two"></span>
-            <span className="hm-mcp-node">Ulka</span>
+            <span className="hm-mcp-node">WayKeep</span>
             <span className="hm-mcp-back">↩ Result goes back to your Being</span>
           </div>
-          <div className="hm-ag-chat" aria-hidden="true"><span className="q">Being → get today's ops digest</span><span className="a">Daily digest returned from Ulka</span></div>
+          <div className="hm-ag-chat" aria-hidden="true"><span className="q">Being → get today's ops digest</span><span className="a">Daily digest returned from WayKeep</span></div>
         </article>
         <p className="hm-ag-note">Example exchanges, illustrative data.</p>
       </div>
