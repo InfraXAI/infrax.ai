@@ -1,4 +1,4 @@
-// Products: the product grid and the Ulka strip.
+// Products: the product grid and the WayKeep strip.
 // Markup from site/src/home.html; product headings use the product logos (ProductBrand).
 import ProductBrand from '@/components/site/ProductBrand';
 export default function HomeProducts() {

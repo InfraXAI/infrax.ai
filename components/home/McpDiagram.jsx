@@ -1,4 +1,4 @@
-// MCP diagram: AI models -> MCP gateway (four checks) -> Ulka tool groups, with call, result and refused tags on the wires.
+// MCP diagram: AI models -> MCP gateway (four checks) -> WayKeep tool groups, with call, result and refused tags on the wires.
 // Tool groups and counts follow the Ops MCP server's ops.* tools.
 import { ICONS } from '@/lib/mcp-icons';
 
@@ -13,7 +13,7 @@ const TOOLS = [['clipboard-list', 'Work orders', '5 tools', 'c1'], ['map-pin', '
 
 export default function McpDiagram() {
   return (
-    <div className="mcp-d" role="img" aria-label="Claude, GPT, Gemini or your own Being call Ulka through the MCP gateway, which checks the access token, the scope of each tool and the tenant, and logs every call. Ulka offers 15 tools in six groups.">
+    <div className="mcp-d" role="img" aria-label="Claude, GPT, Gemini or your own Being call WayKeep through the MCP gateway, which checks the access token, the scope of each tool and the tenant, and logs every call. WayKeep offers 15 tools in six groups.">
       <div className="mcp-models">
         {MODELS.map(([i, n, s]) => <div className="mcp-mdl" key={n}><span className="mcp-ic"><Ic n={i} /></span><div><b>{n}</b><small>{s}</small></div></div>)}
       </div>
@@ -34,8 +34,8 @@ export default function McpDiagram() {
         <span className="mcp-pkt call t1"><Ic n="arrow-right" />allowed</span>
         <span className="mcp-pkt res t2"><Ic n="arrow-left" />result</span>
       </div>
-      <div className="mcp-ulka">
-        <div className="mcp-ulka-h"><span className="mcp-ic big ulka"><Ic n="hard-hat" /></span><div><b>Ulka</b><small>15 tools in 6 groups</small></div></div>
+      <div className="mcp-waykeep">
+        <div className="mcp-waykeep-h"><span className="mcp-ic big waykeep"><Ic n="hard-hat" /></span><div><b>WayKeep</b><small>15 tools in 6 groups</small></div></div>
         <div className="mcp-mods">
           {TOOLS.map(([i, n, s, c]) => <div className="mcp-mod" key={n}><span className={'mcp-ic ' + c}><Ic n={i} /></span><div><b>{n}</b><small>{s}</small></div></div>)}
         </div>

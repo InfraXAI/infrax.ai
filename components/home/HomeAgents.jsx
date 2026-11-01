@@ -18,7 +18,7 @@ export default function HomeAgents() {
             <div className="hm-ag-chat" aria-hidden="true"><span className="q">Why does camera R-14 keep dropping at night?</span><span className="a">Offline after 22:00 on 9 of the last 10 nights, along with R-12 on the same switch · likely pole power · site check proposed</span></div>
           </article>
           <article className="hm-agc">
-            <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In Ulka</p>
+            <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>In WayKeep</p>
             <h3>KRITYA</h3>
             <p className="d">Drafts work orders, shift plans and daily digests for field teams. A person approves before anything goes out.</p>
             <div className="hm-ag-chat" aria-hidden="true"><span className="q">Only two crews today. Which repairs can't wait?</span><span className="a">14 open faults ranked by traffic, deadline and repeat failures · top 5 planned for 2 crews · approve?</span></div>
@@ -40,7 +40,7 @@ export default function HomeAgents() {
           <div className="hm-mcp-t">
             <p className="hm-ag-k"><span className="hm-ag-dot" aria-hidden="true"></span>For your own Beings</p>
             <h3>MCP</h3>
-            <p className="d">Bring any model. Every call goes through one gateway that checks the token, the scope and the tenant before it reaches Ulka.</p>
+            <p className="d">Bring any model. Every call goes through one gateway that checks the token, the scope and the tenant before it reaches WayKeep.</p>
           </div>
           <McpDiagram />
         </article>
