@@ -25,7 +25,7 @@ const FAQ = [
   ['What if our requirement grows to more sites or cameras?', 'You add servers and cameras to the same installation. Cygnus runs on standard CPU servers, and we size the hardware for each new site before it goes live.'],
   ['How long does it take to integrate with our existing VMS, ATMS or other software?', 'It depends on what the other system exposes. We check its interfaces in the Discover step and give you a timeline before work starts; standard interfaces such as ONVIF, RTSP and REST APIs are the quickest. You see the integration working before handover.'],
   ['How long does it take to onboard 1,000 cameras on Cygnus?', 'Cameras are added in bulk from a spreadsheet, not one by one. Most of the time goes into network access and camera credentials on site, so we plan the rollout in batches by site and agree the dates in the Define step.'],
-  ['What happens if the network link to a site drops?', 'Dhrishya and Naka keep working at the site and send their reads and transactions once the link returns.'],
+  ['What happens if the network link to a site drops?', 'Dhrishya and Fareline keep working at the site and send their reads and transactions once the link returns.'],
   ['Can we get the data into our own systems?', 'Yes. We agree the format with you in the Define step and deliver the feed as part of the scope.'],
   ['Do we have to replace our cameras?', 'No, we work with IP cameras over ONVIF or RTSP.'],
   ['Can it run on our own servers?', 'Yes.'],

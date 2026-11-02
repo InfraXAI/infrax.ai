@@ -60,7 +60,7 @@ export default function HomeProducts() {
               <h3><ProductBrand slug="tollcloud" /></h3>
               <p className="d">FASTag, ANPR, UPI and RFID lanes that keep running when the link drops.</p>
               <div className="hm-chips"><span className="st st-live">FASTag</span><span className="st st-live">ANPR</span><span className="st st-live">UPI</span><span className="st st-live">RFID</span></div>
-              <a className="link-arrow" href="/products#tollcloud" aria-label="Explore Naka">Explore</a>
+              <a className="link-arrow" href="/products#tollcloud" aria-label="Explore Fareline">Explore</a>
             </div>
           </article>
           <article className="hm-pc">
@@ -80,7 +80,7 @@ export default function HomeProducts() {
               <h3><ProductBrand slug="access-parking" /></h3>
               <p className="d">Entry and exit with plate reads at every gate.</p>
               <div className="hm-chips"><span className="st st-live">Plate read</span><span className="st st-live">Entry & exit</span></div>
-              <a className="link-arrow" href="/products#access-parking" aria-label="Explore Toran">Explore</a>
+              <a className="link-arrow" href="/products#access-parking" aria-label="Explore Dwaar">Explore</a>
             </div>
           </article>
         </div>
