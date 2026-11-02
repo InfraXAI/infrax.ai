@@ -11,7 +11,7 @@ export default function DemoModal() {
         <div className="dm-dialog" role="dialog" aria-modal="true" aria-labelledby="dmTitle" tabIndex="-1" data-lenis-prevent="">
           <button className="dm-x" type="button" aria-label="Close" data-dm-close=""><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg></button>
           <div className="dm-side">
-            <canvas className="dm-net" aria-hidden="true"></canvas>
+            <canvas className="dm-net" data-density="0.45" aria-hidden="true"></canvas>
             <div className="dm-brand" aria-hidden="true"><img src="/assets/logo.svg" alt="" width="84" height="24" /></div>
             <div className="dm-glass">
               <h2 className="h-2" id="dmTitle">See it on a site like yours.</h2>
