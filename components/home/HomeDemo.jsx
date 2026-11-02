@@ -1,6 +1,6 @@
 // Book a demo band (its canvas[data-net] is run by the shared runtime).
-// Markup from site/src/home.html, unchanged apart from JSX syntax; the white side also holds the day / night compare.
-import HomeDayNight from './HomeDayNight';
+// Markup from site/src/home.html, unchanged apart from JSX syntax; the white side also holds the turning cube of site photos.
+import HomeSiteCube from './HomeSiteCube';
 
 export default function HomeDemo() {
   return (
@@ -8,7 +8,7 @@ export default function HomeDemo() {
       <div className="wrap">
         <div className="hm-demo">
           <div className="hm-demo-side">
-            <canvas className="hm-demo-net" data-net="" aria-hidden="true"></canvas>
+            <canvas className="hm-demo-net" data-net="light" aria-hidden="true"></canvas>
             <div>
               <h2 className="h-2" id="hmDemoT">See it on a <em>site like yours.</em></h2>
               <p className="body" style={{ 'marginTop': 'calc(14*var(--s))' }}>Tell us what you run. We'll show the products that fit.</p>
@@ -25,7 +25,7 @@ export default function HomeDemo() {
               <p className="body">It takes about a minute.</p>
               <div className="btn-row" style={{ 'marginTop': 'calc(22*var(--s))' }}><a className="btn btn-primary" href="/#demo" data-magnetic="">Get in touch <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a><span className="hm-demo-mail">or email <a href="mailto:info@infrax.ai">info@infrax.ai</a></span></div>
             </div>
-            <HomeDayNight />
+            <HomeSiteCube />
           </div>
         </div>
       </div>

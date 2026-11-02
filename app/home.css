@@ -218,17 +218,15 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 /* the white side: copy and button on the left, the day / night compare beside them */
 :where(body[data-page="home"]) .hm-demo-cta{flex-direction:row;align-items:center;flex-wrap:wrap;gap:calc(28*var(--s)) clamp(calc(24*var(--s)),3vw,calc(48*var(--s)))}
 :where(body[data-page="home"]) .hm-demo-copy{flex:1 1 calc(220*var(--s));min-width:0;display:flex;flex-direction:column}
-:where(body[data-page="home"]) .hm-dn{--p:50%;position:relative;flex:0 1 clamp(260px,50%,456px);aspect-ratio:16/9;border-radius:calc(14*var(--s));overflow:hidden;background:#0B1B2C;box-shadow:0 calc(18*var(--s)) calc(36*var(--s)) calc(-22*var(--s)) rgba(14,34,54,.55);touch-action:pan-y}
-:where(body[data-page="home"]) .hm-dn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;user-select:none}
-:where(body[data-page="home"]) .hm-dn-day{clip-path:inset(0 calc(100% - var(--p)) 0 0)}
-:where(body[data-page="home"]) .hm-dn-bar{position:absolute;top:0;bottom:0;left:var(--p);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(14,59,102,.2);pointer-events:none}
-:where(body[data-page="home"]) .hm-dn-bar i{position:absolute;top:50%;left:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:#fff;box-shadow:0 4px 12px rgba(14,34,54,.35);display:grid;place-items:center;transition:transform .15s ease-out}
-:where(body[data-page="home"]) .hm-dn-bar i::before{content:"";width:10px;height:8px;border-left:2px solid var(--blue);border-right:2px solid var(--blue)}
-:where(body[data-page="home"]) .hm-dn-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;-webkit-appearance:none;appearance:none}
-:where(body[data-page="home"]) .hm-dn:hover .hm-dn-bar i{transform:scale(1.08)}
-:where(body[data-page="home"]) .hm-dn:has(.hm-dn-range:focus-visible){outline:2px solid var(--blue);outline-offset:3px}
-/* stacked (phones): the photo comes first, above "Tell us about your sites." */
-@media (max-width:600px){:where(body[data-page="home"]) .hm-dn{flex-basis:100%;order:-1}}
+/* the turning cube of site photos beside the copy (components/home/HomeSiteCube.jsx); 864px square faces stay sharp at 2x */
+:where(body[data-page="home"]) .hm-cube{--cs:clamp(190px,17vw,236px);position:relative;flex:0 1 clamp(280px,50%,456px);min-height:calc(var(--cs) * 1.62);display:grid;place-items:center;perspective:1700px;cursor:grab;touch-action:pan-y;user-select:none}
+:where(body[data-page="home"]) .hm-cube.is-drag{cursor:grabbing}
+:where(body[data-page="home"]) .hm-cube-c{position:relative;width:var(--cs);height:var(--cs);transform-style:preserve-3d;will-change:transform}
+:where(body[data-page="home"]) .hm-cube-f{position:absolute;inset:0;border-radius:calc(14*var(--s));overflow:hidden;border:3px solid #fff;box-shadow:0 0 0 1px rgba(14,59,102,.1);backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#DCE7F1}
+:where(body[data-page="home"]) .hm-cube-f img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;-webkit-user-drag:none}
+:where(body[data-page="home"]) .hm-cube-shadow{position:absolute;left:50%;bottom:6%;width:calc(var(--cs) * 1.05);height:calc(var(--cs) * .12);transform:translateX(-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(14,59,102,.26),rgba(14,59,102,0))}
+:where(body[data-page="home"]) .hm-cube:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+@media (max-width:600px){:where(body[data-page="home"]) .hm-cube{flex-basis:100%;order:-1;--cs:min(200px,52vw)}}
 :where(body[data-page="home"]) .hm-demo-mail{align-self:center;font-size:max(12px,calc(14*var(--s)));color:var(--muted)}
 :where(body[data-page="home"]) .hm-demo-mail a{font-weight:600;color:var(--blue);text-decoration:none}
 :where(body[data-page="home"]) .hm-demo-mail a:hover{text-decoration:underline;text-underline-offset:3px}
@@ -549,11 +547,14 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
 }
 
 /* demo panel in the site's light theme (matches the Book a demo dialog): light-blue gradient, live particle network, blue steps */
-:where(body[data-page="home"]) .hm-demo-side{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(165deg,#F4F8FC 0%,#E4EFF9 100%);color:var(--ink)}
+/* demo panel: brand blue on the left fading to white on the right, into the white half; deep navy type reads across the whole fade */
+/* the heading and the three steps sit together, centred vertically in the panel */
+:where(body[data-page="home"]) .hm-demo-side{justify-content:center;gap:calc(30*var(--s))}
+:where(body[data-page="home"]) .hm-demo-side{position:relative;overflow:hidden;isolation:isolate;background:linear-gradient(90deg,#3F8BD0 0%,#6FAEE4 38%,#BFDCF3 72%,#FFFFFF 100%);color:var(--ink)}
 :where(body[data-page="home"]) .hm-demo-net{position:absolute;inset:0;width:100%;height:100%;z-index:-1;display:block}
-:where(body[data-page="home"]) .hm-demo-side h2{color:var(--ink)}
-:where(body[data-page="home"]) .hm-demo-side h2 em{font-style:normal;color:var(--blue)}
-:where(body[data-page="home"]) .hm-demo-side .body{color:var(--ink-2)}
+:where(body[data-page="home"]) .hm-demo-side h2{color:#0A1A2B}
+:where(body[data-page="home"]) .hm-demo-side h2 em{font-style:normal;color:#0A1A2B}
+:where(body[data-page="home"]) .hm-demo-side .body{color:#0A2440}
 :where(body[data-page="home"]) .hm-steps li{color:var(--ink-2)}
 :where(body[data-page="home"]) .hm-steps li span{background:rgba(255,255,255,.72);border-radius:calc(8*var(--s));padding:calc(3*var(--s)) calc(8*var(--s))}
 :where(body[data-page="home"]) .hm-steps i{border:1px solid var(--blue);background:#fff;color:var(--blue);box-shadow:0 0 0 calc(4*var(--s)) rgba(38,115,181,.08)}
