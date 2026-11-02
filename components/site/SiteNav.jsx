@@ -38,7 +38,7 @@ export default function SiteNav() {
           <li><a href="/services" data-nav="services" aria-current={cur('services')}>Services</a></li>
           <li><a href="/#company" data-nav="company" aria-current={cur('company')}>Company</a></li>
         </ul>
-        <div className="nav-cta"><a className="btn btn-primary" href="/#demo" data-magnetic="">Book a demo <Arrow /></a></div>
+        <div className="nav-cta"><a className="btn btn-primary" href="/#demo" data-magnetic="">Get in touch <Arrow /></a></div>
         <button className="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navSheet"><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6"><path className="nt-open" d="M3 6h14M3 10h14M3 14h14" /><path className="nt-close" d="M5 5l10 10M15 5L5 15" /></svg></button>
       </div></header>
       <nav className="sheet" id="navSheet" aria-label="Mobile">
@@ -49,7 +49,7 @@ export default function SiteNav() {
         ))}
         <a href="/services" data-nav="services" aria-current={cur('services')}>Services<small>Integration &amp; delivery</small></a>
         <a href="/#company">Company<small>About</small></a>
-        <a className="btn btn-primary" href="/#demo">Book a demo <Arrow /></a>
+        <a className="btn btn-primary" href="/#demo">Get in touch <Arrow /></a>
       </nav>
     </>
   );

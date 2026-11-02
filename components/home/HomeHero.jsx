@@ -20,7 +20,7 @@ export default function HomeHero() {
           <h1 className="h-hero hm-h1" id="hmTitle">Your infrastructure,<br /><span className="hx-run">running itself.</span></h1>
           <p className="hx-sub"><strong>The Agentic OS for infrastructure.</strong> AI Beings run the routine work across every camera, asset and site; your people approve what matters.</p>
           <div className="btn-row">
-            <a className="btn btn-primary" href="/#demo" data-magnetic="">Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a>
+            <a className="btn btn-primary" href="/#demo" data-magnetic="">Get in touch <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a>
             <a className="btn btn-ghost" href="/products">See the products <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a>
           </div>
         </div>
