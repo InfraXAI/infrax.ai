@@ -23,7 +23,7 @@ app/
   services/page.jsx     /services    (DONE: the reference port)
   services/services.css the page's inline <style>, verbatim
   products|analytics|deployment|how-it-works|integrations/page.jsx   (placeholders, TODO)
-  api/leads/route.js    demo form backend: lead.js sends two mails via Microsoft Graph, template.js = the mails, route.test.js = tests
+  api/leads/route.js    demo form backend: lead.js sends two mails via Microsoft Graph (Notion fallback), template.js = the mails, route.test.js = tests
 components/
   site/                 SiteNav (client, active state from usePathname), SiteFooter, DemoModal, SiteRuntime,
                         PageRuntime (pages without a script), JsonLd, Arrow
