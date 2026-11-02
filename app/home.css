@@ -83,7 +83,7 @@ html.nav-wait :where(body[data-page="home"]) .site-nav{transform:translateY(-100
   :where(body[data-page="home"]) .hm-h1{max-width:12em}
 }
 @media (max-width:480px){
-  :where(body[data-page="home"]) .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,calc(320*var(--s)))}
+  :where(body[data-page="home"]) .hx-copy .btn-row{flex-direction:column;align-items:stretch;width:min(100%,240px);margin-inline:auto}
   :where(body[data-page="home"]) .hx-copy .btn{justify-content:center}
 }
 @media (prefers-reduced-motion:reduce){:where(body[data-page="home"]) .hx-copy>*,:where(body[data-page="home"]) .hx-rings,:where(body[data-page="home"]) .hx-rc{transition:none!important}}

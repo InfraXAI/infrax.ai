@@ -654,3 +654,10 @@ body #main > .wrap:has(> .next-band){padding-top:calc(var(--sec-g) / 2)}
   .foot-grid .foot-products .pn-tag{margin-left:0}
   .foot-base{flex-direction:column;gap:4px}
 }
+
+/* phones: smaller buttons (Book a demo and the rest), still a 44px tap target; the nav sheet keeps its full-width button */
+@media (max-width:480px){
+  .btn{--h:44px;padding:0 18px;gap:8px;font-size:14px}
+  .btn svg{width:14px;height:14px}
+  .sheet .btn{font-size:15px}
+}
