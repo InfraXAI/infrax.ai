@@ -451,8 +451,9 @@
 :where(body[data-page="products"]) .cy-static .cy-skip{display:none}
 /* never over the station panel or "Show more detail": above "Full screen" on the left, beside it on short landscape, above "Show more detail" on narrow phones */
 @media (max-width:560px){:where(body[data-page="products"]) .cy-skip{right:auto;left:var(--in);bottom:calc(150*var(--s))}}
-@media (min-width:768.02px){:where(body[data-page="products"]) .cy-skip{right:auto;left:var(--in);bottom:calc(158*var(--s))}}
-@media (orientation:landscape) and (max-height:500px) and (min-width:768.02px){:where(body[data-page="products"]) .cy-skip{left:calc(var(--in) + 140px);bottom:136px}}
+/* skip the tour: bottom right on tablets and desktops, level with Full screen and Show more detail (phones keep it bottom left) */
+@media (min-width:768.02px){:where(body[data-page="products"]) .cy-skip{right:var(--in);left:auto;bottom:calc(104*var(--s))}}
+@media (orientation:landscape) and (max-height:500px) and (min-width:768.02px){:where(body[data-page="products"]) .cy-skip{right:auto;left:calc(var(--in) + 140px);bottom:136px}}
 /* station popup open: lock page scroll on the root only (locking body too unpins the sticky nav) */
 html.cy-pop-lock{overflow:hidden}
 /* detection boxes sit in a layer matching the photo's drawn area (placed by script), so they track the vehicles */

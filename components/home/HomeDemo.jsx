@@ -1,5 +1,7 @@
 // Book a demo band (its canvas[data-net] is run by the shared runtime).
-// Markup from site/src/home.html, unchanged apart from JSX syntax.
+// Markup from site/src/home.html, unchanged apart from JSX syntax; the white side also holds the day / night compare.
+import HomeDayNight from './HomeDayNight';
+
 export default function HomeDemo() {
   return (
     <section className="scene" id="demo" aria-labelledby="hmDemoT">
@@ -18,9 +20,12 @@ export default function HomeDemo() {
             </ol>
           </div>
           <div className="hm-demo-cta">
-            <h3 className="h-3" style={{ 'fontSize': 'var(--fs-h3)' }}>Tell us about your sites.</h3>
-            <p className="body">It takes about a minute.</p>
-            <div className="btn-row" style={{ 'marginTop': 'calc(22*var(--s))' }}><a className="btn btn-primary" href="/#demo" data-magnetic="">Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a><span className="hm-demo-mail">or email <a href="mailto:info@infrax.ai">info@infrax.ai</a></span></div>
+            <div className="hm-demo-copy">
+              <h3 className="h-3" style={{ 'fontSize': 'var(--fs-h3)' }}>Tell us about your sites.</h3>
+              <p className="body">It takes about a minute.</p>
+              <div className="btn-row" style={{ 'marginTop': 'calc(22*var(--s))' }}><a className="btn btn-primary" href="/#demo" data-magnetic="">Book a demo <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg></a><span className="hm-demo-mail">or email <a href="mailto:info@infrax.ai">info@infrax.ai</a></span></div>
+            </div>
+            <HomeDayNight />
           </div>
         </div>
       </div>

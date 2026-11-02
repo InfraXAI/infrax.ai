@@ -23,8 +23,7 @@ export default function DeploymentHero() {
         <span className="dp-auto" id="dpAuto">Cycling through the four models · pick one to stop</span>
     
         <div className="dp-stage" id="dpStage">
-          <svg className="dp-svg" id="dpSvg" viewBox="0 0 1200 560" role="img" aria-labelledby="dpSvgTitle">
-            <title id="dpSvgTitle">Deployment topology for the selected size</title>
+          <svg className="dp-svg" id="dpSvg" viewBox="0 0 1200 560" role="img" aria-label="Deployment topology for the selected model">
             <g id="dpZones"></g><g id="dpLinks"></g><g id="dpPackets"></g><g id="dpNodes"></g>
           </svg>
           <div className="dp-legend" aria-hidden="true"><span><i style={{ 'background': '#5A9FD4' }}></i>Video</span><span><i style={{ 'background': '#2673B5' }}></i>Results: plates, events, clips, alerts</span><span><i className="ai"></i>Where the AI runs</span></div>
