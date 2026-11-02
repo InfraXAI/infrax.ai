@@ -26,9 +26,9 @@ export default function HomePage() {
     <>
       <JsonLd page="home" />
       <HomeHero />
-      <HomeAgents />
       <HomeTwin />
       <HomeProducts />
+      <HomeAgents />
       <HomeDomains />
       <HomeProof />
       <HomeCompany />

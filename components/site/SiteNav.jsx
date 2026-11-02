@@ -4,6 +4,7 @@
 // The current-page marks (aria-current on [data-nav] links, .is-current on the menu button) come from the route here.
 import { usePathname } from 'next/navigation';
 import { PLATFORM, PRODUCTS, MARKS, PRODUCT_LOGOS, pageForPath } from '@/lib/site-data';
+import ProductName from './ProductName';
 import { Arrow } from './Arrow';
 
 function Chevron() {
@@ -25,7 +26,7 @@ export default function SiteNav() {
           <li className="has-menu"><button type="button" aria-expanded="false" aria-haspopup="true" data-menu="products" className={btnClass('products')}>Products <Chevron /></button>
             <div className="menu menu-products"><div className="pm-row">
               {PRODUCTS.map(([s, n, d]) => (
-                <a key={s} href={`/products#${s}`} data-nav="products" aria-current={cur('products')}>{PRODUCT_LOGOS[s] ? <i className="mk" aria-hidden="true"><img src={`/assets/products/${PRODUCT_LOGOS[s][0]}-mark.svg`} alt="" width="27" height="27" /></i> : <i style={{ '--pc': MARKS[s][0], '--pr': `${MARKS[s][1]}deg` }} aria-hidden="true"></i>}<b>{n}</b><span>{d}</span></a>
+                <a key={s} href={`/products#${s}`} data-nav="products" aria-current={cur('products')}>{PRODUCT_LOGOS[s] ? <i className="mk" aria-hidden="true"><img className="lt" src={`/assets/products/${PRODUCT_LOGOS[s][0]}-mark.svg`} alt="" width="40" height="40" /><img className="dk" src={`/assets/products/${PRODUCT_LOGOS[s][0]}-mark-white.svg`} alt="" width="40" height="40" /></i> : <i style={{ '--pc': MARKS[s][0], '--pr': `${MARKS[s][1]}deg` }} aria-hidden="true"></i>}<b><ProductName slug={s} /></b><span>{d}</span></a>
               ))}
             </div><a className="pm-all" href="/products">See every product in action &rarr;</a></div></li>
           <li className="has-menu"><button type="button" aria-expanded="false" aria-haspopup="true" data-menu="platform" className={btnClass('platform')}>Platform <Chevron /></button>

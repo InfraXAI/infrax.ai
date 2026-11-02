@@ -115,3 +115,40 @@
   :where(body[data-page="services"]) .sv-qa div{grid-template-columns:1fr;gap:6px}
   :where(body[data-page="services"]) .sv-cta-band{padding:calc(28*var(--s)) calc(22*var(--s))}
 }
+/* each phase sits centred under its dot: four equal columns with no gap, so column centres are the dots' 12.5% steps */
+@media (min-width:768.02px){
+  :where(body[data-page="services"]) .sv-phases{column-gap:0;margin-top:calc(16*var(--s))}
+  :where(body[data-page="services"]) .sv-phases li{text-align:center;padding-inline:calc(14*var(--s))}
+  :where(body[data-page="services"]) .sv-phases p{max-width:28ch;margin-inline:auto}
+}
+/* light CTA band: soft blue wash and grid, brand-blue edge, ink heading, blue button */
+:where(body[data-page="services"]) .sv-cta-band{background:linear-gradient(120deg,#FFFFFF 0%,var(--mist) 55%,var(--wash) 100%);border:1px solid var(--line);box-shadow:0 1px 2px rgba(10,26,43,.04),0 24px 48px -32px rgba(14,59,102,.35)}
+:where(body[data-page="services"]) .sv-cta-band::before{background-image:linear-gradient(rgba(38,115,181,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(38,115,181,.07) 1px,transparent 1px)}
+:where(body[data-page="services"]) .sv-cta-h{color:var(--ink)}
+:where(body[data-page="services"]) .sv-cta-band .btn-primary{background:var(--blue);color:#fff;box-shadow:0 1px 2px rgba(10,26,43,.12),0 10px 24px -12px rgba(14,59,102,.55)}
+:where(body[data-page="services"]) .sv-cta-band .btn-primary:hover{background:var(--blue-mid);color:#fff}
+/* one section head everywhere: heading, then a single tagline under it */
+:where(body[data-page="services"]) .sv-h{margin:0;max-width:24em}
+:where(body[data-page="services"]) .sv-tag{margin:calc(12*var(--s)) 0 0;max-width:46em;color:var(--ink-2)}
+:where(body[data-page="services"]) :is(.sv-path-head,.sv-ex-head){display:block}
+:where(body[data-page="services"]) .sv-faq-grid{grid-template-columns:minmax(0,1fr);gap:var(--gap-c)}
+/* FAQ: an accordion, two columns on wide screens; the first answer starts open */
+:where(body[data-page="services"]) .sv-qa{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(12*var(--s)) calc(20*var(--s));border:0;align-items:start}
+:where(body[data-page="services"]) .sv-qa details{border:1px solid var(--line);border-radius:calc(12*var(--s));background:#fff;padding:0 calc(18*var(--s));transition:border-color .2s,box-shadow .2s}
+:where(body[data-page="services"]) .sv-qa details[open]{border-color:var(--line-2);box-shadow:0 14px 30px -24px rgba(14,59,102,.45)}
+:where(body[data-page="services"]) .sv-qa summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:calc(16*var(--s)) 0;font:600 var(--fs-body)/1.45 var(--f-display);color:var(--ink)}
+:where(body[data-page="services"]) .sv-qa summary::-webkit-details-marker{display:none}
+:where(body[data-page="services"]) .sv-qa summary i{flex:none;position:relative;width:22px;height:22px;margin-top:2px;border-radius:50%;background:var(--mist);color:var(--blue)}
+:where(body[data-page="services"]) .sv-qa summary i::before,:where(body[data-page="services"]) .sv-qa summary i::after{content:"";position:absolute;left:50%;top:50%;width:10px;height:2px;margin:-1px 0 0 -5px;background:currentColor;border-radius:1px;transition:transform .2s}
+:where(body[data-page="services"]) .sv-qa summary i::after{transform:rotate(90deg)}
+:where(body[data-page="services"]) .sv-qa details[open] summary i::after{transform:rotate(0)}
+:where(body[data-page="services"]) .sv-qa summary:hover{color:var(--blue)}
+:where(body[data-page="services"]) .sv-qa summary:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
+:where(body[data-page="services"]) .sv-qa details p{margin:0 0 calc(16*var(--s));font-size:var(--fs-body);line-height:1.55;color:var(--ink-2)}
+@media (max-width:900px){:where(body[data-page="services"]) .sv-qa{grid-template-columns:1fr}}
+/* FAQ: one column, one answer open at a time, so every row lines up */
+:where(body[data-page="services"]) .sv-qa{grid-template-columns:minmax(0,1fr);gap:calc(10*var(--s))}
+:where(body[data-page="services"]) .sv-qa summary{align-items:center;min-height:calc(56*var(--s));padding-block:calc(12*var(--s))}
+:where(body[data-page="services"]) .sv-qa summary i{margin-top:0}
+:where(body[data-page="services"]) .sv-qa details p{max-width:72ch}
+:where(body[data-page="services"]) .sv-qa details{cursor:pointer}

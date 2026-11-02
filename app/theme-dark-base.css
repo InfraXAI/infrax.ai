@@ -28,7 +28,7 @@ html[data-theme="dark"] .site-grid::before{background:
 html[data-theme="dark"] .site-grid::after{background-image:linear-gradient(rgba(150,195,240,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(150,195,240,.06) 1px,transparent 1px)}
 
 /* ---------- logo: navy wordmark turns light, the blue X keeps its hue ---------- */
-html[data-theme="dark"] :is(.brand,.foot-brand) img{filter:invert(1) hue-rotate(180deg) brightness(1.1)}
+html[data-theme="dark"] :is(.brand,.foot-logo) img{filter:invert(1) hue-rotate(180deg) brightness(1.1)}
 
 /* ---------- photographs: a light hairline instead of a dark one ---------- */
 html[data-theme="dark"] :where(main) img:not([src$=".svg"]){outline-color:rgba(255,255,255,.08)}
