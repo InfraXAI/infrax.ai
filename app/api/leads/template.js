@@ -2,8 +2,13 @@
 // Outlook and Apple Mail). A Graph JSON body carries one content type, so there is no plain-text part.
 // Wording is a draft until Tarun approves it.
 
+import { LOGO_CID, LOGO_W, LOGO_H } from './logo';
+
 const BLUE = '#2673B5', DEEP = '#0E3B66', INK = '#0A1A2B', MUTED = '#5B6E82', LINE = '#E3EAF2', MIST = '#F2F7FC';
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+
+// the real logo (inline image, see logo.js); its alt text stays readable on the navy header when images are off
+const LOGO = `<img src="cid:${LOGO_CID}" width="${LOGO_W}" height="${LOGO_H}" alt="InfraX AI" style="display:block;border:0;outline:none;text-decoration:none;width:${LOGO_W}px;height:${LOGO_H}px;font:700 20px/1 ${FONT};color:#FFFFFF">`;
 
 function esc(s) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -44,7 +49,7 @@ export function leadEmail(lead, receivedAt) {
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#FFFFFF;border-radius:14px;overflow:hidden;border:1px solid ${LINE}">
   <tr><td style="background:${DEEP};padding:22px 32px">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td style="font:700 20px/1 ${FONT};color:#FFFFFF;letter-spacing:-.01em">InfraX<span style="color:#7FB6E6"> AI</span></td>
+      <td style="vertical-align:middle">${LOGO}</td>
       <td align="right" style="font:600 11px/1 ${FONT};color:#BFD6EC;letter-spacing:.12em;text-transform:uppercase">New demo request</td>
     </tr></table>
   </td></tr>
@@ -103,7 +108,7 @@ export function ackEmail(name) {
 <body style="margin:0;padding:0;background:#EEF3F8">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EEF3F8"><tr><td align="center" style="padding:28px 12px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#FFFFFF;border-radius:14px;overflow:hidden;border:1px solid ${LINE}">
-  <tr><td style="background:${DEEP};padding:22px 32px;font:700 20px/1 ${FONT};color:#FFFFFF;letter-spacing:-.01em">InfraX<span style="color:#7FB6E6"> AI</span></td></tr>
+  <tr><td style="background:${DEEP};padding:18px 32px">${LOGO}</td></tr>
   <tr><td style="padding:30px 32px 8px">
     <p style="margin:0 0 14px;font:600 17px/1.4 ${FONT};color:${INK}">${first ? `Hello ${esc(first)},` : 'Hello,'}</p>
     <p style="margin:0 0 12px;font:400 15px/1.6 ${FONT};color:${INK}">Thank you for asking for a demo of InfraX AI. Our team has your request and will get in touch with you.</p>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ackEmail, leadEmail } from './template';
+import { LOGO_CID, LOGO_PNG_BASE64 } from './logo';
 
 // The demo-request handler behind app/api/leads/route.js. Requests are sent through Microsoft Graph as donotreply@: a notification to
 // BOOK_DEMO_TO, then a "request received" acknowledgement to the customer. No mailbox password lives
@@ -98,6 +99,8 @@ export async function sendMail(mail, timeoutMs) {
         body: { contentType: 'HTML', content: mail.html },
         toRecipients: mail.to.map((address) => asRecipient({ address })),
         replyTo: mail.replyTo.map(asRecipient),
+        // the header logo, shown by both templates as cid:infrax-ai-logo (logo.js)
+        attachments: [{ '@odata.type': '#microsoft.graph.fileAttachment', name: 'infrax-ai-logo.png', contentType: 'image/png', contentBytes: LOGO_PNG_BASE64, isInline: true, contentId: LOGO_CID }],
       },
       saveToSentItems: false,
     }),
