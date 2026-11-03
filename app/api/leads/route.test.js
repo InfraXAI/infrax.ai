@@ -56,6 +56,16 @@ test('sends the notification, then the acknowledgement', async () => {
   assert.deepEqual(owner.toRecipients, [{ emailAddress: { address: 'bookdemo@infrax.ai' } }]);
   assert.deepEqual(ack.toRecipients, [{ emailAddress: { address: 'test@example.com' } }]);
 });
+test('both mails show the real logo as an inline image', async () => {
+  await POST(req(LEAD));
+  for (const m of mails()) {
+    assert.ok(m.body.content.includes('src="cid:infrax-ai-logo"'));
+    assert.equal(m.attachments.length, 1);
+    const [a] = m.attachments;
+    assert.equal(a.isInline, true); assert.equal(a.contentId, 'infrax-ai-logo'); assert.equal(a.contentType, 'image/png');
+    assert.ok(Buffer.from(a.contentBytes, 'base64').subarray(1, 4).toString() === 'PNG');
+  }
+});
 test('notification replies go to the customer', async () => {
   await POST(req(LEAD));
   assert.deepEqual(mails()[0].replyTo, [{ emailAddress: { name: 'Test Person', address: 'test@example.com' } }]);
