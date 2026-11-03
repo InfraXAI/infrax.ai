@@ -458,3 +458,12 @@
 html.cy-pop-lock{overflow:hidden}
 /* detection boxes sit in a layer matching the photo's drawn area (placed by script), so they track the vehicles */
 :where(body[data-page="products"]) .rw-img{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+
+/* skip the tour on phones (portrait, and landscape under 500px tall): just "Skip", in a smaller pill */
+:where(body[data-page="products"]) .cy-skip-s{display:none}
+@media (max-width:560px),(orientation:landscape) and (max-height:500px){
+  :where(body[data-page="products"]) .cy-skip-l{display:none}
+  :where(body[data-page="products"]) .cy-skip-s{display:inline}
+  :where(body[data-page="products"]) .cy-skip{min-height:34px;padding:0 12px;gap:5px;font-size:12px}
+  :where(body[data-page="products"]) .cy-skip svg{width:11px;height:11px}
+}

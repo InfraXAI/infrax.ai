@@ -661,3 +661,10 @@ body #main > .wrap:has(> .next-band){padding-top:calc(var(--sec-g) / 2)}
   .btn svg{width:14px;height:14px}
   .sheet .btn{font-size:15px}
 }
+
+/* Get in touch form: the heading card and the three steps sit together, centred in the panel under the logo */
+@media (min-width:768.02px){
+  .dm-side{justify-content:flex-start}
+  .dm-glass{margin-top:auto}
+  .dm-steps{margin-top:calc(28*var(--s));margin-bottom:auto}
+}
