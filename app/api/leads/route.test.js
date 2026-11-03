@@ -3,31 +3,41 @@ import { test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { NextRequest } from 'next/server';
 import { POST } from './route';
-import { REQUIRED, resetLimits, failure, GraphError } from './lead';
+import { REQUIRED, NOTION_REQUIRED, resetLimits, failure, GraphError } from './lead';
 import { ackEmail, firstNameOnly, leadEmail } from './template';
 
 const ENV = {
   MAIL_GRAPH_TENANT_ID: 'tenant-1', MAIL_GRAPH_CLIENT_ID: 'client-1', MAIL_GRAPH_CLIENT_SECRET: 'secret-1',
   MAIL_GRAPH_SENDER: 'donotreply@infrax.ai', BOOK_DEMO_TO: 'bookdemo@infrax.ai',
 };
+const NOTION = { NOTION_API_KEY: 'notion-secret-1', NOTION_DATABASE_ID: 'db-1' };
 const LEAD = { name: 'Test Person', email: 'test@example.com', phone: '9000000000', domain: 'Ports', organization: 'Acme', products: ['Cygnus'], message: 'Two gates' };
 
 let calls = [], logs = [];
-let tokenStatus = 200, sendStatus = [], hang = false;
+let tokenStatus = 200, sendStatus = [], hang = false, notionStatus = 200;
 const realFetch = globalThis.fetch, realError = console.error;
 
+function notionCalls() { return calls.filter((c) => c.url.startsWith('https://api.notion.com/')); }
+function useNotion({ mail = true } = {}) { Object.assign(process.env, NOTION); if (!mail) for (const k of REQUIRED) delete process.env[k]; }
 function mails() { return calls.filter((c) => c.url.includes('/sendMail')).map((c) => JSON.parse(String(c.init.body)).message); }
 function req(body, ip = '1.1.1.1') {
   return new NextRequest('http://localhost/api/leads', { method: 'POST', body: typeof body === 'string' ? body : JSON.stringify(body), headers: { 'content-type': 'application/json', 'x-real-ip': ip } });
 }
 
 beforeEach(() => {
-  calls = []; logs = []; tokenStatus = 200; sendStatus = []; hang = false; resetLimits();
+  calls = []; logs = []; tokenStatus = 200; sendStatus = []; hang = false; notionStatus = 200; resetLimits();
   Object.assign(process.env, ENV);
+  for (const k of NOTION_REQUIRED) delete process.env[k];
   console.error = (...a) => { logs.push(a.map(String).join(' ')); };
   globalThis.fetch = (async (input, init = {}) => {
     const url = String(input); calls.push({ url, init });
-    if (hang) await new Promise((_, reject) => init.signal?.addEventListener('abort', () => reject(init.signal?.reason)));
+    // AbortSignal.timeout's timer is unref'd: hold the event loop open or node:test cancels the remaining tests
+    if (hang) await new Promise((_, reject) => { const hold = setInterval(() => {}, 1000); init.signal?.addEventListener('abort', () => { clearInterval(hold); reject(init.signal?.reason); }); });
+    if (url.startsWith('https://api.notion.com/')) {
+      return notionStatus === 200
+        ? new Response(JSON.stringify({ object: 'page', id: 'p1' }), { status: 200 })
+        : new Response(JSON.stringify({ object: 'error', code: 'object_not_found', message: 'db for test@example.com' }), { status: notionStatus });
+    }
     if (url.includes('login.microsoftonline.com')) {
       return tokenStatus === 200
         ? new Response(JSON.stringify({ access_token: 'tok', expires_in: 3600 }), { status: 200 })
@@ -174,4 +184,97 @@ test('the notification escapes unusual names and text', () => {
 test('failure() reports codes only', () => {
   assert.equal(failure(new GraphError('send', 404, 'ErrorInvalidUser')), 'step=send status=404 code=ErrorInvalidUser');
   assert.equal(failure(new Error('mail to test@example.com failed')), 'network');
+});
+
+// Notion fallback: used when mail is not configured or the team notification fails
+test('Notion only: saved to Notion, success without claiming an email', async () => {
+  useNotion({ mail: false });
+  const res = await POST(req(LEAD));
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { success: true, saved: 'notion', emailed: false });
+  assert.equal(mails().length, 0); assert.equal(calls.filter((c) => c.url.includes('login.')).length, 0);
+  assert.equal(notionCalls().length, 1);
+  assert.match(logs.join('\n'), /saved to Notion, no email sent \(mail not configured\)/);
+  assert.ok(!/email (was )?sent|emailed/i.test(logs.join('\n').replace('no email sent', '')));
+});
+test('Notion page: database, auth header and the earlier columns', async () => {
+  useNotion({ mail: false });
+  await POST(req(LEAD));
+  const c = notionCalls()[0], h = c.init.headers, page = JSON.parse(String(c.init.body)), p = page.properties;
+  assert.equal(c.url, 'https://api.notion.com/v1/pages');
+  assert.equal(h.authorization, 'Bearer notion-secret-1'); assert.equal(h['notion-version'], '2022-06-28');
+  assert.deepEqual(page.parent, { database_id: 'db-1' });
+  assert.equal(p.Name.title[0].text.content, 'Test Person');
+  assert.equal(p.Organization.rich_text[0].text.content, 'Acme');
+  assert.equal(p.Email.email, 'test@example.com');
+  assert.equal(p.Phone.phone_number, '9000000000');
+  assert.equal(p.Audience.select.name, 'Ports');
+  assert.equal(p.Message.rich_text[0].text.content, 'Products: Cygnus\n\nTwo gates');
+  assert.equal(p.Source.rich_text[0].text.content, 'website');
+  assert.ok(!Number.isNaN(Date.parse(p['Submitted At'].date.start)));
+});
+test('Notion: commas leave the Audience select name, empty organization is allowed', async () => {
+  useNotion({ mail: false });
+  await POST(req({ ...LEAD, domain: 'Ports, terminals', organization: '' }));
+  const p = JSON.parse(String(notionCalls()[0].init.body)).properties;
+  assert.ok(!p.Audience.select.name.includes(','));
+  assert.deepEqual(p.Organization.rich_text, []);
+});
+test('mail only: mail sent, Notion never called', async () => {
+  const res = await POST(req(LEAD));
+  assert.equal(res.status, 200); assert.equal((await res.json()).emailed, true);
+  assert.equal(mails().length, 2); assert.equal(notionCalls().length, 0);
+});
+test('both set, mail works: mail sent, Notion not called', async () => {
+  useNotion();
+  const res = await POST(req(LEAD));
+  assert.equal(res.status, 200); assert.equal((await res.json()).emailed, true);
+  assert.equal(mails().length, 2); assert.equal(notionCalls().length, 0);
+});
+test('both set, notification fails: saved to Notion, no acknowledgement, success', async () => {
+  useNotion(); sendStatus = [403];
+  const res = await POST(req(LEAD));
+  assert.equal(res.status, 200);
+  assert.deepEqual(await res.json(), { success: true, saved: 'notion', emailed: false });
+  assert.equal(mails().length, 1); assert.equal(notionCalls().length, 1);
+  assert.match(logs.join('\n'), /Lead email failed: step=send status=403/);
+  assert.match(logs.join('\n'), /saved to Notion, no email sent \(mail failed\)/);
+});
+test('both set, sign-in refused: saved to Notion', async () => {
+  useNotion(); tokenStatus = 401;
+  assert.equal((await POST(req(LEAD))).status, 200);
+  assert.equal(mails().length, 0); assert.equal(notionCalls().length, 1);
+});
+test('Notion only, Notion fails: 502, code logged', async () => {
+  useNotion({ mail: false }); notionStatus = 404;
+  const res = await POST(req(LEAD));
+  assert.equal(res.status, 502);
+  assert.match(logs.join('\n'), /Lead not saved to Notion: step=notion status=404 code=object_not_found/);
+  assert.ok(!logs.join('\n').includes('saved to Notion, no email'));
+});
+test('both set, mail and Notion fail: 502', async () => {
+  useNotion(); sendStatus = [500]; notionStatus = 500;
+  assert.equal((await POST(req(LEAD))).status, 502);
+  assert.equal(notionCalls().length, 1);
+});
+test('Notion half set counts as unset: 503 when mail is unset too, log names every setting', async () => {
+  useNotion({ mail: false }); delete process.env.NOTION_DATABASE_ID;
+  assert.equal((await POST(req(LEAD))).status, 503);
+  assert.equal(calls.length, 0);
+  for (const k of [...REQUIRED, 'NOTION_DATABASE_ID']) assert.ok(logs.join('\n').includes(k), k);
+});
+test('Notion path keeps validation, bot field and rate limit', async () => {
+  useNotion({ mail: false });
+  assert.equal((await POST(req({ ...LEAD, phone: '123' }))).status, 400);
+  assert.equal((await POST(req({ ...LEAD, website: 'spam' }))).status, 200);
+  assert.equal(notionCalls().length, 0);
+  for (let i = 0; i < 4; i++) await POST(req(LEAD, '7.7.7.7'));
+  assert.equal((await POST(req(LEAD, '7.7.7.7'))).status, 200);
+  assert.equal((await POST(req(LEAD, '7.7.7.7'))).status, 429);
+});
+test('Notion failure logs never carry addresses, names, phone numbers or the key', async () => {
+  useNotion(); sendStatus = [500]; notionStatus = 400;
+  await POST(req(LEAD));
+  const all = logs.join('\n');
+  for (const s of ['test@example.com', 'Test Person', '9000000000', 'notion-secret-1', 'secret-1']) assert.ok(!all.includes(s), s);
 });

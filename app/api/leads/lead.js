@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { ackEmail, leadEmail } from './template';
 
-// The demo-request handler behind app/api/leads/route.js. Requests are sent through Microsoft Graph as donotreply@: a notification to
-// BOOK_DEMO_TO, then a "request received" acknowledgement to the customer. No mailbox password lives
-// on the host. Settings come from the host's environment variables (see .env.example).
+// The demo-request handler behind app/api/leads/route.js. Mail goes through Microsoft Graph: a notification to
+// BOOK_DEMO_TO, then a "request received" acknowledgement to the customer. When mail is not set up or the
+// notification fails, the lead is saved to a Notion database instead. Settings: see .env.example.
 export const REQUIRED = ['MAIL_GRAPH_TENANT_ID', 'MAIL_GRAPH_CLIENT_ID', 'MAIL_GRAPH_CLIENT_SECRET', 'MAIL_GRAPH_SENDER', 'BOOK_DEMO_TO'];
-const OWNER_TIMEOUT_MS = 10_000, ACK_TIMEOUT_MS = 4_000;
+export const NOTION_REQUIRED = ['NOTION_API_KEY', 'NOTION_DATABASE_ID'];
+const OWNER_TIMEOUT_MS = 10_000, ACK_TIMEOUT_MS = 4_000, NOTION_TIMEOUT_MS = 8_000;
 const MAX = { name: 120, organization: 200, email: 200, phone: 20, domain: 60, products: 400, message: 1500, source: 200 };
 
 // one line, no control characters, trimmed to a length
@@ -38,14 +39,14 @@ function limited(store, key, max, windowMs) {
 }
 export function resetLimits() { ipHits.clear(); ackHits.clear(); token = null; }
 
-function missing() {
-  return REQUIRED.filter((k) => !(process.env[k] || '').trim());
+function missing(keys = REQUIRED) {
+  return keys.filter((k) => !(process.env[k] || '').trim());
 }
 function recipients() {
   return (process.env.BOOK_DEMO_TO || '').split(',').map((s) => s.trim()).filter(Boolean);
 }
 
-// carries only a step, an HTTP status and Graph's error code: never a message, which can quote addresses
+// carries only a step, an HTTP status and the API's error code: never a message, which can quote addresses
 export class GraphError extends Error {
   constructor(step, status, code) { super(`${step} ${status} ${code}`); this.step = step; this.status = status; this.code = code; }
 }
@@ -105,6 +106,50 @@ export async function sendMail(mail, timeoutMs) {
   if (res.status !== 202) throw new GraphError('send', res.status, await graphCode(res));
 }
 
+// Notion fallback: one page per lead in NOTION_DATABASE_ID (same columns as the earlier site's leads database)
+const rich = (v) => ({ rich_text: v ? [{ text: { content: v.slice(0, 2000) } }] : [] });
+export function notionPage(lead, now) {
+  const message = [lead.products && `Products: ${lead.products}`, lead.message].filter(Boolean).join('\n\n');
+  return {
+    parent: { database_id: process.env.NOTION_DATABASE_ID.trim() },
+    properties: {
+      Name: { title: [{ text: { content: lead.name } }] },
+      Organization: rich(lead.organization),
+      Email: { email: lead.email },
+      Phone: { phone_number: lead.phone || null },
+      // select option names cannot hold commas
+      Audience: { select: { name: lead.domain.replace(/,/g, ' ').slice(0, 100) } },
+      Message: rich(message || 'No message provided'),
+      Source: rich(lead.source),
+      'Submitted At': { date: { start: now.toISOString() } },
+    },
+  };
+}
+export async function saveToNotion(lead, now) {
+  const res = await fetch('https://api.notion.com/v1/pages', {
+    method: 'POST', signal: AbortSignal.timeout(NOTION_TIMEOUT_MS),
+    headers: { authorization: `Bearer ${process.env.NOTION_API_KEY.trim()}`, 'content-type': 'application/json', 'notion-version': '2022-06-28' },
+    body: JSON.stringify(notionPage(lead, now)),
+  });
+  if (!res.ok) {
+    let code = 'unknown';
+    try { code = line((await res.json())?.code ?? 'unknown', 60).replace(/[^\w.-]/g, '') || 'unknown'; } catch { /* keep unknown */ }
+    throw new GraphError('notion', res.status, code);
+  }
+}
+
+// saved to Notion only: the response says so and never claims a mail went out
+async function notionFallback(lead, now, why) {
+  try {
+    await saveToNotion(lead, now);
+  } catch (error) {
+    console.error('Lead not saved to Notion:', failure(error));
+    return NextResponse.json({ error: 'Could not send' }, { status: 502 });
+  }
+  console.error(`Lead saved to Notion, no email sent (${why})`);
+  return NextResponse.json({ success: true, saved: 'notion', emailed: false });
+}
+
 export async function handleLead(request) {
   let body;
   try {
@@ -134,26 +179,28 @@ export async function handleLead(request) {
     return NextResponse.json({ error: 'Missing or invalid fields' }, { status: 400 });
   }
 
-  // no built-in fallback address: an unset setting is a configuration error
-  const unset = missing();
-  if (unset.length) {
-    console.error('Lead not sent, settings missing:', unset.join(', '));
+  const now = new Date(), mailUnset = missing(), notionReady = !missing(NOTION_REQUIRED).length;
+  if (mailUnset.length) {
+    if (notionReady) return notionFallback(lead, now, 'mail not configured');
+    // no built-in fallback address: an unset setting is a configuration error
+    console.error('Lead not sent, settings missing:', [...mailUnset, ...missing(NOTION_REQUIRED)].join(', '));
     return NextResponse.json({ error: 'Server configuration error' }, { status: 503 });
   }
 
   // 1. notification to the team: decides what the customer sees
-  const owner = leadEmail(lead, new Date());
+  const owner = leadEmail(lead, now);
   try {
     await sendMail({ to: recipients(), replyTo: [{ name: lead.name, address: lead.email }], subject: owner.subject, html: owner.html }, OWNER_TIMEOUT_MS);
   } catch (error) {
     console.error('Lead email failed:', failure(error));
+    if (notionReady) return notionFallback(lead, now, 'mail failed');
     return NextResponse.json({ error: 'Could not send' }, { status: 502 });
   }
 
   // the team has the request: from here the customer always sees success
   if (limited(ackHits, lead.email.toLowerCase(), 3, 3_600_000)) {
     console.error('Lead acknowledgement skipped: limit for one mailbox');
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, emailed: true });
   }
 
   // 2. acknowledgement to the customer: carries nothing they typed except a letters-only first name
@@ -163,5 +210,5 @@ export async function handleLead(request) {
   } catch (error) {
     console.error('Lead acknowledgement failed:', failure(error));
   }
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, emailed: true });
 }
