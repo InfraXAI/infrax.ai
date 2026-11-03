@@ -55,7 +55,7 @@ export default function ProductsTunnel() {
           </div>
 
           <div className="cy-card cy-tollcard" id="cyToll" aria-hidden="true">
-            <div className="cy-card-h">Naka · plaza P2 <span id="cyTollT">Lane 3</span></div>
+            <div className="cy-card-h">Fareline · plaza P2 <span id="cyTollT">Lane 3</span></div>
             <p className="cy-tstat" id="cyTStat"><i></i><span>Edge ↔ cloud · synced</span></p>
             <ol className="cy-call cy-sess" id="cyTollList"></ol>
           </div>
