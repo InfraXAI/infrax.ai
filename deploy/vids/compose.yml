@@ -1,0 +1,36 @@
+# Installed to /etc/infrax-site/compose.yml by install.sh; the agent never reads this from a deployed commit.
+name: infrax-site
+
+services:
+  site:
+    image: infrax-site:${SITE_TAG:?SITE_TAG is required}
+    container_name: infrax-site
+    restart: unless-stopped
+    env_file: [/etc/infrax-site/site.env]
+    ports: ["127.0.0.1:${SITE_PORT:-18710}:3000"]
+    cpus: 1.0
+    mem_limit: 1g
+    pids_limit: 256
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache:uid=1000,gid=1000
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: &logs
+      driver: json-file
+      options: {max-size: 10m, max-file: "3"}
+
+  tunnel:
+    image: cloudflare/cloudflared:2026.10.7
+    container_name: infrax-site-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    env_file: [/etc/infrax-site/tunnel.env]
+    depends_on: [site]
+    cpus: 0.5
+    mem_limit: 256m
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging: *logs

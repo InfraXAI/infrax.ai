@@ -1,0 +1,12 @@
+[Unit]
+Description=InfraX site deploy agent (VIDS demo)
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/infrax-site-deploy run
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=20min

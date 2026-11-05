@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+# VIDS deploy agent: ships the newest commit on the deploy branch that passed the deploy-vids workflow.
+# Usage: infrax-site-deploy [run|status|rollback|redeploy <sha>]
+set -euo pipefail
+
+CONF=/etc/infrax-site/deploy.conf
+# shellcheck source=/dev/null
+[ -r "$CONF" ] && . "$CONF"
+REPO=${REPO:-InfraXAI/infrax.ai}
+BRANCH=${BRANCH:-tarun/deploy-infraxai-vids}
+WORKFLOW=${WORKFLOW:-deploy-vids.yml}
+SITE_PORT=${SITE_PORT:-18710}
+KEEP_IMAGES=${KEEP_IMAGES:-3}
+STATE=/var/lib/infrax-site
+COMPOSE=/etc/infrax-site/compose.yml
+BUILDER=infrax-site
+
+log() { echo "$(date -u +%FT%TZ) $*"; }
+dc() { SITE_TAG="$1" SITE_PORT="$SITE_PORT" docker compose -f "$COMPOSE" "${@:2}"; }
+
+mkdir -p "$STATE"
+exec 9>"$STATE/lock"
+flock -n 9 || { log "another run holds the lock"; exit 0; }
+
+current() { cat "$STATE/current" 2>/dev/null || true; }
+
+# conditional request: a 304 does not count against the unauthenticated GitHub rate limit
+latest_passed() {
+  local url code etag
+  url="https://api.github.com/repos/$REPO/actions/workflows/$WORKFLOW/runs?branch=$(jq -rn --arg b "$BRANCH" '$b|@uri')&status=success&per_page=1"
+  etag=$(cat "$STATE/gh.etag" 2>/dev/null || true)
+  code=$(curl -sS -m 20 -o "$STATE/gh.new" -D "$STATE/gh.hdr" -w '%{http_code}' \
+    -H 'Accept: application/vnd.github+json' ${etag:+-H "If-None-Match: $etag"} "$url") || return 1
+  case $code in
+    200) mv "$STATE/gh.new" "$STATE/gh.json"
+         grep -i '^etag:' "$STATE/gh.hdr" | cut -d' ' -f2- | tr -d '\r' >"$STATE/gh.etag" || true ;;
+    304) ;;
+    *) return 1 ;;
+  esac
+  jq -r '.workflow_runs[0].head_sha // empty' "$STATE/gh.json"
+}
+
+healthy() {
+  local code
+  for _ in $(seq 1 45); do
+    code=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "http://127.0.0.1:$SITE_PORT/" || true)
+    [ "$code" = 200 ] && return 0
+    sleep 2
+  done
+  return 1
+}
+
+build() {
+  local sha=$1 tag=${1:0:12} src="$STATE/src" ctx="$STATE/build"
+  [ -d "$src/.git" ] || git init -q "$src"
+  git -C "$src" fetch -q --depth 1 "https://github.com/$REPO.git" "$sha"
+  [ "$(git -C "$src" rev-parse FETCH_HEAD)" = "$sha" ] || { log "fetched commit mismatch"; return 1; }
+  rm -rf "$ctx" && mkdir -p "$ctx"
+  git -C "$src" archive "$sha" | tar -x -C "$ctx"
+  # capped builder so a build cannot starve the box's own services
+  docker buildx inspect "$BUILDER" >/dev/null 2>&1 || docker buildx create --name "$BUILDER" \
+    --driver docker-container --driver-opt cpuset-cpus=0-3 --driver-opt memory=4g >/dev/null
+  docker buildx build --builder "$BUILDER" --load -t "infrax-site:$tag" \
+    --label "org.opencontainers.image.revision=$sha" "$ctx"
+}
+
+deploy() {
+  local sha=$1 tag=${1:0:12} prev
+  prev=$(current)
+  log "deploying $tag (previous ${prev:0:12})"
+  if ! build "$sha"; then log "build failed for $tag"; echo "$sha" >"$STATE/failed"; return 1; fi
+  if dc "$tag" up -d --remove-orphans && healthy; then
+    [ -n "$prev" ] && [ "$prev" != "$sha" ] && echo "$prev" >"$STATE/previous"
+    echo "$sha" >"$STATE/current"; rm -f "$STATE/failed"
+    log "live: $tag"
+    prune
+  else
+    log "health check failed for $tag"
+    echo "$sha" >"$STATE/failed"
+    if [ -n "$prev" ]; then dc "${prev:0:12}" up -d --remove-orphans && log "rolled back to ${prev:0:12}"; fi
+    return 1
+  fi
+}
+
+prune() {
+  docker image ls infrax-site --format '{{.CreatedAt}}\t{{.Tag}}' | sort -r | cut -f2 \
+    | tail -n +"$((KEEP_IMAGES + 1))" | while read -r t; do
+        [ "$t" = "$(current | cut -c1-12)" ] || [ "$t" = "$(cut -c1-12 "$STATE/previous" 2>/dev/null)" ] \
+          || docker image rm "infrax-site:$t" >/dev/null 2>&1 || true
+      done
+  docker buildx prune --builder "$BUILDER" --keep-storage 3gb -f >/dev/null 2>&1 || true
+}
+
+case "${1:-run}" in
+  run)
+    want=$(latest_passed) || { log "GitHub check failed"; exit 0; }
+    [ -n "$want" ] || { log "no passed run on $BRANCH yet"; exit 0; }
+    [ "$want" = "$(current)" ] && exit 0
+    [ "$want" = "$(cat "$STATE/failed" 2>/dev/null)" ] && exit 0
+    deploy "$want" ;;
+  redeploy)
+    [[ "${2:-}" =~ ^[0-9a-f]{40}$ ]] || { echo "usage: $0 redeploy <full sha>"; exit 2; }
+    rm -f "$STATE/failed"; deploy "$2" ;;
+  rollback)
+    prev=$(cat "$STATE/previous" 2>/dev/null) || { echo "no previous release"; exit 1; }
+    cur=$(current)
+    dc "${prev:0:12}" up -d --remove-orphans && healthy
+    echo "$prev" >"$STATE/current"; echo "$cur" >"$STATE/previous"
+    # pin: skip this commit until a newer one passes
+    echo "$cur" >"$STATE/failed"
+    log "rolled back to ${prev:0:12}" ;;
+  status)
+    echo "current:  $(current)"; echo "previous: $(cat "$STATE/previous" 2>/dev/null)"
+    echo "failed:   $(cat "$STATE/failed" 2>/dev/null)"
+    docker ps --filter name=infrax-site --format '{{.Names}}\t{{.Image}}\t{{.Status}}' ;;
+  *) echo "usage: $0 [run|status|rollback|redeploy <sha>]"; exit 2 ;;
+esac

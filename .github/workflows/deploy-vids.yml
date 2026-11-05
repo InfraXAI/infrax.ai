@@ -1,0 +1,40 @@
+# Gate for the VIDS demo deploy. The VIDS deploy agent only ships commits that passed this run.
+name: deploy-vids
+
+on:
+  push:
+    branches: [tarun/deploy-infraxai-vids]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-vids
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/tarun/deploy-infraxai-vids'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build production image (runs tests and next build)
+        run: docker build -t infrax-site:ci .
+      - name: Smoke test the image
+        run: |
+          docker run -d --name site -p 127.0.0.1:3000:3000 --read-only \
+            --tmpfs /tmp --tmpfs /app/.next/cache:uid=1000,gid=1000 infrax-site:ci
+          for i in $(seq 1 30); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3000/ || true)
+            [ "$code" = 200 ] && break; sleep 2
+          done
+          docker logs site | tail -20
+          for p in / /products /services /how-it-works; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3000$p")
+            echo "$p $code"; [ "$code" = 200 ] || exit 1
+          done
+      - name: Summary
+        run: |
+          echo "Passed for \`${GITHUB_SHA::7}\`. The VIDS deploy agent picks it up within about 2 minutes." >> "$GITHUB_STEP_SUMMARY"
