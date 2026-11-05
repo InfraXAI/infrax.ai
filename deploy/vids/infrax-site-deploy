@@ -9,6 +9,8 @@ CONF=/etc/infrax-site/deploy.conf
 REPO=${REPO:-InfraXAI/infrax.ai}
 BRANCH=${BRANCH:-tarun/deploy-infraxai-vids}
 WORKFLOW=${WORKFLOW:-deploy-vids.yml}
+# actions = only commits that passed the workflow; branch = branch head (tests still run in the image build)
+GATE=${GATE:-actions}
 SITE_PORT=${SITE_PORT:-18710}
 KEEP_IMAGES=${KEEP_IMAGES:-3}
 STATE=/var/lib/infrax-site
@@ -38,6 +40,18 @@ latest_passed() {
     *) return 1 ;;
   esac
   jq -r '.workflow_runs[0].head_sha // empty' "$STATE/gh.json"
+}
+
+branch_head() {
+  git ls-remote "https://github.com/$REPO.git" "refs/heads/$BRANCH" | cut -f1
+}
+
+wanted() {
+  case $GATE in
+    actions) latest_passed ;;
+    branch) branch_head ;;
+    *) log "unknown GATE=$GATE"; return 1 ;;
+  esac
 }
 
 healthy() {
@@ -93,8 +107,8 @@ prune() {
 
 case "${1:-run}" in
   run)
-    want=$(latest_passed) || { log "GitHub check failed"; exit 0; }
-    [ -n "$want" ] || { log "no passed run on $BRANCH yet"; exit 0; }
+    want=$(wanted) || { log "GitHub check failed"; exit 0; }
+    [ -n "$want" ] || { log "nothing to deploy on $BRANCH yet (gate: $GATE)"; exit 0; }
     [ "$want" = "$(current)" ] && exit 0
     [ "$want" = "$(cat "$STATE/failed" 2>/dev/null)" ] && exit 0
     deploy "$want" ;;
@@ -111,7 +125,7 @@ case "${1:-run}" in
     log "rolled back to ${prev:0:12}" ;;
   status)
     echo "current:  $(current)"; echo "previous: $(cat "$STATE/previous" 2>/dev/null)"
-    echo "failed:   $(cat "$STATE/failed" 2>/dev/null)"
+    echo "failed:   $(cat "$STATE/failed" 2>/dev/null)"; echo "gate:     $GATE"
     docker ps --filter name=infrax-site --format '{{.Names}}\t{{.Image}}\t{{.Status}}' ;;
   *) echo "usage: $0 [run|status|rollback|redeploy <sha>]"; exit 2 ;;
 esac

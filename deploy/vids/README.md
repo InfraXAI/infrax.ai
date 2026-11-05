@@ -10,6 +10,10 @@ Cloudflare Access hostname. Vercel (staging/prod) is separate and does not use t
    It builds that exact commit in a CPU/RAM-capped builder, swaps the container,
    and health-checks it. If the health check fails, it rolls back to the previous release by itself.
 
+`GATE=branch` in `/etc/infrax-site/deploy.conf` makes the agent follow the branch head
+instead of passed runs, for when Actions cannot run. The image build still runs the tests, so a
+failing commit is never deployed.
+
 VIDS needs no inbound access and holds no GitHub credentials. The agent, compose file and
 units are installed on the host once (`install.sh`). Edits here change nothing on VIDS until
 they are re-installed.
